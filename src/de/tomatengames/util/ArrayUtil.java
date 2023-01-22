@@ -19,8 +19,13 @@ import java.util.function.IntFunction;
  */
 public class ArrayUtil {
 	
+	// Static class.
+	private ArrayUtil() {
+	}
+	
 	/* txs-begin contains
 	# for (string type in types) {
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
@@ -29,7 +34,7 @@ public class ArrayUtil {
 	 * @param <T> The type of the elements.
 	 # }
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -55,7 +60,7 @@ public class ArrayUtil {
 	 * @param <T> The type of the elements.
 	 # }
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 *$'/';
@@ -72,7 +77,7 @@ public class ArrayUtil {
 	 * @param <T> The type of the elements.
 	 # }
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -100,7 +105,7 @@ public class ArrayUtil {
 	 * @param <T> The type of the elements.
 	 # }
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 *$'/';
@@ -119,16 +124,18 @@ public class ArrayUtil {
 	 * @param <T> The type of the array elements.
 	 # }
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element. $? type == 'T' && 'May be {@code null}.';
 	 * @return If the array contains the specified element.
 	 *$'/';
 	// $txsinfo();
 	public static $? type == 'T' && '<T>'; boolean contains($type;[] array, $type; element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
 	# }
 	txs-end contains */
 	// txs-begin-gen contains
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
@@ -224,12 +231,14 @@ public class ArrayUtil {
 	public static <T> boolean contains(T[] array, T element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -252,7 +261,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -266,7 +275,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -291,7 +300,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -307,19 +316,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(int[] array, int element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -342,7 +353,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -356,7 +367,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -381,7 +392,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -397,19 +408,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(long[] array, long element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -432,7 +445,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -446,7 +459,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -471,7 +484,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -487,19 +500,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(byte[] array, byte element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -522,7 +537,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -536,7 +551,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -561,7 +576,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -577,19 +592,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(short[] array, short element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -612,7 +629,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -626,7 +643,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -651,7 +668,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -667,19 +684,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(char[] array, char element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -702,7 +721,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -716,7 +735,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -741,7 +760,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -757,19 +776,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(float[] array, float element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -792,7 +813,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -806,7 +827,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -831,7 +852,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -847,19 +868,21 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(double[] array, double element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
+	
 	/**
 	 * Returns the first index of the specified element in the array
 	 * that is greater than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The first index of the specified element &ge; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -882,7 +905,7 @@ public class ArrayUtil {
 	 * Returns the first index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The first index of the specified element.
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 */
@@ -896,7 +919,7 @@ public class ArrayUtil {
 	 * that is less than or equal to the {@code startIndex}.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @param startIndex The index where to start the search.
 	 * @return The last index of the specified element &le; startIndex.
 	 * If no such index exists, {@code -1} is returned.
@@ -921,7 +944,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -937,13 +960,14 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param el The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(boolean[] array, boolean element) {
 		return indexOf(array, element, 0) >= 0;
 	}
+	
 	// txs-end-gen contains
 	
 	/**
