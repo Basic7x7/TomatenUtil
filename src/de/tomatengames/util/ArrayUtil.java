@@ -21,30 +21,196 @@ public class ArrayUtil {
 	
 	/* txs-begin contains
 	# for (string type in types) {
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 # if (type == 'T') {
+	 * @param <T> The type of the elements.
+	 # }
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 *$'/';
+	// $txsinfo();
+	public static $? type == 'T' && '<T>'; int indexOf($type;[] array, $type; element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 # if (type == 'T') {
+	 * @param <T> The type of the elements.
+	 # }
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 *$'/';
+	// $txsinfo();
+	public static $? type == 'T' && '<T>'; int indexOf($type;[] array, $type; element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 # if (type == 'T') {
+	 * @param <T> The type of the elements.
+	 # }
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 *$'/';
+	// $txsinfo();
+	public static $? type == 'T' && '<T>'; int lastIndexOf($type;[] array, $type; element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 # if (type == 'T') {
+	 * @param <T> The type of the elements.
+	 # }
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 *$'/';
+	// $txsinfo();
+	public static $? type == 'T' && '<T>'; int lastIndexOf($type;[] array, $type; element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
+	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
+	 # if (type == 'T') {
 	 * @param <T> The type of the array elements.
+	 # }
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 *$'/';
 	// $txsinfo();
 	public static $? type == 'T' && '<T>'; boolean contains($type;[] array, $type; element) {
-		if (array == null) {
-			return false;
-		}
-		for ($type; arrEl : array) {
-			if (arrEl == element) {
-				return true;
-			}
-		}
-		return false;
+		return indexOf(array, element, 0) >= 0;
 	}
 	# }
 	txs-end contains */
 	// txs-begin-gen contains
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int indexOf(T[] array, T element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int indexOf(T[] array, T element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int lastIndexOf(T[] array, T element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int lastIndexOf(T[] array, T element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
+	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
@@ -56,183 +222,727 @@ public class ArrayUtil {
 	 */
 	// !!! TextScript generated !!!
 	public static <T> boolean contains(T[] array, T element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(int[] array, int element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (T arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(int[] array, int element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(int[] array, int element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(int[] array, int element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(int[] array, int element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(long[] array, long element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (int arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(long[] array, long element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(long[] array, long element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(long[] array, long element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(long[] array, long element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(byte[] array, byte element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (long arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(byte[] array, byte element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(byte[] array, byte element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(byte[] array, byte element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(byte[] array, byte element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(short[] array, short element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (byte arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(short[] array, short element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(short[] array, short element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(short[] array, short element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(short[] array, short element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(char[] array, char element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (short arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(char[] array, char element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(char[] array, char element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(char[] array, char element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(char[] array, char element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(float[] array, float element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (char arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(float[] array, float element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(float[] array, float element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(float[] array, float element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(float[] array, float element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(double[] array, double element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (float arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(double[] array, double element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(double[] array, double element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(double[] array, double element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(double[] array, double element) {
+		return indexOf(array, element, 0) >= 0;
+	}
+	/**
+	 * Returns the first index of the specified element in the array
+	 * that is greater than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(boolean[] array, boolean element, int startIndex) {
 		if (array == null) {
-			return false;
+			return -1;
 		}
-		for (double arrEl : array) {
-			if (arrEl == element) {
-				return true;
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (array[i] == element) {
+				return i;
 			}
 		}
-		return false;
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int indexOf(boolean[] array, boolean element) {
+		return indexOf(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array
+	 * that is less than or equal to the {@code startIndex}.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(boolean[] array, boolean element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (array[i] == element) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of the specified element in the array.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static int lastIndexOf(boolean[] array, boolean element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOf(array, element, array.length-1);
 	}
 	
 	/**
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
 	public static boolean contains(boolean[] array, boolean element) {
-		if (array == null) {
-			return false;
-		}
-		for (boolean arrEl : array) {
-			if (arrEl == element) {
-				return true;
-			}
-		}
-		return false;
+		return indexOf(array, element, 0) >= 0;
 	}
 	// txs-end-gen contains
 	
