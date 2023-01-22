@@ -1040,4 +1040,511 @@ public class ArrayUtil {
 		return target;
 	}
 	
+	
+	/* txs-begin concat
+	# for (string type in types) {
+		## // The generic type has an own implementation with an array factory.
+		if (type == 'T') {
+			continue;
+		}
+		##
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] concat($type;[] array1, $type;[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		$type;[] target = new $type;[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] concat($type;[]... arrays) {
+		int n = 0;
+		for ($type;[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		$type;[] target = new $type;[n];
+		int i = 0;
+		for ($type;[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	# }
+	txs-end concat */
+	// txs-begin-gen concat
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static int[] concat(int[] array1, int[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		int[] target = new int[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static int[] concat(int[]... arrays) {
+		int n = 0;
+		for (int[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		int[] target = new int[n];
+		int i = 0;
+		for (int[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static long[] concat(long[] array1, long[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		long[] target = new long[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static long[] concat(long[]... arrays) {
+		int n = 0;
+		for (long[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		long[] target = new long[n];
+		int i = 0;
+		for (long[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] concat(byte[] array1, byte[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		byte[] target = new byte[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] concat(byte[]... arrays) {
+		int n = 0;
+		for (byte[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		byte[] target = new byte[n];
+		int i = 0;
+		for (byte[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static short[] concat(short[] array1, short[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		short[] target = new short[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static short[] concat(short[]... arrays) {
+		int n = 0;
+		for (short[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		short[] target = new short[n];
+		int i = 0;
+		for (short[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static char[] concat(char[] array1, char[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		char[] target = new char[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static char[] concat(char[]... arrays) {
+		int n = 0;
+		for (char[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		char[] target = new char[n];
+		int i = 0;
+		for (char[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static float[] concat(float[] array1, float[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		float[] target = new float[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static float[] concat(float[]... arrays) {
+		int n = 0;
+		for (float[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		float[] target = new float[n];
+		int i = 0;
+		for (float[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static double[] concat(double[] array1, double[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		double[] target = new double[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static double[] concat(double[]... arrays) {
+		int n = 0;
+		for (double[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		double[] target = new double[n];
+		int i = 0;
+		for (double[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates both arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * <p>
+	 * All elements from {@code array1} are before all from {@code array2}.
+	 * The order of the elements is preserved.
+	 * @param array1 The first array. May be {@code null}.
+	 * @param array2 The second array. May be {@code null}.
+	 * @return An array that contains all elements from both specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] concat(boolean[] array1, boolean[] array2) {
+		int n1 = array1 != null ? array1.length : 0;
+		int n2 = array2 != null ? array2.length : 0;
+		boolean[] target = new boolean[n1+n2];
+		if (array1 != null) {
+			System.arraycopy(array1, 0, target, 0, n1);
+		}
+		if (array2 != null) {
+			System.arraycopy(array2, 0, target, n1, n2);
+		}
+		return target;
+	}
+	
+	/**
+	 * Concatenates all specified arrays.
+	 * If an array is {@code null}, it is handled like an empty array.
+	 * The order of the arrays and the order of the elements inside each array are preserved.
+	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+	 * but the arrays inside may be {@code null}.
+	 * @return An array that contains all elements from all specified arrays.
+	 * Not {@code null}. A new array is created.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] concat(boolean[]... arrays) {
+		int n = 0;
+		for (boolean[] arr : arrays) {
+			if (arr != null) {
+				n += arr.length;
+			}
+		}
+		
+		boolean[] target = new boolean[n];
+		int i = 0;
+		for (boolean[] arr : arrays) {
+			if (arr != null) {
+				int len = arr.length;
+				System.arraycopy(arr, 0, target, i, len);
+				i += len;
+			}
+		}
+		return target;
+	}
+	// txs-end-gen concat
 }
