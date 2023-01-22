@@ -1,0 +1,5 @@
+##
+const string src = "src/de/tomatengames/util";
+##
+
+run-inplace -io "@src;/ArrayUtil.java"

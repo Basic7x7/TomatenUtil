@@ -1,3 +1,10 @@
+/* txs-begin static
+##
+:inline=$
+final string[] types = ["T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
+##
+txs-end static */
+
 package de.tomatengames.util;
 
 import java.util.Objects;
@@ -12,15 +19,42 @@ import java.util.function.IntFunction;
  */
 public class ArrayUtil {
 	
+	/* txs-begin contains
+	# for (string type in types) {
+	
 	/**
 	 * Returns if the specified array contains the specified element.
-	 * The {@code ==} operator is used to check each array element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 *$'/';
+	// $txsinfo();
+	public static $? type == 'T' && '<T>'; boolean contains($type;[] array, $type; element) {
+		if (array == null) {
+			return false;
+		}
+		for ($type; arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	# }
+	txs-end contains */
+	// txs-begin-gen contains
+	
+	/**
+	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param <T> The type of the array elements.
 	 * @param array The array. May be {@code null}.
 	 * @param el The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
+	// !!! TextScript generated !!!
 	public static <T> boolean contains(T[] array, T element) {
 		if (array == null) {
 			return false;
@@ -32,6 +66,175 @@ public class ArrayUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(int[] array, int element) {
+		if (array == null) {
+			return false;
+		}
+		for (int arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(long[] array, long element) {
+		if (array == null) {
+			return false;
+		}
+		for (long arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(byte[] array, byte element) {
+		if (array == null) {
+			return false;
+		}
+		for (byte arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(short[] array, short element) {
+		if (array == null) {
+			return false;
+		}
+		for (short arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(char[] array, char element) {
+		if (array == null) {
+			return false;
+		}
+		for (char arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(float[] array, float element) {
+		if (array == null) {
+			return false;
+		}
+		for (float arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(double[] array, double element) {
+		if (array == null) {
+			return false;
+		}
+		for (double arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns if the specified array contains the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static boolean contains(boolean[] array, boolean element) {
+		if (array == null) {
+			return false;
+		}
+		for (boolean arrEl : array) {
+			if (arrEl == element) {
+				return true;
+			}
+		}
+		return false;
+	}
+	// txs-end-gen contains
 	
 	/**
 	 * Returns if the specified array contains an element that is equal to the specified element.
