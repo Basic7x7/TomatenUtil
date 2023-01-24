@@ -123,28 +123,4 @@ public class ExecUtil {
 		return thread;
 	}
 	
-	
-	
-	
-	/**
-	 * Allows to handle the output of a getter process.
-	 * 
-	 * @author Basic7x7
-	 * @version 2023-01-23
-	 * @since 1.0
-	 */
-	@FunctionalInterface
-	public static interface ExecGetterHandler<T> {
-		/**
-		 * This method is called after a getter process terminated.
-		 * @param cmd The command that created the process.
-		 * @param output The read standard output of the process.
-		 * @param error The read error output of the process.
-		 * @param exitValue The exit value of the process.
-		 * @return The value that should be returned by the {@code exec} method.
-		 * @throws IOException If the execution of the process should be considered as failed.
-		 */
-		public T handle(String[] cmd, CharSequence output, CharSequence error, int exitValue)
-			throws IOException;
-	}
 }
