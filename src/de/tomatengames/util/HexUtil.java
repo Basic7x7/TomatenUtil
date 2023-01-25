@@ -8,6 +8,39 @@ package de.tomatengames.util;
  * @since 1.0
  */
 public class HexUtil {
+	private static final char[] hexChars = "0123456789abcdef".toCharArray();
+	
+	/**
+	 * Returns the hexadecimal character that represents the specified value.
+	 * @param value The value (0-15).
+	 * @return The hexadecimal character (0-9, a-f).
+	 * @throws IllegalArgumentException If the value is out of range.
+	 */
+	public static char toHexChar(int value) {
+		if (value < 0x0 || value > 0xF) {
+			throw new IllegalArgumentException("Value " + value + " cannot be represented as a hex char!");
+		}
+		return hexChars[value];
+	}
+	
+	/**
+	 * Converts the specified byte array into a hexadecimal string.
+	 * Each byte is represented by 2 characters.
+	 * @param bytes The byte array.
+	 * @return The hexadecimal string. Not {@code null}. Alphabetic characters are in lower case.
+	 * @throws NullPointerException If the byte array is {@code null}.
+	 */
+	public static String bytesToHex(byte[] bytes) {
+		int n = bytes.length;
+		char[] chars = new char[n*2];
+		for (int i = 0; i < n; i++) {
+			int b = bytes[i];
+			chars[2*i] = hexChars[(b >>> 4) & 0xF];
+			chars[2*i+1] = hexChars[b & 0xF];
+		}
+		return new String(chars);
+	}
+	
 	
 	/**
 	 * Returns the value of the specified hexadecimal character.
@@ -47,7 +80,7 @@ public class HexUtil {
 	 * and the second hex char the 4 least significant bits of the byte.
 	 * If the length of the hex string is odd, the 4 least significant bits of the last byte are {@code 0000}.
 	 * @param hexString The hexadecimal string.
-	 * @return The byte array that represents the hexadecimal string.
+	 * @return The byte array that represents the hexadecimal string. Not {@code null}.
 	 * @throws NullPointerException If the input string is {@code null}.
 	 * @throws IllegalArgumentException If the string contains a non-hexadecimal character.
 	 */
