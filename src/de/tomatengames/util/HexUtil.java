@@ -70,4 +70,29 @@ public class HexUtil {
 		return bytes;
 	}
 	
+	/**
+	 * Reads the specified hexadecimal string into a {@code long}.
+	 * Each character represents 4 bits of the result.
+	 * The last character of the string represents the least significant bits.
+	 * <p>
+	 * Note: A {@code '-'} sign is not allowed.
+	 * @param hexString The hexadecimal string. Must not be {@code null}.
+	 * Must not be larger than 16 characters.
+	 * @return A {@code long} that represents the hex string.
+	 * @throws NullPointerException If the hex string is {@code null}.
+	 * @throws IllegalArgumentException If the hex string is too large or contains non-hexadecimal characters.
+	 */
+	public static long hexToLong(String hexString) {
+		int n = hexString.length();
+		if (n > Long.BYTES*2) {
+			throw new IllegalArgumentException("Hex string is too large to be stored as a 64 bit integer!");
+		}
+		long value = 0L;
+		for (int i = 0; i < n; i++) {
+			long b = parseHexChar(hexString.charAt(n-1-i));
+			value |= b << (4*i);
+		}
+		return value;
+	}
+	
 }
