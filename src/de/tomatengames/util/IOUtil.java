@@ -4,6 +4,8 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -278,5 +280,36 @@ public class IOUtil {
 			out.write(buffer, 0, n);
 		}
 		out.flush();
+	}
+	
+	/**
+	 * Deletes the specified path.
+	 * If the path represents a file, the file is deleted.
+	 * If the path represents a directory, the directory is deleted recursively.
+	 * <p>
+	 * Symbolic links are not followed, but the symbolic links themselves are deleted.
+	 * @param path The path that should be deleted.
+	 * @throws IOException If an error occurs.
+	 */
+	public static void delete(Path path) throws IOException {
+		if (path == null)
+			return;
+		
+		// Deletes regular files.
+		// Symbolic links are directly removed (and never interpreted as a directory).
+		if (Files.isRegularFile(path) || Files.isSymbolicLink(path)) {
+			Files.delete(path);
+			return;
+		}
+		
+		// Deletes directories recursively.
+		if (Files.isDirectory(path)) {
+			Path[] children = Files.list(path).toArray(Path[]::new);
+			for (Path child : children) {
+				delete(child);
+			}
+			Files.delete(path);
+			return;
+		}
 	}
 }
