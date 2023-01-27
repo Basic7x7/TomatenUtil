@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 
 /**
@@ -297,13 +298,13 @@ public class IOUtil {
 		
 		// Deletes regular files.
 		// Symbolic links are directly removed (and never interpreted as a directory).
-		if (Files.isRegularFile(path) || Files.isSymbolicLink(path)) {
+		if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) || Files.isSymbolicLink(path)) {
 			Files.delete(path);
 			return;
 		}
 		
 		// Deletes directories recursively.
-		if (Files.isDirectory(path)) {
+		if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
 			Path[] children = Files.list(path).toArray(Path[]::new);
 			for (Path child : children) {
 				delete(child);
@@ -328,7 +329,7 @@ public class IOUtil {
 		}
 		
 		// Deletes all files from the directory recursively.
-		if (Files.isDirectory(dir)) {
+		if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
 			Path[] children = Files.list(dir).toArray(Path[]::new);
 			for (Path child : children) {
 				delete(child);
