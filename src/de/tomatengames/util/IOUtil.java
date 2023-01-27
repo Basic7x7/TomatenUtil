@@ -288,7 +288,7 @@ public class IOUtil {
 	 * If the path represents a directory, the directory is deleted recursively.
 	 * <p>
 	 * Symbolic links are not followed, but the symbolic links themselves are deleted.
-	 * @param path The path that should be deleted.
+	 * @param path The path that should be deleted. If {@code null}, nothing happens.
 	 * @throws IOException If an error occurs.
 	 */
 	public static void delete(Path path) throws IOException {
@@ -309,6 +309,30 @@ public class IOUtil {
 				delete(child);
 			}
 			Files.delete(path);
+			return;
+		}
+	}
+	
+	/**
+	 * Deletes all files and directories inside the specified directory recursively.
+	 * The specified directory itself is <b>not</b> deleted.
+	 * <p>
+	 * Symbolic links are not followed.
+	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
+	 * @throws IOException If an error occurs.
+	 */
+	public static void cleanDirectory(Path dir) throws IOException {
+		// Ignore symbolic links.
+		if (dir == null || Files.isSymbolicLink(dir)) {
+			return;
+		}
+		
+		// Deletes all files from the directory recursively.
+		if (Files.isDirectory(dir)) {
+			Path[] children = Files.list(dir).toArray(Path[]::new);
+			for (Path child : children) {
+				delete(child);
+			}
 			return;
 		}
 	}
