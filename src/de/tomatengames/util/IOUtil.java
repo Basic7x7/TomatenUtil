@@ -13,6 +13,7 @@ import java.io.OutputStream;
  * @since 1.0
  */
 public class IOUtil {
+	private static final int BUF_SIZE = 8192;
 	
 	/**
 	 * Writes the 4 bytes of the specified value into the byte array.
@@ -260,5 +261,22 @@ public class IOUtil {
 			throw new EOFException();
 		}
 		return b;
+	}
+	
+	
+	/**
+	 * Reads all data from the {@link InputStream} and writes it to the {@link OutputStream}.
+	 * @param in The input stream.
+	 * @param out Th output stream.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void pipeStream(InputStream in, OutputStream out) throws IOException {
+		// Copy the input to the output.
+		byte[] buffer = new byte[BUF_SIZE];
+		int n;
+		while ((n = in.read(buffer, 0, BUF_SIZE)) >= 0) {
+			out.write(buffer, 0, n);
+		}
+		out.flush();
 	}
 }
