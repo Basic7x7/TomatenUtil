@@ -117,15 +117,15 @@ public class IOUtil {
 	 * @throws ArrayIndexOutOfBoundsException If offset is negative or the array is too small.
 	 * @see #writeLong(long, byte[], int)
 	 */
-	public static int readLong(byte[] input, int offset) {
-		return ((input[offset] & 0xFF) << 56)
-				| ((input[offset+1] & 0xFF) << 48)
-				| ((input[offset+2] & 0xFF) << 40)
-				| ((input[offset+3] & 0xFF) << 32)
-				| ((input[offset+4] & 0xFF) << 24)
-				| ((input[offset+5] & 0xFF) << 16)
-				| ((input[offset+6] & 0xFF) << 8)
-				| (input[offset+7] & 0xFF);
+	public static long readLong(byte[] input, int offset) {
+		return ((input[offset] & 0xFFL) << 56)
+				| ((input[offset+1] & 0xFFL) << 48)
+				| ((input[offset+2] & 0xFFL) << 40)
+				| ((input[offset+3] & 0xFFL) << 32)
+				| ((input[offset+4] & 0xFFL) << 24)
+				| ((input[offset+5] & 0xFFL) << 16)
+				| ((input[offset+6] & 0xFFL) << 8)
+				| (input[offset+7] & 0xFFL);
 	}
 	
 	/**
@@ -137,14 +137,13 @@ public class IOUtil {
 	 * @see #writeLong(long, OutputStream)
 	 */
 	public static long readLong(InputStream in) throws IOException {
-		return (readUByte(in) << 56)
-				| (readUByte(in) << 48)
-				| (readUByte(in) << 40)
-				| (readUByte(in) << 32)
-				| (readUByte(in) << 24)
-				| (readUByte(in) << 26)
-				| (readUByte(in) << 16)
-				| (readUByte(in) << 8)
+		return ((long) readUByte(in) << 56)
+				| ((long) readUByte(in) << 48)
+				| ((long) readUByte(in) << 40)
+				| ((long) readUByte(in) << 32)
+				| ((long) readUByte(in) << 24)
+				| ((long) readUByte(in) << 16)
+				| ((long) readUByte(in) << 8)
 				| readUByte(in);
 	}
 	
@@ -184,7 +183,7 @@ public class IOUtil {
 	 * @see #writeShort(int, byte[], int)
 	 */
 	public static int readShort(byte[] input, int offset) {
-		return (input[offset] << 24) | ((input[offset+1] & 0xFF) << 16) | ((input[offset+2] & 0xFF) << 8) | (input[offset+3] & 0xFF);
+		return ((input[offset] & 0xFF) << 8) | (input[offset+1] & 0xFF);
 	}
 	
 	/**

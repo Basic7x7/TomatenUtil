@@ -49,6 +49,7 @@ public class HexUtil {
 	
 	/**
 	 * Converts the bits of the specified {@code long} into a hexadecimal string.
+	 * The first character represents the most significant bits.
 	 * @param value The {@code long}.
 	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 16}.
 	 * Alphabetic characters are in lower case.
@@ -56,13 +57,14 @@ public class HexUtil {
 	public static String longToHex(long value) {
 		char[] chars = new char[Long.BYTES*2];
 		for (int i = 0; i < Long.BYTES*2; i++) {
-			chars[i] = hexChars[(int) ((value >>> (4*i)) & 0xF)];
+			chars[i] = hexChars[(int) ((value >>> (4*((Long.BYTES*2-1)-i))) & 0xF)];
 		}
 		return new String(chars);
 	}
 	
 	/**
 	 * Converts the bits of the specified {@code int} into a hexadecimal string.
+	 * The first character represents the most significant bits.
 	 * @param value The {@code int}.
 	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 8}.
 	 * Alphabetic characters are in lower case.
@@ -70,7 +72,7 @@ public class HexUtil {
 	public static String intToHex(int value) {
 		char[] chars = new char[Integer.BYTES*2];
 		for (int i = 0; i < Integer.BYTES*2; i++) {
-			chars[i] = hexChars[(value >>> (4*i)) & 0xF];
+			chars[i] = hexChars[(value >>> (4*((Integer.BYTES*2-1)-i))) & 0xF];
 		}
 		return new String(chars);
 	}
