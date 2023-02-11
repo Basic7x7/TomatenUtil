@@ -1,5 +1,11 @@
 package de.tomatengames.util;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 /**
  * Provides methods to work with hexadecimal strings.
  * 
@@ -43,6 +49,7 @@ public class HexUtil {
 	
 	/**
 	 * Converts the bits of the specified {@code long} into a hexadecimal string.
+	 * The first character represents the most significant bits.
 	 * @param value The {@code long}.
 	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 16}.
 	 * Alphabetic characters are in lower case.
@@ -50,13 +57,14 @@ public class HexUtil {
 	public static String longToHex(long value) {
 		char[] chars = new char[Long.BYTES*2];
 		for (int i = 0; i < Long.BYTES*2; i++) {
-			chars[i] = hexChars[(int) ((value >>> (4*i)) & 0xF)];
+			chars[i] = hexChars[(int) ((value >>> (4*((Long.BYTES*2-1)-i))) & 0xF)];
 		}
 		return new String(chars);
 	}
 	
 	/**
 	 * Converts the bits of the specified {@code int} into a hexadecimal string.
+	 * The first character represents the most significant bits.
 	 * @param value The {@code int}.
 	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 8}.
 	 * Alphabetic characters are in lower case.
@@ -64,9 +72,41 @@ public class HexUtil {
 	public static String intToHex(int value) {
 		char[] chars = new char[Integer.BYTES*2];
 		for (int i = 0; i < Integer.BYTES*2; i++) {
-			chars[i] = hexChars[(value >>> (4*i)) & 0xF];
+			chars[i] = hexChars[(value >>> (4*((Integer.BYTES*2-1)-i))) & 0xF];
 		}
 		return new String(chars);
+	}
+	
+	/**
+	 * Reads the specified {@link InputStream} and returns its content as a hex string.
+	 * Each byte of the input is represented by 2 characters.
+	 * @param input The input stream.
+	 * @return The hexadecimal string. Not {@code null}. Alphabetic characters are in lower case.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws NullPointerException If the input stream is {@code null}.
+	 */
+	public static String streamToHex(InputStream input) throws IOException {
+		StringBuilder builder = new StringBuilder();
+		int b;
+		while ((b = input.read()) >= 0) {
+			builder.append(hexChars[(b >>> 4) & 0xF]);
+			builder.append(hexChars[b & 0xF]);
+		}
+		return builder.toString();
+	}
+	
+	/**
+	 * Reads the specified file and returns its content as a hex string.
+	 * Each byte of the file is represented by 2 characters.
+	 * @param path The path to the file.
+	 * @return The hexadecimal string. Not {@code null}. Alphabetic characters are in lower case.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws NullPointerException If the path is {@code null}.
+	 */
+	public static String fileToHex(Path path) throws IOException {
+		try (InputStream in = new BufferedInputStream(Files.newInputStream(path))) {
+			return streamToHex(in);
+		}
 	}
 	
 	

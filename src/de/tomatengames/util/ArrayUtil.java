@@ -2,13 +2,16 @@
 ##
 :inline=$
 final string[] types = ["T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
+final string[] typesWithEqual = ["T", "T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
 ##
 txs-end static */
 
 package de.tomatengames.util;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * Provides methods to work with arrays.
@@ -24,11 +27,11 @@ public class ArrayUtil {
 	}
 	
 	/* txs-begin contains
-	# for (string type in types) {
+	# for (string type in typesWithEqual) with (first eq) {
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] $eq ? "equals" : "=="; element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 # if (type == 'T') {
 	 * @param <T> The type of the elements.
@@ -40,13 +43,17 @@ public class ArrayUtil {
 	 * If no such index exists, {@code -1} is returned.
 	 *$'/';
 	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int indexOf($type;[] array, $type; element, int startIndex) {
+	public static $? type == 'T' && '<T>'; int indexOf$eq&&"Equal";($type;[] array, $type; element, int startIndex) {
 		if (array == null) {
 			return -1;
 		}
 		int n = array.length;
 		for (int i = startIndex; i < n; i++) {
+			# if (eq) {
+			if (Objects.equals(array[i], element)) {
+			# } else {
 			if (array[i] == element) {
+			# }
 				return i;
 			}
 		}
@@ -54,7 +61,9 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the first index of the specified element in the array.
+	 * Returns the first index of $eq
+	 	? "an element in the array that is equal to the specified element."
+	 	: "the specified element in the array.";
 	 * If the array is {@code null}, it does not contain any elements.
 	 # if (type == 'T') {
 	 * @param <T> The type of the elements.
@@ -65,13 +74,13 @@ public class ArrayUtil {
 	 * If the array does not contain the specified element, {@code -1} is returned.
 	 *$'/';
 	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int indexOf($type;[] array, $type; element) {
-		return indexOf(array, element, 0);
+	public static $? type == 'T' && '<T>'; int indexOf$eq&&"Equal";($type;[] array, $type; element) {
+		return indexOf$eq&&"Equal";(array, element, 0);
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] $eq ? "equals" : "=="; element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 # if (type == 'T') {
 	 * @param <T> The type of the elements.
@@ -83,7 +92,7 @@ public class ArrayUtil {
 	 * If no such index exists, {@code -1} is returned.
 	 *$'/';
 	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int lastIndexOf($type;[] array, $type; element, int startIndex) {
+	public static $? type == 'T' && '<T>'; int lastIndexOf$eq&&"Equal";($type;[] array, $type; element, int startIndex) {
 		if (array == null) {
 			return -1;
 		}
@@ -91,7 +100,11 @@ public class ArrayUtil {
 			startIndex = array.length-1;
 		}
 		for (int i = startIndex; i >= 0; i--) {
+			# if (eq) {
+			if (Objects.equals(array[i], element)) {
+			# } else {
 			if (array[i] == element) {
+			# }
 				return i;
 			}
 		}
@@ -99,7 +112,9 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array.
+	 * Returns the last index of $eq
+	 	? "an element in the array that is equal to the specified element."
+	 	: "the specified element in the array.";
 	 * If the array is {@code null}, it does not contain any elements.
 	 # if (type == 'T') {
 	 * @param <T> The type of the elements.
@@ -110,15 +125,17 @@ public class ArrayUtil {
 	 * If the array does not contain the element, {@code -1} is returned.
 	 *$'/';
 	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int lastIndexOf($type;[] array, $type; element) {
+	public static $? type == 'T' && '<T>'; int lastIndexOf$eq&&"Equal";($type;[] array, $type; element) {
 		if (array == null) {
 			return -1;
 		}
-		return lastIndexOf(array, element, array.length-1);
+		return lastIndexOf$eq&&"Equal";(array, element, array.length-1);
 	}
 	
 	/**
-	 * Returns if the specified array contains the specified element.
+	 * Returns if the specified array contains $eq
+	 	? "an element that is equal to the specified element."
+	 	: "the specified element.";
 	 * The array {@code null} does not contain any elements.
 	 # if (type == 'T') {
 	 * @param <T> The type of the array elements.
@@ -128,8 +145,8 @@ public class ArrayUtil {
 	 * @return If the array contains the specified element.
 	 *$'/';
 	// $txsinfo();
-	public static $? type == 'T' && '<T>'; boolean contains($type;[] array, $type; element) {
-		return indexOf(array, element, 0) >= 0;
+	public static $? type == 'T' && '<T>'; boolean contains$eq&&"Equal";($type;[] array, $type; element) {
+		return indexOf$eq&&"Equal";(array, element, 0) >= 0;
 	}
 	
 	# }
@@ -137,8 +154,105 @@ public class ArrayUtil {
 	// txs-begin-gen contains
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] equals element} applies.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The first index of the specified element &ge; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int indexOfEqual(T[] array, T element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		int n = array.length;
+		for (int i = startIndex; i < n; i++) {
+			if (Objects.equals(array[i], element)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the first index of an element in the array that is equal to the specified element.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The first index of the specified element.
+	 * If the array does not contain the specified element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int indexOfEqual(T[] array, T element) {
+		return indexOfEqual(array, element, 0);
+	}
+	
+	/**
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] equals element} applies.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @param startIndex The index where to start the search.
+	 * @return The last index of the specified element &le; startIndex.
+	 * If no such index exists, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int lastIndexOfEqual(T[] array, T element, int startIndex) {
+		if (array == null) {
+			return -1;
+		}
+		if (startIndex >= array.length) {
+			startIndex = array.length-1;
+		}
+		for (int i = startIndex; i >= 0; i--) {
+			if (Objects.equals(array[i], element)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Returns the last index of an element in the array that is equal to the specified element.
+	 * If the array is {@code null}, it does not contain any elements.
+	 * @param <T> The type of the elements.
+	 * @param array The array. May be {@code null}.
+	 * @param element The element. May be {@code null}.
+	 * @return The last index of the specified element.
+	 * If the array does not contain the element, {@code -1} is returned.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> int lastIndexOfEqual(T[] array, T element) {
+		if (array == null) {
+			return -1;
+		}
+		return lastIndexOfEqual(array, element, array.length-1);
+	}
+	
+	/**
+	 * Returns if the specified array contains an element that is equal to the specified element.
+	 * The array {@code null} does not contain any elements.
+	 * @param <T> The type of the array elements.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element. May be {@code null}.
+	 * @return If the array contains the specified element.
+	 */
+	// !!! TextScript generated !!!
+	public static <T> boolean containsEqual(T[] array, T element) {
+		return indexOfEqual(array, element, 0) >= 0;
+	}
+	
+	
+	/**
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param <T> The type of the elements.
 	 * @param array The array. May be {@code null}.
@@ -176,8 +290,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param <T> The type of the elements.
 	 * @param array The array. May be {@code null}.
@@ -234,8 +348,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -271,8 +385,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -326,8 +440,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -363,8 +477,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -418,8 +532,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -455,8 +569,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -510,8 +624,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -547,8 +661,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -602,8 +716,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -639,8 +753,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -694,8 +808,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -731,8 +845,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -786,8 +900,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -823,8 +937,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -878,8 +992,8 @@ public class ArrayUtil {
 	
 	
 	/**
-	 * Returns the first index of the specified element in the array
-	 * that is greater than or equal to the {@code startIndex}.
+	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -915,8 +1029,8 @@ public class ArrayUtil {
 	}
 	
 	/**
-	 * Returns the last index of the specified element in the array
-	 * that is less than or equal to the {@code startIndex}.
+	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+	 * {@code array[index] == element} applies.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
 	 * @param element The element.
@@ -970,27 +1084,6 @@ public class ArrayUtil {
 	
 	// txs-end-gen contains
 	
-	/**
-	 * Returns if the specified array contains an element that is equal to the specified element.
-	 * The array {@code null} does not contain any elements.
-	 * @param <T> The type of the array elements.
-	 * @param array The array. May be {@code null}.
-	 * @param element The element. May be {@code null}.
-	 * @return If the array contains an element that is equal to the specified element.
-	 * @see Object#equals(Object)
-	 */
-	public static <T> boolean containsEqual(T[] array, T element) {
-		if (array == null) {
-			return false;
-		}
-		
-		for (T arrEl : array) {
-			if (Objects.equals(element, arrEl)) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	/**
 	 * Concatenates both arrays.
@@ -1064,6 +1157,28 @@ public class ArrayUtil {
 		return target;
 	}
 	
+	/**
+	 * Concatenates the specified collections to a single one.
+	 * The type of the resulting collection is specified by the factory.
+	 * @param <T> The element type.
+	 * @param <C> The type of the resulting collection. Must not be {@code null}.
+	 * @param factory The factory that produces an empty collection.
+	 * @param collections The collections that should be concatenated.
+	 * Must not be {@code null}, but the inner collections may be {@code null}.
+	 * @return A collection that contains all elements of the specified collections.
+	 * The resulting collection is created using the factory.
+	 * If the factory does not return {@code null}, the result is not {@code null}.
+	 */
+	@SafeVarargs
+	public static <T, C extends Collection<T>> C concat(Supplier<C> factory, Collection<? extends T>... collections) {
+		C result = factory.get();
+		for (Collection<? extends T> col : collections) {
+			if (col != null) {
+				result.addAll(col);
+			}
+		}
+		return result;
+	}
 	
 	/* txs-begin concat
 	# for (string type in types) {
@@ -1571,4 +1686,197 @@ public class ArrayUtil {
 		return target;
 	}
 	// txs-end-gen concat
+	
+	
+	/* txs-begin reverse
+# for (string type in types) {
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 # if (type == "T") {
+	 * @param <T> The element type.
+	 # }
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 *$'/';
+	public static $? type=="T" && "<T>"; $type;[] reverse($type;[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			$type; temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+# }
+	 txs-end reverse */
+	// txs-begin-gen reverse
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param <T> The element type.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static <T> T[] reverse(T[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			T temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static int[] reverse(int[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			int temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static long[] reverse(long[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			long temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static byte[] reverse(byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			byte temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static short[] reverse(short[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			short temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static char[] reverse(char[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			char temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static float[] reverse(float[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			float temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static double[] reverse(double[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			double temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static boolean[] reverse(boolean[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			boolean temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	// txs-end-gen reverse
+	
 }

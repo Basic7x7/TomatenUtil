@@ -5,11 +5,15 @@ import static de.tomatengames.util.ArrayUtil.contains;
 import static de.tomatengames.util.ArrayUtil.containsEqual;
 import static de.tomatengames.util.ArrayUtil.indexOf;
 import static de.tomatengames.util.ArrayUtil.lastIndexOf;
+import static de.tomatengames.util.ArrayUtil.reverse;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
@@ -132,6 +136,35 @@ class ArrayUtilTest {
 		assertArrayEquals(ia2, ArrayUtil.concat(null, ia2));
 		
 		assertArrayEquals(ia3, ArrayUtil.concat(null, ia3, null));
+	}
+	
+	@Test
+	void testReverse() {
+		int[] a = { 1, 2, 3, 4, 5 };
+		reverse(a);
+		assertArrayEquals(new int[] {5,4,3,2,1}, a);
+		
+		assertArrayEquals(new int[] {1,2,3}, reverse(new int[] {3,2,1}));
+		assertArrayEquals(new int[] {7,2,9,9}, reverse(new int[] {9,9,2,7}));
+		assertArrayEquals(new int[] {3}, reverse(new int[] {3}));
+		assertArrayEquals(new int[] {5,4,3,2,1,9,8}, reverse(new int[] {8,9,1,2,3,4,5}));
+		
+		assertEquals(null, reverse((int[]) null));
+	}
+	
+	@Test
+	void testConcatCollections() {
+		ArrayList<Integer> list1 = new ArrayList<>();
+		list1.add(5);
+		list1.add(8);
+		list1.add(3);
+		
+		ArrayList<Integer> list2 = new ArrayList<>();
+		list2.add(7);
+		list2.add(8);
+		
+		assertEquals(Arrays.asList(5,8,3,7,8), concat(ArrayList::new, list1, list2));
+		assertEquals(new HashSet<>(Arrays.asList(3,5,7,8)), concat(HashSet::new, list1, list2));
 	}
 	
 	
