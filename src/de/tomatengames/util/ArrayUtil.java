@@ -1,14 +1,17 @@
 /* txs-begin static
 ##
 :inline=$
-final string[] types = ["T", "T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
+final string[] types = ["T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
+final string[] typesWithEqual = ["T", "T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
 ##
 txs-end static */
 
 package de.tomatengames.util;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 /**
  * Provides methods to work with arrays.
@@ -24,7 +27,7 @@ public class ArrayUtil {
 	}
 	
 	/* txs-begin contains
-	# for (string type in types) with (first eq) {
+	# for (string type in typesWithEqual) with (first eq) {
 	
 	/**
 	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
@@ -1154,6 +1157,28 @@ public class ArrayUtil {
 		return target;
 	}
 	
+	/**
+	 * Concatenates the specified collections to a single one.
+	 * The type of the resulting collection is specified by the factory.
+	 * @param <T> The element type.
+	 * @param <C> The type of the resulting collection. Must not be {@code null}.
+	 * @param factory The factory that produces an empty collection.
+	 * @param collections The collections that should be concatenated.
+	 * Must not be {@code null}, but the inner collections may be {@code null}.
+	 * @return A collection that contains all elements of the specified collections.
+	 * The resulting collection is created using the factory.
+	 * If the factory does not return {@code null}, the result is not {@code null}.
+	 */
+	@SafeVarargs
+	public static <T, C extends Collection<T>> C concat(Supplier<C> factory, Collection<? extends T>... collections) {
+		C result = factory.get();
+		for (Collection<? extends T> col : collections) {
+			if (col != null) {
+				result.addAll(col);
+			}
+		}
+		return result;
+	}
 	
 	/* txs-begin concat
 	# for (string type in types) {
