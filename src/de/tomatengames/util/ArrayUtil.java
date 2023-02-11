@@ -1686,4 +1686,197 @@ public class ArrayUtil {
 		return target;
 	}
 	// txs-end-gen concat
+	
+	
+	/* txs-begin reverse
+# for (string type in types) {
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 # if (type == "T") {
+	 * @param <T> The element type.
+	 # }
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 *$'/';
+	public static $? type=="T" && "<T>"; $type;[] reverse($type;[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			$type; temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+# }
+	 txs-end reverse */
+	// txs-begin-gen reverse
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param <T> The element type.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static <T> T[] reverse(T[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			T temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static int[] reverse(int[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			int temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static long[] reverse(long[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			long temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static byte[] reverse(byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			byte temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static short[] reverse(short[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			short temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static char[] reverse(char[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			char temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static float[] reverse(float[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			float temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static double[] reverse(double[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			double temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	/**
+	 * Reverses the specified array inplace.
+	 * If the array is {@code null}, nothing happens and {@code null} is returned.
+	 * @param array The array that should be reversed. May be {@code null}.
+	 * @return The specified array for piping.
+	 */
+	public static boolean[] reverse(boolean[] array) {
+		if (array == null) {
+			return null;
+		}
+		for (int i = 0, j = array.length-1; i < j; i++, j--) {
+			boolean temp = array[i];
+			array[i] = array[j];
+			array[j] = temp;
+		}
+		return array;
+	}
+	
+	// txs-end-gen reverse
+	
 }
