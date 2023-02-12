@@ -11,6 +11,10 @@ import java.util.Comparator;
  */
 public class SortUtil {
 	
+	// Static class
+	private SortUtil() {
+	}
+	
 	/**
 	 * Compares the specified strings case-insensitive.
 	 * If the strings contain numbers, the numbers are compared like numbers and not character-wise.

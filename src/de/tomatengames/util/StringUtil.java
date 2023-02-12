@@ -11,6 +11,10 @@ import java.util.function.IntPredicate;
  */
 public class StringUtil {
 	
+	// Static class
+	private StringUtil() {
+	}
+	
 	/**
 	 * Counts the amount of characters at the beginning of the string
 	 * that match the predicate.

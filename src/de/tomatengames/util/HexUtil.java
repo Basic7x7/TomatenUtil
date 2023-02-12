@@ -16,6 +16,10 @@ import java.nio.file.Path;
 public class HexUtil {
 	private static final char[] hexChars = "0123456789abcdef".toCharArray();
 	
+	// Static class
+	private HexUtil() {
+	}
+	
 	/**
 	 * Returns the hexadecimal character that represents the specified value.
 	 * @param value The value (0-15).

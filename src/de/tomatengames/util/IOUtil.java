@@ -18,6 +18,10 @@ import java.nio.file.Path;
 public class IOUtil {
 	private static final int BUF_SIZE = 8192;
 	
+	// Static class
+	private IOUtil() {
+	}
+	
 	/**
 	 * Writes the 4 bytes of the specified value into the byte array.
 	 * @param value The value.

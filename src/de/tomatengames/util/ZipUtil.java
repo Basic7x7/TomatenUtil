@@ -25,6 +25,10 @@ import java.util.zip.ZipFile;
  */
 public class ZipUtil {
 	
+	// Static class
+	private ZipUtil() {
+	}
+	
 	/**
 	 * Extracts the entries of the specified ZIP file into the specified target directory.
 	 * @param zipFile The ZIP file.
