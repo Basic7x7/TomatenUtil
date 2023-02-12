@@ -1,9 +1,12 @@
 package de.tomatengames.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -360,5 +363,50 @@ public class IOUtil {
 	 */
 	public static void cleanDirectory(Path dir) throws IOException {
 		cleanDirectory(dir, null);
+	}
+	
+	
+	/**
+	 * Writes the specified text to the specified file. The UTF-8 encoding is used.
+	 * If the file does not exist, it is created.
+	 * If the file does already exist, it is overwritten.
+	 * @param path The path to the file that should be written.
+	 * If {@code null}, nothing happens.
+	 * @param text The text that should be written to the file.
+	 * If {@code null}, the empty string {@code ""} is written.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void writeTextFile(Path path, String text) throws IOException {
+		if (path == null) {
+			return;
+		}
+		
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			writer.write(text != null ? text : "");
+			writer.flush();
+		}
+	}
+	
+	/**
+	 * Reads the specified text file into a {@link String}. The UTF-8 encoding is used.
+	 * @param path The path to the file that should be read.
+	 * If {@code null}, the empty string {@code ""} is returned.
+	 * @return The read text. Not {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 * For example, the file does not exist, cannot be read or contains malformed byte sequences.
+	 */
+	public static String readTextFile(Path path) throws IOException {
+		if (path == null) {
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+			int ch;
+			while ((ch = reader.read()) >= 0) {
+				builder.append((char) ch);
+			}
+		}
+		return builder.toString();
 	}
 }
