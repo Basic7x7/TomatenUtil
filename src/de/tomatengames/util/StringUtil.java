@@ -61,7 +61,39 @@ public class StringUtil {
 	 * @return The trimmed string.
 	 */
 	public static String trimFront(String str, char ch) {
-		int n = str.length();
+		int i = countFront(str, ch);
+		return i > 0 ? str.substring(i) : str;
+	}
+	
+	/**
+	 * Removes the first characters from the specified string that match the predicate.
+	 * If the string starts with more than {@code maxRemove} characters that match the predicate,
+	 * only the first {@code maxRemove} characters are removed.
+	 * @param str The string.
+	 * @param predicate The predicate.
+	 * @param maxRemove The maximum number of characters that can be removed.
+	 * @return The trimmed string.
+	 */
+	public static String trimFront(String str, IntPredicate predicate, int maxRemove) {
+		int n = Integer.min(str.length(), maxRemove);
+		int i = 0;
+		while (i < n && predicate.test(str.charAt(i))) {
+			i++;
+		}
+		return i > 0 ? str.substring(i) : str;
+	}
+	
+	/**
+	 * Removes the first characters from the specified string that are equal to the specified character.
+	 * If the string starts with more than {@code maxRemove} characters
+	 * that are equal to the specified character, only the first {@code maxRemove} characters are removed.
+	 * @param str The string.
+	 * @param ch The character that should be removed from the string.
+	 * @param maxRemove The maximum number of characters that can be removed.
+	 * @return The trimmed string.
+	 */
+	public static String trimFront(String str, char ch, int maxRemove) {
+		int n = Integer.min(str.length(), maxRemove);
 		int i = 0;
 		while (i < n && str.charAt(i) == ch) {
 			i++;
