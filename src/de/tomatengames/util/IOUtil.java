@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.function.Predicate;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -318,14 +319,20 @@ public class IOUtil {
 	}
 	
 	/**
-	 * Deletes all files and directories inside the specified directory recursively.
+	 * Deletes files and directories inside the specified directory recursively.
 	 * The specified directory itself is <b>not</b> deleted.
+	 * <p>
+	 * Files inside the specified directory that do not match the predicate are not deleted.
+	 * This only applies for the direct file list of the directory.
+	 * The predicate is <b>not</b> checked recursively.
 	 * <p>
 	 * Symbolic links are not followed.
 	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
+	 * @param filter A predicate to filter the entries in the file list to delete.
+	 * If {@code null}, all files are deleted.
 	 * @throws IOException If an error occurs.
 	 */
-	public static void cleanDirectory(Path dir) throws IOException {
+	public static void cleanDirectory(Path dir, Predicate<Path> filter) throws IOException {
 		// Ignore symbolic links.
 		if (dir == null || Files.isSymbolicLink(dir)) {
 			return;
@@ -335,9 +342,23 @@ public class IOUtil {
 		if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
 			Path[] children = Files.list(dir).toArray(Path[]::new);
 			for (Path child : children) {
-				delete(child);
+				if (filter == null || filter.test(child)) {
+					delete(child);
+				}
 			}
 			return;
 		}
+	}
+	
+	/**
+	 * Deletes all files and directories inside the specified directory recursively.
+	 * The specified directory itself is <b>not</b> deleted.
+	 * <p>
+	 * Symbolic links are not followed.
+	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
+	 * @throws IOException If an error occurs.
+	 */
+	public static void cleanDirectory(Path dir) throws IOException {
+		cleanDirectory(dir, null);
 	}
 }
