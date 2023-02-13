@@ -65,4 +65,23 @@ public class TestUtil {
 		assertEquals(expectedText, readText);
 	}
 	
+	
+	/**
+	 * Asserts that the binary file exists and matches the hexadecimal string.
+	 * @param expectedHex A hex string that represents the expected bytes.
+	 * If {@code null}, the binary file must not exist.
+	 * @param basePath The base path.
+	 * @param path The path to the binary file, relative to the base path.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void assertBinaryFile(String expectedHex, Path basePath, String path) throws IOException {
+		if (expectedHex == null) {
+			assertFileExists(false, basePath, path);
+			return;
+		}
+		assertFileExists(true, basePath, path);
+		String fileHex = HexUtil.fileToHex(basePath.resolve(path));
+		assertEquals(expectedHex.toLowerCase(), fileHex);
+	}
+	
 }
