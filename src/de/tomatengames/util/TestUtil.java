@@ -120,7 +120,7 @@ public class TestUtil {
 	 */
 	public static void assertFileTree(Path expected, Path actual) throws IOException {
 		assertFileTree(expected, actual,
-				p -> p.getFileName().toString().startsWith("."));
+				p -> !p.getFileName().toString().startsWith("."));
 	}
 	
 	private static void assertFileTree(Path expected, Path actual, Path actualRelative, int depth,
