@@ -16,6 +16,10 @@ import java.nio.file.Path;
  */
 public class TestUtil {
 	
+	// Static class
+	private TestUtil() {
+	}
+	
 	/**
 	 * Asserts that the specified file exists if and only if {@code expectedExists} is {@code true}.
 	 * @param expectedExists If the file must exist. If {@code false}, the file must not exist.
