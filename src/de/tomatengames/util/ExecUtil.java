@@ -89,7 +89,7 @@ public class ExecUtil {
 	 * @see #execGet(String[], String[], File)
 	 */
 	public static String execGetOutput(String[] cmd, String[] envp, File dir) throws IOException {
-		ExecGetResult result = execGet(cmd);
+		ExecGetResult result = execGet(cmd, envp, dir);
 		if (result.getExitValue() != 0) {
 			throw new IOException("Command '" + String.join(" ", cmd) + "' returned exit value "
 					+ result.getExitValue() + ". " + "Error stream: " + result.getError());
