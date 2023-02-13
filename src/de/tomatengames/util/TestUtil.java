@@ -3,9 +3,12 @@ package de.tomatengames.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 /**
  * Provides methods that are helpful for JUnit testing.
@@ -82,6 +85,121 @@ public class TestUtil {
 		assertFileExists(true, basePath, path);
 		String fileHex = HexUtil.fileToHex(basePath.resolve(path));
 		assertEquals(expectedHex.toLowerCase(), fileHex);
+	}
+	
+	/**
+	 * Asserts that both specified files or directories are recursively equal.
+	 * If both paths represent files, the content of these files must be equal.
+	 * If both paths are directories, they must have the an equal file list.
+	 * The inner files and directories must also be equal.
+	 * Links are followed.
+	 * @param expected The expected file tree.
+	 * @param actual The actual file tree.
+	 * @param filter A filter that allows to exclude some files from the test.
+	 * Files and directories that do not match this filter can appear arbitrarily in file lists.
+	 * Directories that do not match this filter are not checked recursively.
+	 * Must not be {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void assertFileTree(Path expected, Path actual, Predicate<? super Path> filter) throws IOException {
+		assertFileTree(expected, actual, actual, 0, filter);
+	}
+	
+	/**
+	 * Asserts that both specified files or directories are recursively equal.
+	 * If both paths represent files, the content of these files must be equal.
+	 * If both paths are directories, they must have the an equal file list.
+	 * The inner files and directories must also be equal.
+	 * Links are followed.
+	 * <p>
+	 * Files and directories that start with a {@code "."} are ignored.
+	 * They can appear arbitrarily in file lists and they are not checked recursively.
+	 * @param expected The expected file tree.
+	 * @param actual The actual file tree.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void assertFileTree(Path expected, Path actual) throws IOException {
+		assertFileTree(expected, actual,
+				p -> p.getFileName().toString().startsWith("."));
+	}
+	
+	private static void assertFileTree(Path expected, Path actual, Path actualRelative, int depth,
+			Predicate<? super Path> filter) throws IOException {
+		
+		Path act = actualRelative.relativize(actual);
+		
+		if (!Files.exists(expected)) {
+			if (Files.exists(actual)) {
+				fail(act + " exists unexpectedly.");
+			}
+			return;
+		}
+		
+		if (!Files.exists(actual)) {
+			fail(act + " does not exist.");
+			return;
+		}
+		
+		// Both files exist.
+		
+		if (depth > 0) {
+			assertEquals(expected.getFileName(), actual.getFileName());
+		}
+		
+		if (Files.isDirectory(expected)) {
+			if (Files.isDirectory(actual)) {
+				Path[] expectedFileList = Files.list(expected)
+						.filter(filter).sorted().toArray(Path[]::new);
+				Path[] actualFileList = Files.list(actual)
+						.filter(filter).sorted().toArray(Path[]::new);
+				int n = expectedFileList.length;
+				if (actualFileList.length != n) {
+					String[] expectedNames = Arrays.stream(expectedFileList)
+							.map(Path::getFileName).map(Object::toString).toArray(String[]::new);
+					String[] actualNames = Arrays.stream(actualFileList)
+							.map(Path::getFileName).map(Object::toString).toArray(String[]::new);
+					fail("The file list of " + act + "differs. Expected: "
+							+ Arrays.toString(expectedNames)
+							+ ", actual: " + Arrays.toString(actualNames));
+					return;
+				}
+				
+				for (int i = 0; i < n; i++) {
+					assertFileTree(expectedFileList[i], actualFileList[i], actualRelative,
+							depth++, filter);
+				}
+				return;
+			}
+			fail(act + " is no directory.");
+			return;
+		}
+		
+		if (Files.isDirectory(actual)) {
+			fail(act + " is unexpectedly a directory.");
+			return;
+		}
+		
+		// Both files are regular files.
+		
+		try (BufferedInputStream expectedIn = new BufferedInputStream(Files.newInputStream(expected));
+				BufferedInputStream actualIn = new BufferedInputStream(Files.newInputStream(actual))) {
+			
+			int e, a;
+			while (true) {
+				e = expectedIn.read();
+				a = actualIn.read();
+				
+				if (e == a) {
+					if (e < 0) {
+						return;
+					}
+					continue;
+				}
+				
+				fail("The file content of " + act + " differs.");
+				return;
+			}
+		}
 	}
 	
 }
