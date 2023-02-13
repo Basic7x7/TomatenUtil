@@ -1,1 +1,4 @@
+Version 1.0.1 (2023-02-14)
+* Bugfix (high): ExecUtil.execGetOutput forwards its parameters
+
 Version 1.0 (2023-02-13)
