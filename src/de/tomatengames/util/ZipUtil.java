@@ -25,6 +25,10 @@ import java.util.zip.ZipFile;
  */
 public class ZipUtil {
 	
+	// Static class
+	private ZipUtil() {
+	}
+	
 	/**
 	 * Extracts the entries of the specified ZIP file into the specified target directory.
 	 * @param zipFile The ZIP file.
@@ -51,10 +55,7 @@ public class ZipUtil {
 			entry = entries.nextElement();
 			
 			// Gets the path/name of the entry without the first '/'.
-			String name = entry.getName();
-			if (name.startsWith("/")) {
-				name = name.substring(1);
-			}
+			String name = StringUtil.trimFront(entry.getName(), '/');
 			
 			// Determines the path of the target file.
 			Path target = targetDir.resolve(name).toAbsolutePath().normalize();

@@ -1,12 +1,16 @@
 package de.tomatengames.util;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.function.Predicate;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -17,6 +21,10 @@ import java.nio.file.Path;
  */
 public class IOUtil {
 	private static final int BUF_SIZE = 8192;
+	
+	// Static class
+	private IOUtil() {
+	}
 	
 	/**
 	 * Writes the 4 bytes of the specified value into the byte array.
@@ -314,14 +322,20 @@ public class IOUtil {
 	}
 	
 	/**
-	 * Deletes all files and directories inside the specified directory recursively.
+	 * Deletes files and directories inside the specified directory recursively.
 	 * The specified directory itself is <b>not</b> deleted.
+	 * <p>
+	 * Files inside the specified directory that do not match the predicate are not deleted.
+	 * This only applies for the direct file list of the directory.
+	 * The predicate is <b>not</b> checked recursively.
 	 * <p>
 	 * Symbolic links are not followed.
 	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
+	 * @param filter A predicate to filter the entries in the file list to delete.
+	 * If {@code null}, all files are deleted.
 	 * @throws IOException If an error occurs.
 	 */
-	public static void cleanDirectory(Path dir) throws IOException {
+	public static void cleanDirectory(Path dir, Predicate<Path> filter) throws IOException {
 		// Ignore symbolic links.
 		if (dir == null || Files.isSymbolicLink(dir)) {
 			return;
@@ -331,9 +345,68 @@ public class IOUtil {
 		if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
 			Path[] children = Files.list(dir).toArray(Path[]::new);
 			for (Path child : children) {
-				delete(child);
+				if (filter == null || filter.test(child)) {
+					delete(child);
+				}
 			}
 			return;
 		}
+	}
+	
+	/**
+	 * Deletes all files and directories inside the specified directory recursively.
+	 * The specified directory itself is <b>not</b> deleted.
+	 * <p>
+	 * Symbolic links are not followed.
+	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
+	 * @throws IOException If an error occurs.
+	 */
+	public static void cleanDirectory(Path dir) throws IOException {
+		cleanDirectory(dir, null);
+	}
+	
+	
+	/**
+	 * Writes the specified text to the specified file. The UTF-8 encoding is used.
+	 * If the file does not exist, it is created.
+	 * If the file does already exist, it is overwritten.
+	 * @param path The path to the file that should be written.
+	 * If {@code null}, nothing happens.
+	 * @param text The text that should be written to the file.
+	 * If {@code null}, the empty string {@code ""} is written.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static void writeTextFile(Path path, String text) throws IOException {
+		if (path == null) {
+			return;
+		}
+		
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			writer.write(text != null ? text : "");
+			writer.flush();
+		}
+	}
+	
+	/**
+	 * Reads the specified text file into a {@link String}. The UTF-8 encoding is used.
+	 * @param path The path to the file that should be read.
+	 * If {@code null}, the empty string {@code ""} is returned.
+	 * @return The read text. Not {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 * For example, the file does not exist, cannot be read or contains malformed byte sequences.
+	 */
+	public static String readTextFile(Path path) throws IOException {
+		if (path == null) {
+			return "";
+		}
+		
+		StringBuilder builder = new StringBuilder();
+		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+			int ch;
+			while ((ch = reader.read()) >= 0) {
+				builder.append((char) ch);
+			}
+		}
+		return builder.toString();
 	}
 }

@@ -16,6 +16,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class ExecUtil {
 	
+	// Static class
+	private ExecUtil() {
+	}
+	
 	/**
 	 * Starts a process using {@link Runtime#exec(String[], String[], File)},
 	 * and waits for the process to terminate.

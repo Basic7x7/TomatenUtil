@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  */
 public class ArrayUtil {
 	
-	// Static class.
+	// Static class
 	private ArrayUtil() {
 	}
 	
