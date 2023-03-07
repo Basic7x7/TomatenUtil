@@ -10,6 +10,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +23,9 @@ import de.tomatengames.util.ArrayUtil;
 
 class ArrayUtilTest {
 	private static final A a7 = new A(7);
+	private static final A a1 = new A(1);
+	private static final A a2 = new A(2);
+	private static final A a3 = new A(3);
 	private static final B[] oa1 = { new B(1, 1) };
 	private static final C[] oa2 = { new C(2, "hello") };
 	private static final A[] oa3 = { new B(4, 5), new A(0) };
@@ -166,6 +170,97 @@ class ArrayUtilTest {
 		assertEquals(Arrays.asList(5,8,3,7,8), concat(ArrayList::new, list1, list2));
 		assertEquals(new HashSet<>(Arrays.asList(3,5,7,8)), concat(HashSet::new, list1, list2));
 	}
+	
+	@Test
+	void testAddObject() {
+		A[] a = null;
+		assertArrayEquals(new A[] {a7}, a = ArrayUtil.addFirst(a, a7, A[]::new));
+		assertArrayEquals(new A[] {a7, a7}, a = ArrayUtil.addFirst(a, a7, A[]::new));
+		assertArrayEquals(new A[] {a1, a7, a7}, a = ArrayUtil.addFirst(a, a1, A[]::new));
+		assertArrayEquals(new A[] {a1, a7, a7, a2}, a = ArrayUtil.addLast(a, a2, A[]::new));
+		assertArrayEquals(new A[] {a1, a7, a7, a2, a1}, a = ArrayUtil.addLast(a, a1, A[]::new));
+		assertArrayEquals(new A[] {a1, a7, a3, a7, a2, a1}, a = ArrayUtil.add(a, a3, 2, A[]::new));
+		assertArrayEquals(new A[] {a2, a1, a7, a3, a7, a2, a1}, a = ArrayUtil.add(a, a2, 0, A[]::new));
+		assertArrayEquals(new A[] {a2, a1, a7, a3, a7, a2, a1, a2}, a = ArrayUtil.add(a, a2, a.length, A[]::new));
+		
+		final A[] af = a;
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, a1, -1, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, a2, -27, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, a1, af.length+1, A[]::new));
+		
+		assertArrayEquals(new A[] {a7}, ArrayUtil.addLast(null, a7, A[]::new));
+		assertArrayEquals(new A[] {a7}, ArrayUtil.add(null, a7, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(null, a1, 1, A[]::new));
+		
+		assertArrayEquals(new A[] {a7}, ArrayUtil.add(new A[0], a7, 0, A[]::new));
+		assertArrayEquals(new A[] {a7}, ArrayUtil.addFirst(new A[0], a7, A[]::new));
+		assertArrayEquals(new A[] {a7}, ArrayUtil.addLast(new A[0], a7, A[]::new));
+	}
+	
+	@Test
+	void testRemoveObject() {
+		final A[] a = { a1, a2, a3, a7 };
+		assertArrayEquals(new A[] { a1, a2, a3 }, ArrayUtil.removeIndex(a, 3, A[]::new));
+		assertArrayEquals(new A[] { a1, a3, a7 }, ArrayUtil.removeIndex(a, 1, A[]::new));
+		assertArrayEquals(new A[] { a2, a3, a7 }, ArrayUtil.removeIndex(a, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -1, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -28, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(null, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(new A[] {}, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, a.length, A[]::new));
+		
+		final A[] b = new A[] {a1, new A(7), a2, a3, a7};
+		assertArrayEquals(new A[] { a1, a7, a2, a3 }, ArrayUtil.removeIndex(b, 4, A[]::new));
+		assertArrayEquals(new A[] { a1, a7, a3, a7 }, ArrayUtil.remove(b, a2, A[]::new));
+		assertArrayEquals(new A[] { a1, a7, a2, a3 }, ArrayUtil.remove(b, a7, A[]::new));
+		assertArrayEquals(new A[] { a1, a2, a3, a7 }, ArrayUtil.removeEqual(b, a7, A[]::new));
+		assertArrayEquals(new A[] { a1, a7, a2, a7 }, ArrayUtil.removeEqual(b, a3, A[]::new));
+		assertArrayEquals(b, ArrayUtil.remove(b, new A(10), A[]::new));
+		assertArrayEquals(b, ArrayUtil.removeEqual(b, new A(10), A[]::new));
+	}
+	
+	@Test
+	void testAdd() {
+		int[] a = null;
+		assertArrayEquals(new int[] { 3 }, a = ArrayUtil.addFirst(a, 3));
+		assertArrayEquals(new int[] { 3, 2 }, a = ArrayUtil.addLast(a, 2));
+		assertArrayEquals(new int[] { 1, 3, 2 }, a = ArrayUtil.addFirst(a, 1));
+		assertArrayEquals(new int[] { 1, 3, 4, 2 }, a = ArrayUtil.add(a, 4, 2));
+		assertArrayEquals(new int[] { 5, 1, 3, 4, 2 }, a = ArrayUtil.add(a, 5, 0));
+		assertArrayEquals(new int[] { 5, 1, 3, 4, 2, 6 }, a = ArrayUtil.add(a, 6, 5));
+		assertArrayEquals(new int[] { 5, 7, 1, 3, 4, 2, 6 }, a = ArrayUtil.add(a, 7, 1));
+		assertArrayEquals(new int[] { 5, 7, 1, 3, 4, 2, 6, 8 }, a = ArrayUtil.addLast(a, 8));
+		assertArrayEquals(new int[] { 9, 5, 7, 1, 3, 4, 2, 6, 8 }, a = ArrayUtil.addFirst(a, 9));
+		
+		final int[] af = a;
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 20, 20));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 21, -1));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 22, -30));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add((int[]) null, 5, 1));
+		
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.add((int[]) null, 5, 0));
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.addFirst((int[]) null, 5));
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.addLast((int[]) null, 5));
+	}
+	
+	@Test
+	void testRemove() {
+		final int[] a = { 1, 2, 3, 4 };
+		assertArrayEquals(new int[] { 1, 2, 3 }, ArrayUtil.removeIndex(a, 3));
+		assertArrayEquals(new int[] { 1, 3, 4 }, ArrayUtil.removeIndex(a, 1));
+		assertArrayEquals(new int[] { 2, 3, 4 }, ArrayUtil.removeIndex(a, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -1));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -28));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex((int[]) null, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(new int[] {}, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, a.length));
+		
+		assertArrayEquals(new int[] { 1, 3, 4 }, ArrayUtil.remove(a, 2));
+		assertArrayEquals(new int[] { 1, 2, 3 }, ArrayUtil.remove(a, 4));
+		assertArrayEquals(new int[] { 2, 3, 4 }, ArrayUtil.remove(a, 1));
+		assertArrayEquals(a, ArrayUtil.remove(a, 20));
+	}
+	
 	
 	
 	private static class A {
