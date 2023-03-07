@@ -200,23 +200,65 @@ class ArrayUtilTest {
 	@Test
 	void testRemoveObject() {
 		final A[] a = { a1, a2, a3, a7 };
-		assertArrayEquals(new A[] { a1, a2, a3 }, ArrayUtil.remove(a, 3, A[]::new));
-		assertArrayEquals(new A[] { a1, a3, a7 }, ArrayUtil.remove(a, 1, A[]::new));
-		assertArrayEquals(new A[] { a2, a3, a7 }, ArrayUtil.remove(a, 0, A[]::new));
-		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.remove(a, -1, A[]::new));
-		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.remove(a, -28, A[]::new));
-		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.remove(null, 0, A[]::new));
-		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.remove(new A[] {}, 0, A[]::new));
-		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.remove(a, a.length, A[]::new));
+		assertArrayEquals(new A[] { a1, a2, a3 }, ArrayUtil.removeIndex(a, 3, A[]::new));
+		assertArrayEquals(new A[] { a1, a3, a7 }, ArrayUtil.removeIndex(a, 1, A[]::new));
+		assertArrayEquals(new A[] { a2, a3, a7 }, ArrayUtil.removeIndex(a, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -1, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -28, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(null, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(new A[] {}, 0, A[]::new));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, a.length, A[]::new));
 		
 		final A[] b = new A[] {a1, new A(7), a2, a3, a7};
-		assertArrayEquals(new A[] { a1, a7, a2, a3 }, ArrayUtil.remove(b, 4, A[]::new));
+		assertArrayEquals(new A[] { a1, a7, a2, a3 }, ArrayUtil.removeIndex(b, 4, A[]::new));
 		assertArrayEquals(new A[] { a1, a7, a3, a7 }, ArrayUtil.remove(b, a2, A[]::new));
 		assertArrayEquals(new A[] { a1, a7, a2, a3 }, ArrayUtil.remove(b, a7, A[]::new));
 		assertArrayEquals(new A[] { a1, a2, a3, a7 }, ArrayUtil.removeEqual(b, a7, A[]::new));
 		assertArrayEquals(new A[] { a1, a7, a2, a7 }, ArrayUtil.removeEqual(b, a3, A[]::new));
 		assertArrayEquals(b, ArrayUtil.remove(b, new A(10), A[]::new));
 		assertArrayEquals(b, ArrayUtil.removeEqual(b, new A(10), A[]::new));
+	}
+	
+	@Test
+	void testAdd() {
+		int[] a = null;
+		assertArrayEquals(new int[] { 3 }, a = ArrayUtil.addFirst(a, 3));
+		assertArrayEquals(new int[] { 3, 2 }, a = ArrayUtil.addLast(a, 2));
+		assertArrayEquals(new int[] { 1, 3, 2 }, a = ArrayUtil.addFirst(a, 1));
+		assertArrayEquals(new int[] { 1, 3, 4, 2 }, a = ArrayUtil.add(a, 4, 2));
+		assertArrayEquals(new int[] { 5, 1, 3, 4, 2 }, a = ArrayUtil.add(a, 5, 0));
+		assertArrayEquals(new int[] { 5, 1, 3, 4, 2, 6 }, a = ArrayUtil.add(a, 6, 5));
+		assertArrayEquals(new int[] { 5, 7, 1, 3, 4, 2, 6 }, a = ArrayUtil.add(a, 7, 1));
+		assertArrayEquals(new int[] { 5, 7, 1, 3, 4, 2, 6, 8 }, a = ArrayUtil.addLast(a, 8));
+		assertArrayEquals(new int[] { 9, 5, 7, 1, 3, 4, 2, 6, 8 }, a = ArrayUtil.addFirst(a, 9));
+		
+		final int[] af = a;
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 20, 20));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 21, -1));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add(af, 22, -30));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.add((int[]) null, 5, 1));
+		
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.add((int[]) null, 5, 0));
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.addFirst((int[]) null, 5));
+		assertArrayEquals(new int[] { 5 }, ArrayUtil.addLast((int[]) null, 5));
+	}
+	
+	@Test
+	void testRemove() {
+		final int[] a = { 1, 2, 3, 4 };
+		assertArrayEquals(new int[] { 1, 2, 3 }, ArrayUtil.removeIndex(a, 3));
+		assertArrayEquals(new int[] { 1, 3, 4 }, ArrayUtil.removeIndex(a, 1));
+		assertArrayEquals(new int[] { 2, 3, 4 }, ArrayUtil.removeIndex(a, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -1));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, -28));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex((int[]) null, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(new int[] {}, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> ArrayUtil.removeIndex(a, a.length));
+		
+		assertArrayEquals(new int[] { 1, 3, 4 }, ArrayUtil.remove(a, 2));
+		assertArrayEquals(new int[] { 1, 2, 3 }, ArrayUtil.remove(a, 4));
+		assertArrayEquals(new int[] { 2, 3, 4 }, ArrayUtil.remove(a, 1));
+		assertArrayEquals(a, ArrayUtil.remove(a, 20));
 	}
 	
 	

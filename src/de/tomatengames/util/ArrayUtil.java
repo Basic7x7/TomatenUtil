@@ -1987,8 +1987,9 @@ public class ArrayUtil {
 	 * @return A new array without the element at the specified index. Not {@code null}.
 	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
 	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
 	 */
-	public static <T> T[] remove(T[] array, int index, IntFunction<T[]> arrayFactory) {
+	public static <T> T[] removeIndex(T[] array, int index, IntFunction<T[]> arrayFactory) {
 		if (array == null) {
 			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
 		}
@@ -2024,7 +2025,7 @@ public class ArrayUtil {
 		if (index < 0) {
 			return array;
 		}
-		return remove(array, index, arrayFactory);
+		return removeIndex(array, index, arrayFactory);
 	}
 	
 	/**
@@ -2047,7 +2048,7 @@ public class ArrayUtil {
 		if (index < 0) {
 			return array;
 		}
-		return remove(array, index, arrayFactory);
+		return removeIndex(array, index, arrayFactory);
 	}
 	
 	/* txs-begin addElement
@@ -2057,12 +2058,1199 @@ for (string type in types) {
 		continue;
 	}
 	##
-	public static $type[]; add($type;[] array, $type; el, int index) {
-		// TODO
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] add($type;[] array, $type; el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new $type;[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		$type;[] newArray = new $type;[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
 	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] addFirst($type;[] array, $type; el) {
+		if (array == null) {
+			return new $type;[] { el };
+		}
+		int n = array.length;
+		$type;[] newArray = new $type;[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] addLast($type;[] array, $type; el) {
+		if (array == null) {
+			return new $type;[] { el };
+		}
+		int n = array.length;
+		$type;[] newArray = new $type;[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] removeIndex($type;[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		$type;[] newArray = new $type;[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 *$'/';
+	// $txsinfo();
+	public static $type;[] remove($type;[] array, $type; el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
 	##
 }
 ##
 	txs-end addElement */
+	// txs-begin-gen addElement
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static int[] add(int[] array, int el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new int[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		int[] newArray = new int[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static int[] addFirst(int[] array, int el) {
+		if (array == null) {
+			return new int[] { el };
+		}
+		int n = array.length;
+		int[] newArray = new int[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static int[] addLast(int[] array, int el) {
+		if (array == null) {
+			return new int[] { el };
+		}
+		int n = array.length;
+		int[] newArray = new int[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static int[] removeIndex(int[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		int[] newArray = new int[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static int[] remove(int[] array, int el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static long[] add(long[] array, long el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new long[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		long[] newArray = new long[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static long[] addFirst(long[] array, long el) {
+		if (array == null) {
+			return new long[] { el };
+		}
+		int n = array.length;
+		long[] newArray = new long[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static long[] addLast(long[] array, long el) {
+		if (array == null) {
+			return new long[] { el };
+		}
+		int n = array.length;
+		long[] newArray = new long[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static long[] removeIndex(long[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		long[] newArray = new long[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static long[] remove(long[] array, long el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] add(byte[] array, byte el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new byte[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		byte[] newArray = new byte[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] addFirst(byte[] array, byte el) {
+		if (array == null) {
+			return new byte[] { el };
+		}
+		int n = array.length;
+		byte[] newArray = new byte[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] addLast(byte[] array, byte el) {
+		if (array == null) {
+			return new byte[] { el };
+		}
+		int n = array.length;
+		byte[] newArray = new byte[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] removeIndex(byte[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		byte[] newArray = new byte[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static byte[] remove(byte[] array, byte el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static short[] add(short[] array, short el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new short[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		short[] newArray = new short[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static short[] addFirst(short[] array, short el) {
+		if (array == null) {
+			return new short[] { el };
+		}
+		int n = array.length;
+		short[] newArray = new short[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static short[] addLast(short[] array, short el) {
+		if (array == null) {
+			return new short[] { el };
+		}
+		int n = array.length;
+		short[] newArray = new short[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static short[] removeIndex(short[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		short[] newArray = new short[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static short[] remove(short[] array, short el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static char[] add(char[] array, char el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new char[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		char[] newArray = new char[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static char[] addFirst(char[] array, char el) {
+		if (array == null) {
+			return new char[] { el };
+		}
+		int n = array.length;
+		char[] newArray = new char[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static char[] addLast(char[] array, char el) {
+		if (array == null) {
+			return new char[] { el };
+		}
+		int n = array.length;
+		char[] newArray = new char[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static char[] removeIndex(char[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		char[] newArray = new char[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static char[] remove(char[] array, char el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static float[] add(float[] array, float el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new float[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		float[] newArray = new float[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static float[] addFirst(float[] array, float el) {
+		if (array == null) {
+			return new float[] { el };
+		}
+		int n = array.length;
+		float[] newArray = new float[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static float[] addLast(float[] array, float el) {
+		if (array == null) {
+			return new float[] { el };
+		}
+		int n = array.length;
+		float[] newArray = new float[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static float[] removeIndex(float[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		float[] newArray = new float[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static float[] remove(float[] array, float el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static double[] add(double[] array, double el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new double[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		double[] newArray = new double[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static double[] addFirst(double[] array, double el) {
+		if (array == null) {
+			return new double[] { el };
+		}
+		int n = array.length;
+		double[] newArray = new double[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static double[] addLast(double[] array, double el) {
+		if (array == null) {
+			return new double[] { el };
+		}
+		int n = array.length;
+		double[] newArray = new double[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static double[] removeIndex(double[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		double[] newArray = new double[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static double[] remove(double[] array, double el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] add(boolean[] array, boolean el, int index) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			return new boolean[] { el };
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		boolean[] newArray = new boolean[n+1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] addFirst(boolean[] array, boolean el) {
+		if (array == null) {
+			return new boolean[] { el };
+		}
+		int n = array.length;
+		boolean[] newArray = new boolean[n+1];
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] addLast(boolean[] array, boolean el) {
+		if (array == null) {
+			return new boolean[] { el };
+		}
+		int n = array.length;
+		boolean[] newArray = new boolean[n+1];
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] removeIndex(boolean[] array, int index) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		
+		boolean[] newArray = new boolean[n-1];
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	// !!! TextScript generated !!!
+	public static boolean[] remove(boolean[] array, boolean el) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return removeIndex(array, index);
+	}
+	
+	
+	// txs-end-gen addElement
 	
 }
