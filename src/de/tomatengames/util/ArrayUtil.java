@@ -1879,4 +1879,190 @@ public class ArrayUtil {
 	
 	// txs-end-gen reverse
 	
+	
+	/**
+	 * Copies the array and inserts the specified element at the specified index.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted. May be {@code null}.
+	 * @param index The index where the element should be inserted.
+	 * Must not be negative and must not be greater than {@code array.length}.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+	 * @since 1.1
+	 */
+	public static <T> T[] add(T[] array, T el, int index, IntFunction<T[]> arrayFactory) {
+		if (array == null) {
+			if (index != 0) {
+				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+			}
+			T[] newArray = arrayFactory.apply(1);
+			newArray[0] = el;
+			return newArray;
+		}
+		
+		int n = array.length;
+		if (index < 0 || index > n) {
+			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		}
+		
+		T[] newArray = arrayFactory.apply(n+1);
+		System.arraycopy(array, 0, newArray, 0, index);
+		newArray[index] = el;
+		System.arraycopy(array, index, newArray, index+1, n-index);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element to the front.
+	 * The resulting array is
+	 * <pre>
+	 * [el, array...]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted. May be {@code null}.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array that contains the specified element and all elements from the specified array.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	public static <T> T[] addFirst(T[] array, T el, IntFunction<T[]> arrayFactory) {
+		if (array == null) {
+			T[] newArray = arrayFactory.apply(1);
+			newArray[0] = el;
+			return newArray;
+		}
+		int n = array.length;
+		T[] newArray = arrayFactory.apply(n+1);
+		newArray[0] = el;
+		System.arraycopy(array, 0, newArray, 1, n);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array and inserts the specified element at the end.
+	 * The resulting array is
+	 * <pre>
+	 * [array..., el]
+	 * </pre>
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be inserted. May be {@code null}.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array that contains all elements from the specified array and the specified element.
+	 * Not {@code null}.
+	 * @since 1.1
+	 */
+	public static <T> T[] addLast(T[] array, T el, IntFunction<T[]> arrayFactory) {
+		if (array == null) {
+			T[] newArray = arrayFactory.apply(1);
+			newArray[0] = el;
+			return newArray;
+		}
+		int n = array.length;
+		T[] newArray = arrayFactory.apply(n+1);
+		System.arraycopy(array, 0, newArray, 0, n);
+		newArray[n] = el;
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the specified index.
+	 * The result is an array with one element less.
+	 * If the array is {@code null}, it is handled like an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param index The index that should be removed. Must be in range.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array without the element at the specified index. Not {@code null}.
+	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+	 * Occurs always if the array is empty or {@code null}.
+	 */
+	public static <T> T[] remove(T[] array, int index, IntFunction<T[]> arrayFactory) {
+		if (array == null) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+		}
+		int n = array.length;
+		if (index < 0 || index >= n) {
+			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		}
+		// ==> n >= 1
+		
+		T[] newArray = arrayFactory.apply(n-1);
+		System.arraycopy(array, 0, newArray, 0, index);
+		System.arraycopy(array, index+1, newArray, index, n-index-1);
+		return newArray;
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance of the specified element.
+	 * The result is an array with one element less if the array contains the specified element.
+	 * If the array does not contain the specified element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed. May be {@code null}.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array without the first appearance of the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	public static <T> T[] remove(T[] array, T el, IntFunction<T[]> arrayFactory) {
+		int index = indexOf(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return remove(array, index, arrayFactory);
+	}
+	
+	/**
+	 * Copies the array, but skips the first appearance an element that is equal to the specified element.
+	 * The result is an array with one element less if the array contains such an element.
+	 * If the array does not contain such an element, the input array is returned and not copied.
+	 * To find out if an element was removed, the length of the input array and the result array can be compared.
+	 * If the array is {@code null}, it is handled as an empty array.
+	 * @param <T> The element type.
+	 * @param array The array. May be {@code null}.
+	 * @param el The element that should be removed. May be {@code null}.
+	 * @param arrayFactory A factory that creates arrays of a given size.
+	 * Should be implemented like {@code T[]::new}.
+	 * @return A new array without the first appearance of an element that is equal to the specified element.
+	 * Might be {@code null} if the input array is {@code null}.
+	 * @since 1.1
+	 */
+	public static <T> T[] removeEqual(T[] array, T el, IntFunction<T[]> arrayFactory) {
+		int index = indexOfEqual(array, el);
+		if (index < 0) {
+			return array;
+		}
+		return remove(array, index, arrayFactory);
+	}
+	
+	/* txs-begin addElement
+##
+for (string type in types) {
+	if (type == "T") {
+		continue;
+	}
+	##
+	public static $type[]; add($type;[] array, $type; el, int index) {
+		// TODO
+	}
+	##
+}
+##
+	txs-end addElement */
+	
 }
