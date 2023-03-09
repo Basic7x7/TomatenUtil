@@ -173,7 +173,7 @@ public class StringUtil {
 		int n = str.length();
 		int m = prefix.length();
 		// false, if the offset is out of range or the prefix does not fit in the string.
-		if (offset < 0 || offset >= n || offset+m > n) {
+		if (offset < 0 || offset+m > n) {
 			return false;
 		}
 		return startsWithIgnoreCaseUnchecked(str, prefix, offset, m);
@@ -238,7 +238,8 @@ public class StringUtil {
 			return false;
 		}
 		
-		for (int i = n-m; i >= 0; i--) {
+		int lastStartIndex = n-m;
+		for (int i = 0; i <= lastStartIndex; i++) {
 			if (startsWithIgnoreCaseUnchecked(str, substr, i, m)) {
 				return true;
 			}
