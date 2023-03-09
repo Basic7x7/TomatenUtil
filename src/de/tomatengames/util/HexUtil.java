@@ -211,6 +211,7 @@ public class HexUtil {
 	 * @return An {@code int} that represents the hex string.
 	 * @throws NullPointerException If the hex string is {@code null}.
 	 * @throws IllegalArgumentException If the hex string is too large or contains non-hexadecimal characters.
+	 * @since 1.1
 	 */
 	public static int hexToInt(String hexString) {
 		int n = hexString.length();

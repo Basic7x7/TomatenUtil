@@ -12,9 +12,16 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.junit.jupiter.api.Test;
 
+import de.tomatengames.util.HexUtil;
+
 class HexUtilTest {
+	private static final Path dir = Paths.get("test/hexutil");
 	
 	@Test
 	void testToHexChar() {
@@ -143,6 +150,14 @@ class HexUtilTest {
 		assertThrows(IllegalArgumentException.class, () -> hexToLong("fffffffffffffffff")); // Too long
 		assertThrows(IllegalArgumentException.class, () -> hexToLong("12G3"));
 		assertThrows(NullPointerException.class, () -> hexToLong(null));
+	}
+	
+	@Test
+	void testHexFile() throws IOException {
+		assertEquals("48656c6c6f", HexUtil.fileToHex(dir.resolve("1.txt")));
+		assertEquals("6120746573742066696c65", HexUtil.fileToHex(dir.resolve("2.txt")));
+		assertEquals("30313233343536373839", HexUtil.fileToHex(dir.resolve("3.txt")));
+		assertThrows(NullPointerException.class, () -> HexUtil.fileToHex(null));
 	}
 	
 }
