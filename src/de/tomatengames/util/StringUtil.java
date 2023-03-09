@@ -139,4 +139,111 @@ public class StringUtil {
 		}
 		return count;
 	}
+	
+	
+	private static boolean startsWithIgnoreCaseUnchecked(String str, String prefix, int offset, int length) {
+		for (int i = 0; i < length; i++) {
+			char ch1 = str.charAt(offset+i);
+			char ch2 = prefix.charAt(i);
+			if (Character.toLowerCase(ch1) != Character.toLowerCase(ch2)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Returns if the string starts with the specified prefix at the specified index.
+	 * The case of both strings is ignored.
+	 * <p>
+	 * The string {@code null} does not start with any prefix.
+	 * No string starts with the prefix {@code null}.
+	 * In particular, the string {@code null} does not start with the prefix {@code null}.
+	 * @param str The string. May be {@code null}.
+	 * @param prefix The prefix. May be {@code null}.
+	 * @param offset The index where the prefix should start in the specified string.
+	 * @return If the string starts with the specified prefix at the specified index.
+	 * If the specified offset is out of range, {@code false} is returned.
+	 * @since 1.1
+	 */
+	public static boolean startsWithIgnoreCase(String str, String prefix, int offset) {
+		if (str == null || prefix == null) {
+			return false;
+		}
+		int n = str.length();
+		int m = prefix.length();
+		// false, if the offset is out of range or the prefix does not fit in the string.
+		if (offset < 0 || offset+m > n) {
+			return false;
+		}
+		return startsWithIgnoreCaseUnchecked(str, prefix, offset, m);
+	}
+	
+	/**
+	 * Returns if the string starts with the specified prefix.
+	 * The case of both strings is ignored.
+	 * <p>
+	 * The string {@code null} does not start with any prefix.
+	 * No string starts with the prefix {@code null}.
+	 * In particular, the string {@code null} does not start with the prefix {@code null}.
+	 * @param str The string. May be {@code null}.
+	 * @param prefix The prefix. May be {@code null}.
+	 * @return If the string starts with the specified prefix.
+	 * @since 1.1
+	 */
+	public static boolean startsWithIgnoreCase(String str, String prefix) {
+		return startsWithIgnoreCase(str, prefix, 0);
+	}
+	
+	/**
+	 * Returns if the string ends with the specified suffix.
+	 * The case of both strings is ignored.
+	 * <p>
+	 * The string {@code null} does not start with any suffix.
+	 * No string ends with the suffix {@code null}.
+	 * In particular, the string {@code null} does not end with the suffix {@code null}.
+	 * @param str The string. May be {@code null}.
+	 * @param suffix The suffix. May be {@code null}.
+	 * @return If the string ends with the specified suffix.
+	 * @since 1.1
+	 */
+	public static boolean endsWithIgnoreCase(String str, String suffix) {
+		if (str == null || suffix == null) {
+			return false;
+		}
+		return startsWithIgnoreCase(str, suffix, str.length()-suffix.length());
+	}
+	
+	/**
+	 * Returns if the string contains the specified substring.
+	 * The strings are compared case-insensitive.
+	 * <p>
+	 * The string {@code null} does not contain any substring.
+	 * No string contains the substring {@code null}.
+	 * In particular, the string {@code null} does not contain the substring {@code null}.
+	 * @param str The string. May be {@code null}.
+	 * @param substr The substring. May be {@code null}.
+	 * @return If the string contains the specified substring.
+	 * @since 1.1
+	 */
+	public static boolean containsIgnoreCase(String str, String substr) {
+		// The string null does not contain any strings and the string null is not contained by any string.
+		if (str == null || substr == null) {
+			return false;
+		}
+		int n = str.length();
+		int m = substr.length();
+		// The string cannot contain a larger string.
+		if (m > n) {
+			return false;
+		}
+		
+		int lastStartIndex = n-m;
+		for (int i = 0; i <= lastStartIndex; i++) {
+			if (startsWithIgnoreCaseUnchecked(str, substr, i, m)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
