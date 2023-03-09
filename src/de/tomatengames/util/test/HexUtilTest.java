@@ -2,6 +2,7 @@ package de.tomatengames.util.test;
 
 import static de.tomatengames.util.HexUtil.bytesToHex;
 import static de.tomatengames.util.HexUtil.hexToBytes;
+import static de.tomatengames.util.HexUtil.hexToInt;
 import static de.tomatengames.util.HexUtil.hexToLong;
 import static de.tomatengames.util.HexUtil.intToHex;
 import static de.tomatengames.util.HexUtil.longToHex;
@@ -115,15 +116,29 @@ class HexUtilTest {
 	
 	@Test
 	void testHexToInt() {
+		assertEquals(0, hexToInt("00000000"));
+		assertEquals(0, hexToInt("0"));
+		assertEquals(1, hexToInt("1"));
+		assertEquals(16, hexToInt("10"));
+		assertEquals(49, hexToInt("31"));
+		assertEquals(49, hexToInt("000031"));
+		assertEquals(-1, hexToInt("ffffffff"));
+		assertEquals(0x240DB2F5L, hexToInt("240DB2f5"));
+		assertEquals(0xD7BB6400, hexToInt("d7bB6400"));
+		assertEquals(0x6DC2BF7B, hexToInt("6DC2BF7B"));
+		assertThrows(IllegalArgumentException.class, () -> hexToInt("fffffffff")); // Too long
+		assertThrows(IllegalArgumentException.class, () -> hexToInt("12G3"));
+		assertThrows(NullPointerException.class, () -> hexToInt(null));
+		
 		assertEquals(0L, hexToLong("0000000000000000"));
 		assertEquals(0L, hexToLong("0"));
 		assertEquals(1L, hexToLong("1"));
 		assertEquals(16L, hexToLong("10"));
 		assertEquals(49L, hexToLong("31"));
 		assertEquals(49L, hexToLong("000031"));
-		assertEquals(-1L, hexToLong("ffffffffffffffff"));
+		assertEquals(-1L, hexToLong("ffffffFfffFfffff"));
 		assertEquals(0x240DB2F5L, hexToLong("240db2f5"));
-		assertEquals(0x5318DE851CB8A076L, hexToLong("5318de851cb8a076"));
+		assertEquals(0x5318DE851CB8A076L, hexToLong("5318de851CB8a076"));
 		assertEquals(0xF37830E799B7F3C4L, hexToLong("f37830e799b7f3c4"));
 		assertThrows(IllegalArgumentException.class, () -> hexToLong("fffffffffffffffff")); // Too long
 		assertThrows(IllegalArgumentException.class, () -> hexToLong("12G3"));
