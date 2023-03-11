@@ -16,7 +16,7 @@ import de.tomatengames.util.HashUtil;
 import de.tomatengames.util.HexUtil;
 
 class HashUtilTest {
-	private static final Path dir = Paths.get("test/hashutil");
+	private static final Path dir = Paths.get("testdata/hashutil");
 	
 	@Test
 	void testGet() {

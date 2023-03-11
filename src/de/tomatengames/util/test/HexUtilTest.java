@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import de.tomatengames.util.HexUtil;
 
 class HexUtilTest {
-	private static final Path dir = Paths.get("test/hexutil");
+	private static final Path dir = Paths.get("testdata/hexutil");
 	
 	@Test
 	void testToHexChar() {
