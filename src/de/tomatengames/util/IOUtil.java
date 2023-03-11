@@ -3,9 +3,6 @@ package de.tomatengames.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInput;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -314,6 +311,68 @@ public class IOUtil {
 		readFully(in, arr, 0, arr.length);
 	}
 	
+	/**
+	 * Writes the specified {@link String} to the {@link OutputStream}.
+	 * <p>
+	 * The first 4 bytes represent the amount of bytes of the string.
+	 * These bytes are followed by the UTF-8 byte representation of the string.
+	 * If the string is {@code null}, the first 4 bytes represent {@code -1} and no further bytes are written.
+	 * @param str The string that should be written. May be {@code null}.
+	 * @param out The output stream. Must not be {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 * @see #readString(InputStream)
+	 * @since 1.1
+	 */
+	public static void writeString(String str, OutputStream out) throws IOException {
+		if (str == null) {
+			writeInt(-1, out);
+			return;
+		}
+		byte[] utf = str.getBytes(StandardCharsets.UTF_8);
+		writeInt(utf.length, out);
+		out.write(utf);
+	}
+	
+	/**
+	 * Reads a {@link String} from the specified {@link InputStream}.
+	 * This method uses the protocol specified by {@link #writeString(String, OutputStream)}.
+	 * @param in The input stream. Must not be {@code null}.
+	 * @param byteLengthLimit The maximum amount of bytes that represent the string.
+	 * This parameter should be used if the input stream is not trusted.
+	 * @return The read string.
+	 * @throws IOException If an I/O error occurs or the byte length is exceeded.
+	 * @throws EOFException If the input streams ends before the string is fully read.
+	 * @see #writeString(String, OutputStream)
+	 * @see #readString(InputStream)
+	 * @since 1.1
+	 */
+	public static String readString(InputStream in, int byteLengthLimit) throws IOException {
+		int n = readInt(in);
+		if (n < 0) {
+			return null;
+		}
+		if (n > byteLengthLimit) {
+			throw new IOException("Byte length limit exceeded! Limit: " + byteLengthLimit + ", Found: " + n);
+		}
+		byte[] utf = new byte[n];
+		readFully(in, utf);
+		return new String(utf, StandardCharsets.UTF_8);
+	}
+	
+	/**
+	 * Reads a {@link String} from the specified {@link InputStream}.
+	 * This method uses the protocol specified by {@link #writeString(String, OutputStream)}.
+	 * @param in The input stream. Must not be {@code null}.
+	 * @return The read string.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws EOFException If the input streams ends before the string is fully read.
+	 * @see #writeString(String, OutputStream)
+	 * @see #readString(InputStream, int)
+	 * @since 1.1
+	 */
+	public static String readString(InputStream in) throws IOException {
+		return readString(in, Integer.MAX_VALUE);
+	}
 	
 	
 	/**
