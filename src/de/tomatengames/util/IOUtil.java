@@ -2,6 +2,7 @@ package de.tomatengames.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -408,5 +409,46 @@ public class IOUtil {
 			}
 		}
 		return builder.toString();
+	}
+	
+	/**
+	 * Writes the specified bytes to the specified file.
+	 * If the file does not exist, it is created.
+	 * If the file does already exist, it is overwritten.
+	 * @param path The path to the file that should be written.
+	 * If {@code null}, nothing happens.
+	 * @param bytes The bytes that should be written to the file.
+	 * If {@code null}, the file will be empty.
+	 * @throws IOException If an I/O error occurs.
+	 * @since 1.1
+	 */
+	public static void writeBinaryFile(Path path, byte[] bytes) throws IOException {
+		if (path == null) {
+			return;
+		}
+		try (OutputStream out = Files.newOutputStream(path)) {
+			if (bytes != null) {
+				out.write(bytes);
+			}
+			out.flush();
+		}
+	}
+	
+	/**
+	 * Reads alls bytes of the specified file and returns them as a byte array.
+	 * @param path The path to the file that should be read.
+	 * If {@code null}, an empty byte array is returned.
+	 * @return The read bytes. Not {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 */
+	public static byte[] readBinaryFile(Path path) throws IOException {
+		if (path == null) {
+			return new byte[0];
+		}
+		try (InputStream in = Files.newInputStream(path);
+				ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
+			pipeStream(in, bout);
+			return bout.toByteArray();
+		}
 	}
 }
