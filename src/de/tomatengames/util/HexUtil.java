@@ -200,4 +200,30 @@ public class HexUtil {
 		return value;
 	}
 	
+	/**
+	 * Reads the specified hexadecimal string into an {@code int}.
+	 * Each character represents 4 bits of the result.
+	 * The last character of the string represents the least significant bits.
+	 * <p>
+	 * Note: A {@code '-'} sign is not allowed.
+	 * @param hexString The hexadecimal string. Must not be {@code null}.
+	 * Must not be larger than 8 characters.
+	 * @return An {@code int} that represents the hex string.
+	 * @throws NullPointerException If the hex string is {@code null}.
+	 * @throws IllegalArgumentException If the hex string is too large or contains non-hexadecimal characters.
+	 * @since 1.1
+	 */
+	public static int hexToInt(String hexString) {
+		int n = hexString.length();
+		if (n > Integer.BYTES*2) {
+			throw new IllegalArgumentException("Hex string is too large to be stored as a 32 bit integer!");
+		}
+		int value = 0;
+		for (int i = 0; i < n; i++) {
+			int b = parseHexChar(hexString.charAt(n-1-i));
+			value |= b << (4*i);
+		}
+		return value;
+	}
+	
 }

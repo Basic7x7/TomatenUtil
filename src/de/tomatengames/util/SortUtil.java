@@ -6,7 +6,9 @@ import java.util.Comparator;
  * Provides {@link Comparator} functions.
  * 
  * @author Basic7x7
- * @version 2023-02-11
+ * @version
+ * 2023-03-09 last modified<br>
+ * 2023-02-11 created
  * @since 1.0
  */
 public class SortUtil {
@@ -25,11 +27,19 @@ public class SortUtil {
 	 * compare("Test1", "Test2") => "Test1" < "Test2"
 	 * compare("Test11", "Test2") => "Test11" > "Test2"
 	 * </pre>
-	 * @param s1 The first string.
-	 * @param s2 The second string.
+	 * The string {@code null} is before all other strings.
+	 * @param s1 The first string. May be {@code null}.
+	 * @param s2 The second string. May be {@code null}.
 	 * @return {@code -1} if {@code s1<s2}, {@code 1} if {@code s1>s2} or {@code 0} if {@code s1=s2}.
 	 */
 	public static int compareNumberPreserving(String s1, String s2) {
+		if (s1 == null) {
+			return s2 == null ? 0 : -1;
+		}
+		else if (s2 == null) {
+			return 1;
+		}
+		
 		int n1 = s1.length();
 		int n2 = s2.length();
 		

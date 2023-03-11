@@ -66,6 +66,50 @@ public class HashUtil {
 	}
 	
 	/**
+	 * Returns a {@link MessageDigest} object that implements the MD5 algorithm.
+	 * @return The {@link MessageDigest} object.
+	 * @throws IllegalArgumentException If the MD5 algorithm is not supported by this runtime.
+	 * All Java platforms before Java 14 are required to support this algorithm.
+	 * @see #get(String)
+	 * @since 1.1
+	 */
+	public static MessageDigest getMD5() {
+		return get(MD5);
+	}
+	
+	/**
+	 * Returns a {@link MessageDigest} object that implements the SHA-1 algorithm.
+	 * @return The {@link MessageDigest} object.
+	 * @see #get(String)
+	 * @since 1.1
+	 */
+	public static MessageDigest getSHA1() {
+		return get(SHA1); // SHA1 must be supported ==> no IllegalArgumentException
+	}
+	
+	/**
+	 * Returns a {@link MessageDigest} object that implements the SHA-256 algorithm.
+	 * @return The {@link MessageDigest} object.
+	 * @see #get(String)
+	 * @since 1.1
+	 */
+	public static MessageDigest getSHA256() {
+		return get(SHA256); // SHA256 must be supported ==> no IllegalArgumentException
+	}
+	
+	/**
+	 * Returns a {@link MessageDigest} object that implements the SHA-512 algorithm.
+	 * @return The {@link MessageDigest} object.
+	 * @throws IllegalArgumentException If the SHA-512 algorithm is not supported by this runtime.
+	 * @see #get(String)
+	 * @since 1.1
+	 */
+	public static MessageDigest getSHA512() {
+		return get(SHA512);
+	}
+	
+	
+	/**
 	 * Calculates the hash of the specified bytes and returns it.
 	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
 	 * @param bytes The bytes that should be hashed.
