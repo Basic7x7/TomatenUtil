@@ -3,6 +3,9 @@ package de.tomatengames.util;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -273,6 +276,44 @@ public class IOUtil {
 		}
 		return b;
 	}
+	
+	
+	/**
+	 * Reads exactly {@code len} bytes from the {@link InputStream} into the specified byte array.
+	 * {@code off} is the first byte array index that is written.
+	 * @param in The input stream. Must not be {@code null}.
+	 * @param arr The array to write the read data in. Must not be {@code null}.
+	 * @param off The first index of the byte array that should be written.
+	 * @param len The amount of bytes to read. If negative, no bytes are read.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws EOFException If the input stream reaches the end before reading {@code len} bytes.
+	 * @since 1.1
+	 */
+	public static void readFully(InputStream in, byte[] arr, int off, int len) throws IOException {
+		int rest = len;
+		int index = off;
+		while (rest > 0) {
+			int n = in.read(arr, index, rest);
+			if (n < 0) {
+				throw new EOFException("The byte array could not be read fully!");
+			}
+			index += n;
+			rest -= n;
+		}
+	}
+	
+	/**
+	 * Reads exactly {@code arr.length} bytes from the {@link InputStream} into the specified byte array.
+	 * @param in The input stream. Must not be {@code null}.
+	 * @param arr The array to write the read data in. Must not be {@code null}.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws EOFException If the input stream reaches the end before reading {@code arr.length} bytes.
+	 * @since 1.1
+	 */
+	public static void readFully(InputStream in, byte[] arr) throws IOException {
+		readFully(in, arr, 0, arr.length);
+	}
+	
 	
 	
 	/**
