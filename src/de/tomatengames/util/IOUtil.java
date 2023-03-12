@@ -11,10 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -377,116 +374,6 @@ public class IOUtil {
 		return readString(in, Integer.MAX_VALUE);
 	}
 	
-	
-	/**
-	 * Writes the specified array to the {@link OutputStream}.
-	 * <p>
-	 * If the array is {@code null}, 4 bytes are written representing {@code -1}.
-	 * If the array not not {@code null}, 4 bytes are written representing the length of the array.
-	 * After that, the specified {@link ElementWriter} is called for each element in the array.
-	 * @param <T> The type of the array elements.
-	 * @param arr The array that should be written. May be {@code null}.
-	 * The elements in the array may be {@code null} if the {@link ElementWriter} supports {@code null} elements.
-	 * @param out The output stream. Must not be {@code null}.
-	 * @param writer The writer that specifies how to write the array elements. Must not be {@code null}.
-	 * @throws IOException If an I/O error occurs.
-	 * @see #readArray(InputStream, ElementReader, IntFunction)
-	 * @since 1.1
-	 */
-	public static <T> void writeArray(T[] arr, OutputStream out, ElementWriter<? super T> writer) throws IOException {
-		if (arr == null) {
-			writeInt(-1, out);
-			return;
-		}
-		int n = arr.length;
-		writeInt(n, out);
-		for (int i = 0; i < n; i++) {
-			writer.write(arr[i], out);
-		}
-	}
-	
-	/**
-	 * Reads an array from the {@link InputStream}.
-	 * The protocol specified by {@link #writeArray(Object[], OutputStream, ElementWriter)} is used.
-	 * The {@link ElementReader} is called {@code n} times to read all elements of the array.
-	 * @param <T> The type of the array elements.
-	 * @param in The input stream. Must not be {@code null}.
-	 * @param reader The reader that specifies how to read the array elements. Must not be {@code null}.
-	 * @param arrayFactory An factory that produces arrays of a given length. Must not be {@code null}.
-	 * @param lengthLimit The maximum length of the array that should be read.
-	 * This parameter should be used if the input stream is not trusted.
-	 * @return The read array. May be {@code null}.
-	 * @throws IOException If an I/O error occurs or the length limit is exceeded.
-	 * @see #writeArray(Object[], OutputStream, ElementWriter)
-	 * @since 1.1
-	 */
-	public static <T> T[] readArray(InputStream in, ElementReader<? extends T> reader, IntFunction<T[]> arrayFactory,
-			int lengthLimit) throws IOException {
-		int n = readInt(in);
-		if (n < 0) {
-			return null;
-		}
-		if (n > lengthLimit) {
-			throw new IOException("Length limit exceeded! Limit: " + lengthLimit + ", Found: " + n);
-		}
-		T[] arr = arrayFactory.apply(n);
-		for (int i = 0; i < n; i++) {
-			arr[i] = reader.read(in);
-		}
-		return arr;
-	}
-	
-	/**
-	 * Reads an array from the {@link InputStream}.
-	 * The protocol specified by {@link #writeArray(Object[], OutputStream, ElementWriter)} is used.
-	 * The {@link ElementReader} is called {@code n} times to read all elements of the array.
-	 * @param <T> The type of the array elements.
-	 * @param in The input stream. Must not be {@code null}.
-	 * @param reader The reader that specifies how to read the array elements. Must not be {@code null}.
-	 * @param arrayFactory An factory that produces arrays of a given length. Must not be {@code null}.
-	 * @return The read array. May be {@code null}.
-	 * @throws IOException If an I/O error occurs.
-	 * @see #writeArray(Object[], OutputStream, ElementWriter)
-	 * @since 1.1
-	 */
-	public static <T> T[] readArray(InputStream in, ElementReader<? extends T> reader, IntFunction<T[]> arrayFactory) throws IOException {
-		return readArray(in, reader, arrayFactory, Integer.MAX_VALUE);
-	}
-	
-	public static <T> void writeCollection(Iterable<T> collection, OutputStream out, ElementWriter<? super T> writer) throws IOException {
-		if (collection == null) {
-			out.write(100); // 100 => null
-			return;
-		}
-		for (T el : collection) {
-			out.write(1); // 1 => has next
-			writer.write(el, out);
-		}
-		out.write(0); // 0 => no next element
-	}
-	
-	public static <T, C extends Collection<? super T>> C readCollection(InputStream in, ElementReader<? extends T> reader,
-			Supplier<C> collectionFactory) throws IOException {
-		
-		int nextIndicator = readUByte(in);
-		if (nextIndicator == 100) {
-			return null;
-		}
-		
-		C collection = collectionFactory.get();
-		while (nextIndicator == 1) {
-			collection.add(reader.read(in));
-			nextIndicator = readUByte(in);
-		}
-		
-		if (nextIndicator != 0) {
-			throw new IOException("Invalid next-indicator '" + nextIndicator + "'!");
-		}
-		return collection;
-	}
-	
-	// TODO readArray/writeArray for elemental types
-	// TODO read/writeCollection
 	
 	
 	/**
