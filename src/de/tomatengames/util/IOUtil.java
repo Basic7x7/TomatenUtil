@@ -11,8 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -451,6 +453,40 @@ public class IOUtil {
 		return readArray(in, reader, arrayFactory, Integer.MAX_VALUE);
 	}
 	
+	public static <T> void writeCollection(Iterable<T> collection, OutputStream out, ElementWriter<? super T> writer) throws IOException {
+		if (collection == null) {
+			out.write(100); // 100 => null
+			return;
+		}
+		for (T el : collection) {
+			out.write(1); // 1 => has next
+			writer.write(el, out);
+		}
+		out.write(0); // 0 => no next element
+	}
+	
+	public static <T, C extends Collection<? super T>> C readCollection(InputStream in, ElementReader<? extends T> reader,
+			Supplier<C> collectionFactory) throws IOException {
+		
+		int nextIndicator = readUByte(in);
+		if (nextIndicator == 100) {
+			return null;
+		}
+		
+		C collection = collectionFactory.get();
+		while (nextIndicator == 1) {
+			collection.add(reader.read(in));
+			nextIndicator = readUByte(in);
+		}
+		
+		if (nextIndicator != 0) {
+			throw new IOException("Invalid next-indicator '" + nextIndicator + "'!");
+		}
+		return collection;
+	}
+	
+	// TODO readArray/writeArray for elemental types
+	// TODO read/writeCollection
 	
 	
 	/**
