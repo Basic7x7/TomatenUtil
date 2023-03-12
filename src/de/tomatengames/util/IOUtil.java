@@ -282,11 +282,12 @@ public class IOUtil {
 	 * @param arr The array to write the read data in. Must not be {@code null}.
 	 * @param off The first index of the byte array that should be written.
 	 * @param len The amount of bytes to read. If negative, no bytes are read.
+	 * @return {@code arr}
 	 * @throws IOException If an I/O error occurs.
 	 * @throws EOFException If the input stream reaches the end before reading {@code len} bytes.
 	 * @since 1.1
 	 */
-	public static void readFully(InputStream in, byte[] arr, int off, int len) throws IOException {
+	public static byte[] readFully(InputStream in, byte[] arr, int off, int len) throws IOException {
 		int rest = len;
 		int index = off;
 		while (rest > 0) {
@@ -297,18 +298,20 @@ public class IOUtil {
 			index += n;
 			rest -= n;
 		}
+		return arr;
 	}
 	
 	/**
 	 * Reads exactly {@code arr.length} bytes from the {@link InputStream} into the specified byte array.
 	 * @param in The input stream. Must not be {@code null}.
 	 * @param arr The array to write the read data in. Must not be {@code null}.
+	 * @return {@code arr}
 	 * @throws IOException If an I/O error occurs.
 	 * @throws EOFException If the input stream reaches the end before reading {@code arr.length} bytes.
 	 * @since 1.1
 	 */
-	public static void readFully(InputStream in, byte[] arr) throws IOException {
-		readFully(in, arr, 0, arr.length);
+	public static byte[] readFully(InputStream in, byte[] arr) throws IOException {
+		return readFully(in, arr, 0, arr.length);
 	}
 	
 	/**
