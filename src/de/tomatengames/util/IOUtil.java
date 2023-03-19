@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Provides utilities for file system interactions and streams.
@@ -405,8 +406,9 @@ public class IOUtil {
 	 * @throws IOException If an error occurs.
 	 */
 	public static void delete(Path path) throws IOException {
-		if (path == null)
+		if (path == null) {
 			return;
+		}
 		
 		// Deletes regular files.
 		// Symbolic links are directly removed (and never interpreted as a directory).
@@ -417,7 +419,10 @@ public class IOUtil {
 		
 		// Deletes directories recursively.
 		if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
-			Path[] children = Files.list(path).toArray(Path[]::new);
+			Path[] children;
+			try (Stream<Path> stream = Files.list(path)) {
+				children = stream.toArray(Path[]::new);
+			}
 			for (Path child : children) {
 				delete(child);
 			}
@@ -448,7 +453,10 @@ public class IOUtil {
 		
 		// Deletes all files from the directory recursively.
 		if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
-			Path[] children = Files.list(dir).toArray(Path[]::new);
+			Path[] children;
+			try (Stream<Path> stream = Files.list(dir)) {
+				children = stream.toArray(Path[]::new);
+			}
 			for (Path child : children) {
 				if (filter == null || filter.test(child)) {
 					delete(child);
