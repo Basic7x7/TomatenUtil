@@ -1,3 +1,16 @@
+Version 1.1.1 (2023-03-19)
+* Bugfix (high): Call Files.list() only in a try-with-resources
+    May have caused permanent file locks.
+    Affected methods: IOUtil.delete(), IOUtil.cleanDirectory(), TestUtil.assertFileTree()
+
+Version 1.1 (2023-03-13)
++ ArrayUtil: add element to array, remove element from array
++ StringUtil: startsWithIgnoreCase, endsWithIgnoreCase and containsIgnoreCase
++ HexUtil: hexToInt method
++ HashUtil: getMD5(), getSHA256(), etc.
++ IOUtil: readFully(), writeString(), readString()
+* Bugfix (low): SortUtil.compareNumberPreserving supports null values
+
 Version 1.0.1 (2023-02-14)
 * Bugfix (high): ExecUtil.execGetOutput forwards its parameters
 
