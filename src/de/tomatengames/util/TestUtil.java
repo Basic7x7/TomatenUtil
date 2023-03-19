@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Provides methods that are helpful for JUnit testing.
@@ -148,10 +149,14 @@ public class TestUtil {
 		
 		if (Files.isDirectory(expected)) {
 			if (Files.isDirectory(actual)) {
-				Path[] expectedFileList = Files.list(expected)
-						.filter(filter).sorted().toArray(Path[]::new);
-				Path[] actualFileList = Files.list(actual)
-						.filter(filter).sorted().toArray(Path[]::new);
+				Path[] expectedFileList;
+				try (Stream<Path> stream = Files.list(expected)) {
+					expectedFileList = stream.filter(filter).sorted().toArray(Path[]::new);
+				}
+				Path[] actualFileList;
+				try (Stream<Path> stream = Files.list(actual)) {
+					actualFileList = stream.filter(filter).sorted().toArray(Path[]::new);
+				}
 				int n = expectedFileList.length;
 				if (actualFileList.length != n) {
 					String[] expectedNames = Arrays.stream(expectedFileList)
