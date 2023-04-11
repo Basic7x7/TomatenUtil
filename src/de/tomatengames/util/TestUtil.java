@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -74,6 +75,7 @@ public class TestUtil {
 	/**
 	 * Asserts that the binary file exists and matches the hexadecimal string.
 	 * @param expectedHex A hex string that represents the expected bytes.
+	 * Whitespace characters are ignored.
 	 * If {@code null}, the binary file must not exist.
 	 * @param basePath The base path.
 	 * @param path The path to the binary file, relative to the base path.
@@ -86,7 +88,7 @@ public class TestUtil {
 		}
 		assertFileExists(true, basePath, path);
 		String fileHex = HexUtil.fileToHex(basePath.resolve(path));
-		assertEquals(expectedHex.toLowerCase(), fileHex);
+		assertEquals(expectedHex.toLowerCase(Locale.ROOT).replaceAll("\\s", ""), fileHex);
 	}
 	
 	/**
