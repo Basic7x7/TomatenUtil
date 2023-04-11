@@ -563,4 +563,20 @@ public class IOUtil {
 			return bout.toByteArray();
 		}
 	}
+	
+	
+	/**
+	 * Return an array that contains the entries in the directory.
+	 * This method behaves like {@link Files#list(Path)},
+	 * but all entries are read and the stream is closed.
+	 * @param dir The path to the directory.
+	 * @return An array that contains the entries in the directory.
+	 * @throws IOException See {@link Files#list(Path)}.
+	 * @since 1.2
+	 */
+	public static Path[] listDirectory(Path dir) throws IOException {
+		try (Stream<Path> stream = Files.list(dir)) {
+			return stream.toArray(Path[]::new);
+		}
+	}
 }
