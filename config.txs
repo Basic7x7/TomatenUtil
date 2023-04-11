@@ -1,5 +1,38 @@
 ##
 const string src = "src/de/tomatengames/util";
+const string txs = "src/txs";
+
+final object[] types = [
+	new { name: "Boolean", 	java: "boolean", prim: true,  docName: "boolean", a: "a" },
+	new { name: "Byte", 	java: "byte",	 prim: true,  docName: "byte",    a: "a" },
+	new { name: "Short",	java: "short",	 prim: true,  docName: "short",   a: "a" },
+	new { name: "Int",		java: "int",	 prim: true,  docName: "int",     a: "an" },
+	new { name: "Long",		java: "long",	 prim: true,  docName: "long",    a: "a" },
+	new { name: "Float",	java: "float",	 prim: true,  docName: "float",   a: "a" },
+	new { name: "Double",	java: "double",	 prim: true,  docName: "double",  a: "a" },
+	new { name: "Char",		java: "char",	 prim: true,  docName: "char",    a: "a" },
+	new { name: "Ref",		java: "T",		 prim: false, docName: "Object",  a: "an" }
+];
+
+const int MAX_FUNCTION_N = 9;
 ##
 
 run-inplace -io "@src;/ArrayUtil.java"
+
+##
+for (object type in types) {
+	for (object type2 in types) {
+		##
+		run -i "@txs;/XToXFunction.txs" -o "@src;/function/@type.name;To@type2.name;Function.java"
+			-v inp=@tson(type); out=@tson(type2);
+		##
+	}
+	
+	for (int i = 0; i <= MAX_FUNCTION_N; i++) {
+		##
+		run -i "@txs;/RefNToXFunction.txs" -o "@src;/function/Ref@i;To@type.name;Function.java"
+			-v n=@i; out=@tson(type);
+		##
+	}
+}
+##
