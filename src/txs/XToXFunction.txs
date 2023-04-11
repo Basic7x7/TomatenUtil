@@ -25,7 +25,11 @@ final string Function = inp.name::"To"::out.name::"Function";
 ##
 
 /**
- * A function that accepts $inp.a; {@code $inp.docName;} and returns $out.a; {@code $out.docName;}.
+ * A function that accepts ##
+	if (inp.java == "void") { ##no parameters## }
+	else { ##$inp.a; {@code $inp.docName;}## } ## and returns ##
+	if (out.java == "void") { ##nothing## }
+	else { ##$out.a; {@code $out.docName;}## } ##.
  * 
  * @author Basic7x7
  * @version
@@ -38,13 +42,21 @@ public interface $Function;$generic; {
 	
 	/**
 	 * Applies the function.
+	 # if (inp.java != "void") {
 	 * @param e The argument.
+	 # }
+	 # if (out.java != "void") {
 	 * @return The result.
+	 # }
 	 */
-	public $out.java; apply($inp.java; e);
+	public $out.java; apply(##
+			if (inp.java != "void") {
+				##$inp.java; e##
+			}
+			##);
 #
 #
-# if (inp.name == out.name) {
+# if (inp.name == out.name && inp.java != "void") {
 	
 	
 	/**
@@ -60,6 +72,7 @@ public interface $Function;$generic; {
 #
 # if (out.java == "boolean") {
 	# string gen = !inp.prim && "<I>";
+	# string arg = inp.java != "void" && "e";
 	
 	
 	/**
@@ -67,7 +80,7 @@ public interface $Function;$generic; {
 	 * @return The logical negation of this function.
 	 */
 	public default $Function;$generic; negate() {
-		return e -> !this.apply(e);
+		return ($arg;) -> !this.apply($arg;);
 	}
 	
 	/**
