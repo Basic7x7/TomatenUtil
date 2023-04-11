@@ -21,4 +21,23 @@ public interface Ref2ToBooleanFunction<A, B> {
 	 */
 	public boolean apply(A a, B b);
 	
+	
+	/**
+	 * Returns a Ref2ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref2ToBooleanFunction<A, B> negate() {
+		return (a, b) -> !this.apply(a, b);
+	}
+	
+	/**
+	 * Returns a Ref2ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static <A, B> Ref2ToBooleanFunction<A, B> not(Ref2ToBooleanFunction<A, B> func) {
+		return func.negate();
+	}
+	
 }

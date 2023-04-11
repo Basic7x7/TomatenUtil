@@ -22,4 +22,23 @@ public interface Ref3ToBooleanFunction<A, B, C> {
 	 */
 	public boolean apply(A a, B b, C c);
 	
+	
+	/**
+	 * Returns a Ref3ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref3ToBooleanFunction<A, B, C> negate() {
+		return (a, b, c) -> !this.apply(a, b, c);
+	}
+	
+	/**
+	 * Returns a Ref3ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static <A, B, C> Ref3ToBooleanFunction<A, B, C> not(Ref3ToBooleanFunction<A, B, C> func) {
+		return func.negate();
+	}
+	
 }

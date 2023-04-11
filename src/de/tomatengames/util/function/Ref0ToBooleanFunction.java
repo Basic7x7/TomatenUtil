@@ -19,4 +19,23 @@ public interface Ref0ToBooleanFunction {
 	 */
 	public boolean apply();
 	
+	
+	/**
+	 * Returns a Ref0ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref0ToBooleanFunction negate() {
+		return () -> !this.apply();
+	}
+	
+	/**
+	 * Returns a Ref0ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static Ref0ToBooleanFunction not(Ref0ToBooleanFunction func) {
+		return func.negate();
+	}
+	
 }

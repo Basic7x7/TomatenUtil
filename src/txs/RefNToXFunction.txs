@@ -1,7 +1,7 @@
 // @txsinfo();
 package de.tomatengames.util.function;
 ##
-:inline=$
+:inline=§
 
 extern final int n;
 extern final object out;
@@ -18,7 +18,7 @@ final string Function = "Ref"::n::"To"::out.name::"Function";
 ##
 
 /**
- * A function that accepts $n; generic input parameter$n!=1&&"s"; and returns $out.a; {@code $out.docName;}.
+ * A function that accepts §n; generic input parameter§n!=1&&"s"; and returns §out.a; {@code §out.docName;}.
  * 
  # if (!out.prim) {
  * @param <T> The return type.
@@ -31,21 +31,52 @@ final string Function = "Ref"::n::"To"::out.name::"Function";
  * @since 1.2
  */
 @FunctionalInterface
-public interface $Function;$generic; {
+public interface §Function;§generic; {
 	
 	/**
 	 * Applies the function.
 	 # for (int i = 0; i < n; i++) {
-	 * @param $toChar(`a`+i); An argument.
+	 * @param §toChar(`a`+i); An argument.
 	 # }
 	 * @return The result.
 	 */
-	public $out.java; apply(##
+	public §out.java; apply(##
 			for (int i = 0; i < n; i++) {
 				string type = toChar(`A`+i);
 				string name = lowercase(type);
-				##$i>0 && ", ";$type; $name;##
+				##§i>0 && ", ";§type; §name;##
 			}
 			##);
+##
+
+if (out.java == "boolean") {
+	string[] argNames = new string[n];
+	for (int i = 0; i < n; i++) {
+		argNames[i] = toChar(`a`+i);
+	}
+	string args = join(", ", argNames);
+	##
+	
+	
+	/**
+	 * Returns a §Function; that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default §Function;§generic; negate() {
+		return (§args;) -> !this.apply(§args;);
+	}
+	
+	/**
+	 * Returns a §Function; that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static §?generic; §Function;§generic; not(§Function;§generic; func) {
+		return func.negate();
+	}
+	##
+}
+##
 	
 }

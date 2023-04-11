@@ -27,4 +27,23 @@ public interface Ref8ToBooleanFunction<A, B, C, D, E, F, G, H> {
 	 */
 	public boolean apply(A a, B b, C c, D d, E e, F f, G g, H h);
 	
+	
+	/**
+	 * Returns a Ref8ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref8ToBooleanFunction<A, B, C, D, E, F, G, H> negate() {
+		return (a, b, c, d, e, f, g, h) -> !this.apply(a, b, c, d, e, f, g, h);
+	}
+	
+	/**
+	 * Returns a Ref8ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static <A, B, C, D, E, F, G, H> Ref8ToBooleanFunction<A, B, C, D, E, F, G, H> not(Ref8ToBooleanFunction<A, B, C, D, E, F, G, H> func) {
+		return func.negate();
+	}
+	
 }

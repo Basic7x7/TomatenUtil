@@ -20,4 +20,23 @@ public interface Ref1ToBooleanFunction<A> {
 	 */
 	public boolean apply(A a);
 	
+	
+	/**
+	 * Returns a Ref1ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref1ToBooleanFunction<A> negate() {
+		return (a) -> !this.apply(a);
+	}
+	
+	/**
+	 * Returns a Ref1ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static <A> Ref1ToBooleanFunction<A> not(Ref1ToBooleanFunction<A> func) {
+		return func.negate();
+	}
+	
 }

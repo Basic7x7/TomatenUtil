@@ -28,4 +28,23 @@ public interface Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> {
 	 */
 	public boolean apply(A a, B b, C c, D d, E e, F f, G g, H h, I i);
 	
+	
+	/**
+	 * Returns a Ref9ToBooleanFunction that represents {@code !this.apply(...)}.
+	 * @return The logical negation of this function.
+	 */
+	public default Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> negate() {
+		return (a, b, c, d, e, f, g, h, i) -> !this.apply(a, b, c, d, e, f, g, h, i);
+	}
+	
+	/**
+	 * Returns a Ref9ToBooleanFunction that represents {@code !func.apply(...)}.
+	 * @param func The function to negate. Must not be {@code null}.
+	 * @return The logical negation of the specified function.
+	 * @throws NullPointerException If the specified function is {@code null}.
+	 */
+	public static <A, B, C, D, E, F, G, H, I> Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> not(Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> func) {
+		return func.negate();
+	}
+	
 }
