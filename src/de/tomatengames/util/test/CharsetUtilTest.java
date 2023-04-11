@@ -45,4 +45,17 @@ class CharsetUtilTest {
 		assertOutputStream("ED959C", out -> encodeUTF8('한', out)); // U+D55C
 		assertOutputStream("F0908D88", out -> encodeUTF8(0x10348, out));
 	}
+	
+	@Test
+	void testEncodeUTF8String() throws IOException {
+		assertOutputStream("41", out -> encodeUTF8("A", out));
+		assertOutputStream("C3B6", out -> encodeUTF8("ö", out));
+		assertOutputStream("C3B641C3B6", out -> encodeUTF8("öAö", out));
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertOutputStream("4D C3 AC 6E 68 20 6E C3 B3 69 20 74 69 E1 BA BF 6E 67 20 56 69 E1 BB 87 74",
+				out -> encodeUTF8("Mình nói tiếng Việt", out));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
+				out -> encodeUTF8("𨉟呐㗂越", out));
+	}
 }
