@@ -13,6 +13,8 @@ final object[] types = [
 	new { name: "Char",		java: "char",	 prim: true,  docName: "char",    a: "a" },
 	new { name: "Ref",		java: "T",		 prim: false, docName: "Object",  a: "an" }
 ];
+
+const int MAX_FUNCTION_N = 9;
 ##
 
 run-inplace -io "@src;/ArrayUtil.java"
@@ -23,6 +25,13 @@ for (object type in types) {
 		##
 		run -i "@txs;/XToXFunction.txs" -o "@src;/function/@type.name;To@type2.name;Function.java"
 			-v inp=@tson(type); out=@tson(type2);
+		##
+	}
+	
+	for (int i = 0; i <= MAX_FUNCTION_N; i++) {
+		##
+		run -i "@txs;/RefNToXFunction.txs" -o "@src;/function/Ref@i;To@type.name;Function.java"
+			-v n=@i; out=@tson(type);
 		##
 	}
 }
