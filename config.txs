@@ -35,5 +35,10 @@ for (object type in types) {
 			-v n=@i; out=@tson(type);
 		##
 	}
+	
+	##
+	run -i "@txs;/ConsumerWithThrows.txs" -o "@src;/function/@type.name;ConsumerWithThrows.java"
+		-v inp=@tson(type);
+	##
 }
 ##
