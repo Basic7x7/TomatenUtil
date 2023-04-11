@@ -71,7 +71,7 @@ public class CharsetUtil {
 	 * Encodes the specified Unicode code point using UTF-8
 	 * and writes the result into the {@link OutputStream}.
 	 * @param codePoint The code point that should be encoded.
-	 * @param out The output stream.
+	 * @param out The output stream. Must not be {@code null}.
 	 * @throws IOException If an I/O error occurs.
 	 * @throws IllegalArgumentException If the code point is out of range.
 	 */
