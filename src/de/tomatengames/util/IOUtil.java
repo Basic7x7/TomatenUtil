@@ -552,6 +552,7 @@ public class IOUtil {
 	 * If {@code null}, an empty byte array is returned.
 	 * @return The read bytes. Not {@code null}.
 	 * @throws IOException If an I/O error occurs.
+	 * @since 1.1
 	 */
 	public static byte[] readBinaryFile(Path path) throws IOException {
 		if (path == null) {
