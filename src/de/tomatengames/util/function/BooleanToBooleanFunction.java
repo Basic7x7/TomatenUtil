@@ -36,7 +36,7 @@ public interface BooleanToBooleanFunction {
 	 * @return The logical negation of this function.
 	 */
 	public default BooleanToBooleanFunction negate() {
-		return e -> !this.apply(e);
+		return (e) -> !this.apply(e);
 	}
 	
 	/**

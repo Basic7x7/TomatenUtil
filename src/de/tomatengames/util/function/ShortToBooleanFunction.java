@@ -26,7 +26,7 @@ public interface ShortToBooleanFunction {
 	 * @return The logical negation of this function.
 	 */
 	public default ShortToBooleanFunction negate() {
-		return e -> !this.apply(e);
+		return (e) -> !this.apply(e);
 	}
 	
 	/**

@@ -5,13 +5,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import de.tomatengames.util.function.RefConsumerWithThrows;
 
 /**
  * Provides methods that are helpful for JUnit testing.
@@ -108,6 +112,43 @@ public class TestUtil {
 		assertFileExists(true, basePath, path);
 		byte[] fileBytes = IOUtil.readBinaryFile(basePath.resolve(path));
 		assertArrayEquals(expectedBytes, fileBytes);
+	}
+	
+	
+	/**
+	 * Runs the specified action on a new {@link OutputStream} and
+	 * asserts that the bytes written to the output stream match the expected hexadecimal string.
+	 * @param expectedHex A hex string that represents the expected bytes.
+	 * Whitespace characters are ignored. Must not be {@code null}.
+	 * @param action The action that should output bytes to the output stream.
+	 * @throws IOException If an I/O error occurs while writing to the stream.
+	 * @since 1.2
+	 */
+	public static void assertOutputStream(String expectedHex,
+			RefConsumerWithThrows<OutputStream, IOException> action) throws IOException {
+		
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			action.accept(out);
+			assertEquals(expectedHex.toLowerCase(Locale.ROOT).replaceAll("\\s", ""),
+					HexUtil.bytesToHex(out.toByteArray()));
+		}
+	}
+	
+	/**
+	 * Runs the specified action on a new {@link OutputStream} and
+	 * asserts that the bytes written to the output stream match the expected bytes.
+	 * @param expectedBytes The bytes expected to be written to the stream. Must not be {@code null}.
+	 * @param action The action that should output bytes to the output stream.
+	 * @throws IOException If an I/O error occurs while writing to the stream.
+	 * @since 1.2
+	 */
+	public static void assertOutputStream(byte[] expectedBytes,
+			RefConsumerWithThrows<OutputStream, IOException> action) throws IOException {
+		
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+			action.accept(out);
+			assertArrayEquals(expectedBytes, out.toByteArray());
+		}
 	}
 	
 	/**

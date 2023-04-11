@@ -26,7 +26,7 @@ public interface LongToBooleanFunction {
 	 * @return The logical negation of this function.
 	 */
 	public default LongToBooleanFunction negate() {
-		return e -> !this.apply(e);
+		return (e) -> !this.apply(e);
 	}
 	
 	/**

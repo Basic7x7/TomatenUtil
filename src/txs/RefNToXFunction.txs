@@ -18,7 +18,9 @@ final string Function = "Ref"::n::"To"::out.name::"Function";
 ##
 
 /**
- * A function that accepts §n; generic input parameter§n!=1&&"s"; and returns §out.a; {@code §out.docName;}.
+ * A function that accepts §n; generic input parameter§n!=1&&"s"; and returns ##
+	if (out.java == "void") { ##nothing## }
+	else { ##§out.a; {@code §out.docName;}## } ##.
  * 
  # if (!out.prim) {
  * @param <T> The return type.
@@ -38,7 +40,9 @@ public interface §Function;§generic; {
 	 # for (int i = 0; i < n; i++) {
 	 * @param §toChar(`a`+i); An argument.
 	 # }
+	 # if (out.java != "void") {
 	 * @return The result.
+	 # }
 	 */
 	public §out.java; apply(##
 			for (int i = 0; i < n; i++) {

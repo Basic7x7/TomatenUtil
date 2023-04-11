@@ -11,6 +11,7 @@ final object[] types = [
 	new { name: "Float",	java: "float",	 prim: true,  docName: "float",   a: "a" },
 	new { name: "Double",	java: "double",	 prim: true,  docName: "double",  a: "a" },
 	new { name: "Char",		java: "char",	 prim: true,  docName: "char",    a: "a" },
+	new { name: "Void",		java: "void",	 prim: true,  docName: "void",    a: "a" },
 	new { name: "Ref",		java: "T",		 prim: false, docName: "Object",  a: "an" }
 ];
 
@@ -34,5 +35,10 @@ for (object type in types) {
 			-v n=@i; out=@tson(type);
 		##
 	}
+	
+	##
+	run -i "@txs;/ConsumerWithThrows.txs" -o "@src;/function/@type.name;ConsumerWithThrows.java"
+		-v inp=@tson(type);
+	##
 }
 ##

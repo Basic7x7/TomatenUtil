@@ -26,7 +26,7 @@ public interface RefToBooleanFunction<I> {
 	 * @return The logical negation of this function.
 	 */
 	public default RefToBooleanFunction<I> negate() {
-		return e -> !this.apply(e);
+		return (e) -> !this.apply(e);
 	}
 	
 	/**

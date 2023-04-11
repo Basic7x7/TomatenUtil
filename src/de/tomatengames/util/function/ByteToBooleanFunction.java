@@ -26,7 +26,7 @@ public interface ByteToBooleanFunction {
 	 * @return The logical negation of this function.
 	 */
 	public default ByteToBooleanFunction negate() {
-		return e -> !this.apply(e);
+		return (e) -> !this.apply(e);
 	}
 	
 	/**

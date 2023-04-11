@@ -2,7 +2,7 @@
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code double} and returns a {@code boolean}.
+ * A function that accepts no parameters and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -11,31 +11,30 @@ package de.tomatengames.util.function;
  * @since 1.2
  */
 @FunctionalInterface
-public interface DoubleToBooleanFunction {
+public interface VoidToBooleanFunction {
 	
 	/**
 	 * Applies the function.
-	 * @param e The argument.
 	 * @return The result.
 	 */
-	public boolean apply(double e);
+	public boolean apply();
 	
 	
 	/**
-	 * Returns a DoubleToBooleanFunction that represents {@code !this.apply(e)}.
+	 * Returns a VoidToBooleanFunction that represents {@code !this.apply(e)}.
 	 * @return The logical negation of this function.
 	 */
-	public default DoubleToBooleanFunction negate() {
-		return (e) -> !this.apply(e);
+	public default VoidToBooleanFunction negate() {
+		return () -> !this.apply();
 	}
 	
 	/**
-	 * Returns a DoubleToBooleanFunction that represents {@code !func.apply(e)}.
+	 * Returns a VoidToBooleanFunction that represents {@code !func.apply(e)}.
 	 * @param func The function to negate. Must not be {@code null}.
 	 * @return The logical negation of the specified function.
 	 * @throws NullPointerException If the specified function is {@code null}.
 	 */
-	public static DoubleToBooleanFunction not(DoubleToBooleanFunction func) {
+	public static VoidToBooleanFunction not(VoidToBooleanFunction func) {
 		return func.negate();
 	}
 }
