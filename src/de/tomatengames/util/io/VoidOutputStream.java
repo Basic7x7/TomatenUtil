@@ -6,6 +6,7 @@ import java.io.OutputStream;
  * An {@link OutputStream} that ignores all data written to it.
  * <p>
  * Note that the {@code write(...)} methods do not check if the parameters are valid.
+ * Closing this stream has no effect.
  * 
  * @author Basic7x7
  * @version 2023-04-12
