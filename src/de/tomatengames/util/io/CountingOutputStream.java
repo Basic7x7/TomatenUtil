@@ -18,7 +18,7 @@ import java.io.OutputStream;
  * @since 1.2
  */
 public class CountingOutputStream extends FilterOutputStream {
-	private long bytesCount;
+	private long byteCount;
 	
 	/**
 	 * Creates a new {@link CountingOutputStream}.
@@ -26,32 +26,32 @@ public class CountingOutputStream extends FilterOutputStream {
 	 */
 	public CountingOutputStream(OutputStream out) {
 		super(out);
-		this.bytesCount = 0L;
+		this.byteCount = 0L;
 	}
 	
 	@Override
 	public void write(int b) throws IOException {
 		this.out.write(b);
-		this.bytesCount++;
+		this.byteCount++;
 	}
 	
 	@Override
 	public void write(byte[] b) throws IOException {
 		this.out.write(b);
-		this.bytesCount += b.length;
+		this.byteCount += b.length;
 	}
 	
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		this.out.write(b, off, len);
-		this.bytesCount += len;
+		this.byteCount += len;
 	}
 	
 	/**
 	 * Returns the amount of bytes written to this stream.
 	 * @return The amount of bytes written.
 	 */
-	public long getBytesCount() {
-		return bytesCount;
+	public long getByteCount() {
+		return this.byteCount;
 	}
 }
