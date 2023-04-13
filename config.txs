@@ -40,5 +40,13 @@ for (object type in types) {
 	run -i "@txs;/ConsumerWithThrows.txs" -o "@src;/function/@type.name;ConsumerWithThrows.java"
 		-v inp=@tson(type);
 	##
+	
+	if (type.name != "Void") {
+		string name = type.name != "Ref" && <string> type.name;
+		##
+		run -i "@txs;/Linked.txs" -o "@src;/linked/Linked@name;.java"
+			-v type=@tson(type);
+		##
+	}
 }
 ##
