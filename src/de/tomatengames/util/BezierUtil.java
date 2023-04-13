@@ -9,7 +9,7 @@ package de.tomatengames.util;
  */
 public class BezierUtil {
 	private static final int MAX_NEWTON_ITERATIONS = 6;
-	private static final int MAX_BISECTION_ITERATIONS = 10000;
+	private static final int MAX_BISECTION_ITERATIONS = 1024;
 	
 	// Static class
 	private BezierUtil() {
@@ -43,7 +43,7 @@ public class BezierUtil {
 					double xt = evalDeCasteljau(t, p1x, c1x, c2x, p2x); // = x(t)
 					
 					// f(t) := x(t) − X
-					double ft = x - xt;
+					double ft = xt - x;
 					if (Math.abs(ft) <= eps) {
 						break makeTMorePrecise;
 					}
@@ -63,22 +63,29 @@ public class BezierUtil {
 			
 			// Use Bisection if Newton's method did not work.
 			double min = 0.0, max = 1.0;
+			double prevT = 0.0; // t=0.5 in the first iteration
 			for (int i = 0; i < MAX_BISECTION_ITERATIONS; i++) { // Prevents endless loop
 				t = (max + min) * 0.5;
 				double fx = evalDeCasteljau(t, p1x, c1x, c2x, p2x);
-				if (Math.abs(fx) <= eps) {
+				
+				// Abort if x(t) is near enough to x.
+				// If t did not change, it cannot be more precise.
+				double dx = fx - x;
+				if (Math.abs(dx) <= eps || t == prevT) {
 					break makeTMorePrecise;
 				}
 				
-				if (fx < x) {
+				if (dx < 0) {
 					min = t;
 				}
 				else {
 					max = t;
 				}
+				prevT = t;
 			}
 		}
 		
-		return evalDeCasteljau(t, p1y, c1y, c2y, p2y);
+		double y = evalDeCasteljau(t, p1y, c1y, c2y, p2y);
+		return y;
 	}
 }
