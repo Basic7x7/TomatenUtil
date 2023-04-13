@@ -144,7 +144,6 @@ public class BezierUtil {
 			}
 		}
 		
-		double y = evalDeCasteljau(t, p1y, c1y, c2y, p2y);
-		return y;
+		return evalDeCasteljau(t, p1y, c1y, c2y, p2y);
 	}
 }
