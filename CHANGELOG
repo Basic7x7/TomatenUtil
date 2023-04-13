@@ -1,3 +1,19 @@
+Version 1.2 (2023-04-14)
++ XToXFunction interfaces
++ ConsumerWithThrows interfaces
++ Linked classes
++ IOUtil: listDirectory()
++ VoidOutputStream, CountingOutputStream, CountingInputStream
++ CharsetUtil
+    Allows to write an UTF-8 string to an output stream.
++ BezierUtil
+    Allows to evaluate cubic Bézier curves.
++ PredicateUtil
+    Provides methods not(), and(), or() to transform Predicates.
++ TestUtil: assertOutputStream(), assertBinaryFile(byte[])
+* TestUtil.assertBinaryFile(hex) ignores whitespace characters
+
+
 Version 1.1.1 (2023-03-19)
 * Bugfix (high): Call Files.list() only in a try-with-resources
     May have caused permanent file locks.
@@ -10,6 +26,7 @@ Version 1.1 (2023-03-13)
 + HashUtil: getMD5(), getSHA256(), etc.
 + IOUtil: readFully(), writeString(), readString(), readBinaryFile(), writeBinaryFile()
 * Bugfix (low): SortUtil.compareNumberPreserving supports null values
+
 
 Version 1.0.1 (2023-02-14)
 * Bugfix (high): ExecUtil.execGetOutput forwards its parameters
