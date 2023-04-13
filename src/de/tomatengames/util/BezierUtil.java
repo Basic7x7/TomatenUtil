@@ -9,13 +9,34 @@ package de.tomatengames.util;
  */
 public class BezierUtil {
 	private static final int MAX_NEWTON_ITERATIONS = 6;
-	private static final int MAX_BISECTION_ITERATIONS = 1024;
+	private static final int MAX_BISECTION_ITERATIONS = 10000;
 	
 	// Static class
 	private BezierUtil() {
 	}
 	
 	
+	/**
+	 * Runs the De-Casteljau algorithm to evaluate the cubic Bézier curve
+	 * defined by the parameters {@code p1, c1, c2, p2} at {@code t}.
+	 * <p>
+	 * Note that this function only calculates one dimension of the Bézier curve.
+	 * In general, Bézier curves are defined as 2-dimensional curves {@code P(t)=[P.x(t), P.y(t)]}
+	 * with {@code p1=[p1.x, p1.y]}, etc.
+	 * To calculate {@code P(t)}, this method can be called twice with the corresponding parameters
+	 * of the respective dimension.
+	 * <pre>
+	 * P.x(t) = evalDeCasteljau(t, p1.x, c1.x, c2.x, p2.x)
+	 * P.y(t) = evalDeCasteljau(t, p1.y, c1.y, c2.y, p2.y)
+	 * </pre>
+	 * @param t The point at which the curve is to be evaluated. Must be in the range from 0 to 1.
+	 * {@code t=0} returns {@code p1} and {@code t=1} returns {@code p2}.
+	 * @param p1 The start point of the curve.
+	 * @param c1 The control point of {@code p1}.
+	 * @param c2 The control point of {@code p2}.
+	 * @param p2 The end point of the curve.
+	 * @return The evaluated point on the curve.
+	 */
 	public static double evalDeCasteljau(double t,
 			double p1, double c1, double c2, double p2) {
 		
@@ -28,6 +49,44 @@ public class BezierUtil {
 		return t1*b21 + t*b22;
 	}
 	
+	/**
+	 * Evaluates the cubic Bézier curve defined by the parameters {@code p1, c1, c2, p2}
+	 * at the specified {@code x} position.
+	 * <p>
+	 * This method first tries to calculate the parameter {@code t}
+	 * for the specified {@code x} position numerically.
+	 * If the calculated {@code t} implies a {@code x(t)} with {@code abs(x(t)-x) <= eps},
+	 * this step is complete.
+	 * Then {@code y(t)} is calculated and returned.
+	 * <p>
+	 * The parameters must meet the following requirements:
+	 * <ul>
+	 * <li>{@code p1} must be before {@code p2} ({@code p1x < p2x})
+	 * <li>{@code c1x} must be in the range of {@code p1x} and {@code p2x} ({@code p1x <= c1x <= p2x})
+	 * <li>{@code c2x} must be in the range of {@code p1x} and {@code p2x} ({@code p1x <= c2x <= p2x})
+	 * <li>{@code x} must be in the range of {@code p1x} and {@code p2x} ({@code p1x <= x <= p2x})
+	 * </ul>
+	 * If any of these requirements is not met, the result is undefined.
+	 * @param x The x position that should be evaluated.
+	 * Must be in the range of {@code p1x} and {@code p2x}.
+	 * @param eps The maximum error of {@code x} to abort numerical methods.
+	 * Negative values have the same effect as {@code 0}.
+	 * It is recommended to choose a value greater than {@code 0} to improve performance.
+	 * Note that it is not guaranteed that the error is less than {@code eps}.
+	 * In special cases, e.g. {@code eps=0}, if it is not possible or involves a disproportionate effort
+	 * to find a fitting {@code t}, {@code eps} may be ignored.
+	 * @param p1x The {@code x} position of the start point. Must be less than {@code p2x}.
+	 * @param p1y The {@code y} position of the start point.
+	 * @param c1x The {@code x} position of the control point of {@code p1}.
+	 * Must be in the range of {@code p1x} and {@code p2x}.
+	 * @param c1y The {@code y} position of the control point of {@code p1}.
+	 * @param c2x The {@code x} position of the control point of {@code p2}.
+	 * Must be in the range of {@code p1x} and {@code p2x}.
+	 * @param c2y The {@code y} position of the control point of {@code p2}.
+	 * @param p2x The {@code x} position of the end point. Must be greater than {@code p1x}.
+	 * @param p2y The {@code y} position of the end point.
+	 * @return The {@code y} position of the curve at the specified {@code x} position.
+	 */
 	public static double eval(double x, double eps,
 			double p1x, double p1y, double c1x, double c1y,
 			double c2x, double c2y, double p2x, double p2y) {
