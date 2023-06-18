@@ -10,7 +10,7 @@ import de.tomatengames.util.TOTPUtil;
 public class TOTPTest {
 	
 	private String totp(Mac mac, int codeSeconds, int codeLength, long time) {
-		return TOTPUtil.toString(TOTPUtil.hotpLong(mac, TOTPUtil.totpCounter(codeSeconds, time)), codeLength);
+		return TOTPUtil.hotpString(mac, TOTPUtil.totpCounter(codeSeconds, time), codeLength);
 	}
 	
 	@Test
