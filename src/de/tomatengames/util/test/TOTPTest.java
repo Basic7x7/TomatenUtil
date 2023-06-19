@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import de.tomatengames.util.HashUtil;
 import de.tomatengames.util.TOTPUtil;
 
-public class TOTPTest {
+class TOTPTest {
 	
 	private String totp(Mac mac, int codeSeconds, int codeLength, long time) {
 		return TOTPUtil.hotpString(mac, TOTPUtil.totpCounter(codeSeconds, time), codeLength);
 	}
 	
 	@Test
-	public void testTOTP() {
+	void testTOTP() {
 		Mac sha1 = HashUtil.getHmacSHA1("12345678901234567890".getBytes(StandardCharsets.US_ASCII));
 		Mac sha256 = HashUtil.getHmacSHA256("12345678901234567890123456789012".getBytes(StandardCharsets.US_ASCII));
 		Mac sha512 = HashUtil.getHmacSHA512("1234567890123456789012345678901234567890123456789012345678901234".getBytes(StandardCharsets.US_ASCII));

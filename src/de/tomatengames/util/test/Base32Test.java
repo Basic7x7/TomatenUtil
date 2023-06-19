@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import de.tomatengames.util.Base32Util;
 
-public class Base32Test {
+class Base32Test {
 	
 	private String base32(String s) {
 		return Base32Util.bytesToBase32(s.getBytes(StandardCharsets.UTF_8), true);
@@ -19,7 +19,7 @@ public class Base32Test {
 	}
 	
 	@Test
-	public void testBase32() {
+	void testBase32() {
 		checkBase32("", "");
 		checkBase32("MY======", "f");
 		checkBase32("MZXQ====", "fo");
