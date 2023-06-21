@@ -4,14 +4,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Provides utilities to work with hashes.
  * 
  * @author Basic7x7
- * @version 2023-02-13
+ * @version
+ * 2023-06-18 modified<br>
+ * 2023-02-13 created
  * @since 1.0
  */
 public class HashUtil {
@@ -45,6 +50,37 @@ public class HashUtil {
 	 */
 	public static final String SHA512 = "SHA-512";
 	
+	/**
+	 * The name of the {@code HMAC-MD5} MAC algorithm.
+	 * <p>
+	 * All Java platforms before Java 14 are required to support this algorithm.
+	 * @since 1.3
+	 */
+	public static final String HMAC_MD5 = "HmacMD5";
+	
+	/**
+	 * The name of the {@code HMAC-SHA1} MAC algorithm.
+	 * <p>
+	 * All Java platforms are required to support this algorithm.
+	 * @since 1.3
+	 */
+	public static final String HMAC_SHA1 = "HmacSHA1";
+	
+	/**
+	 * The name of the {@code HMAC-SHA256} MAC algorithm.
+	 * <p>
+	 * All Java platforms are required to support this algorithm.
+	 * @since 1.3
+	 */
+	public static final String HMAC_SHA256 = "HmacSHA256";
+	
+	/**
+	 * The name of the {@code HMAC-SHA512} MAC algorithm.
+	 * <p>
+	 * The Java platform is <b>not</b> required to support this algorithm.
+	 * @since 1.3
+	 */
+	public static final String HMAC_SHA512 = "HmacSHA512";
 	
 	// Static class
 	private HashUtil() {
@@ -61,6 +97,24 @@ public class HashUtil {
 		try {
 			return MessageDigest.getInstance(algorithm);
 		} catch (NoSuchAlgorithmException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+	
+	/**
+	 * Returns a {@link Mac} object that implements the specified algorithm using the specified key.
+	 * @param algorithm The algorithm name.
+	 * @param key The key.
+	 * @return The {@link Mac} object.
+	 * @throws IllegalArgumentException If the algorithm is unknown.
+	 * @see Mac#getInstance(String)
+	 */
+	public static Mac getMac(String algorithm, byte[] key) {
+		try {
+			Mac m = Mac.getInstance(algorithm);
+			m.init(new SecretKeySpec(key, algorithm));
+			return m;
+		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -106,6 +160,52 @@ public class HashUtil {
 	 */
 	public static MessageDigest getSHA512() {
 		return get(SHA512);
+	}
+	
+	/**
+	 * Returns a new {@link Mac} object that implements the HMAC-MD5 algorithm using the specified key.
+	 * @param key The key.
+	 * @return The {@link Mac} object.
+	 * @throws IllegalArgumentException If the HMAC-MD5 algorithm is not supported by this runtime.
+	 * @see #getMac(String, byte[])
+	 * @since 1.3
+	 */
+	public static Mac getHmacMD5(byte[] key) {
+		return getMac(HMAC_MD5, key);
+	}
+	
+	/**
+	 * Returns a new {@link Mac} object that implements the HMAC-SHA1 algorithm using the specified key.
+	 * @param key The key.
+	 * @return The {@link Mac} object.
+	 * @see #getMac(String, byte[])
+	 * @since 1.3
+	 */
+	public static Mac getHmacSHA1(byte[] key) {
+		return getMac(HMAC_SHA1, key); // HMAC-SHA1 must be supported ==> no IllegalArgumentException
+	}
+	
+	/**
+	 * Returns a new {@link Mac} object that implements the HMAC-SHA256 algorithm using the specified key.
+	 * @param key The key.
+	 * @return The {@link Mac} object.
+	 * @see #getMac(String, byte[])
+	 * @since 1.3
+	 */
+	public static Mac getHmacSHA256(byte[] key) {
+		return getMac(HMAC_SHA256, key); // HMAC-SHA1 must be supported ==> no IllegalArgumentException
+	}
+	
+	/**
+	 * Returns a new {@link Mac} object that implements the HMAC-SHA512 algorithm using the specified key.
+	 * @param key The key.
+	 * @return The {@link Mac} object.
+	 * @throws IllegalArgumentException If the HMAC-SHA512 algorithm is not supported by this runtime.
+	 * @see #getMac(String, byte[])
+	 * @since 1.3
+	 */
+	public static Mac getHmacSHA512(byte[] key) {
+		return getMac(HMAC_SHA512, key);
 	}
 	
 	
