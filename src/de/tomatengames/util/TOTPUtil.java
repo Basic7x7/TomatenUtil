@@ -2,6 +2,13 @@ package de.tomatengames.util;
 
 import javax.crypto.Mac;
 
+/**
+ * Provides methods to calculate HTOP and TOTP codes.
+ * 
+ * @author LukasE7x7
+ * @version 2023-06-18
+ * @since 1.3
+ */
 public class TOTPUtil {
 	
 	/**
@@ -35,8 +42,9 @@ public class TOTPUtil {
 	/**
 	 * Returns the modulus to cut the last n (codeLength) digits from some integer.
 	 * The digits are supposed to be obtained by that integer % modulus.
-	 * The return value is 10^n for n in range [0, 9].
-	 * If n >= 10 this will return {@link Integer#MIN_VALUE}, which, used as a modulus, results in the original integer for any non-negative input integer.
+	 * The return value is {@code 10^n} for n in range {@code [0, 9]}.
+	 * If {@code n >= 10} this will return {@link Integer#MIN_VALUE},
+	 * which, used as a modulus, results in the original integer for any non-negative input integer.
 	 * @param codeLength The amount of digits to cut (n).
 	 * @return The modulus.
 	 */
@@ -66,7 +74,7 @@ public class TOTPUtil {
 	 * @param mac The MAC algorithm.
 	 * @param counter The HOTP counter.
 	 * @param codeLength The HOTP code's length.
-	 * @return The HOTP code as a string.
+	 * @return The HOTP code as a string. Not {@code null}.
 	 */
 	public static String hotpString(Mac mac, long counter, int codeLength) {
 		return toString(hotpFull(mac, counter), codeLength);
@@ -79,7 +87,7 @@ public class TOTPUtil {
 	 * This does not insert any spaces.
 	 * @param code The code.
 	 * @param codeLength The output code length.
-	 * @return The code as a string.
+	 * @return The code as a string. Not {@code null}.
 	 */
 	public static String toString(int code, int codeLength) {
 		char[] out = new char[codeLength];

@@ -14,7 +14,9 @@ import javax.crypto.spec.SecretKeySpec;
  * Provides utilities to work with hashes.
  * 
  * @author Basic7x7
- * @version 2023-02-13
+ * @version
+ * 2023-06-19 modified<br>
+ * 2023-02-13 created
  * @since 1.0
  */
 public class HashUtil {
@@ -52,6 +54,7 @@ public class HashUtil {
 	 * The name of the {@code HMAC-MD5} MAC algorithm.
 	 * <p>
 	 * All Java platforms before Java 14 are required to support this algorithm.
+	 * @since 1.3
 	 */
 	public static final String HMAC_MD5 = "HmacMD5";
 	
@@ -59,6 +62,7 @@ public class HashUtil {
 	 * The name of the {@code HMAC-SHA1} MAC algorithm.
 	 * <p>
 	 * All Java platforms are required to support this algorithm.
+	 * @since 1.3
 	 */
 	public static final String HMAC_SHA1 = "HmacSHA1";
 	
@@ -66,6 +70,7 @@ public class HashUtil {
 	 * The name of the {@code HMAC-SHA256} MAC algorithm.
 	 * <p>
 	 * All Java platforms are required to support this algorithm.
+	 * @since 1.3
 	 */
 	public static final String HMAC_SHA256 = "HmacSHA256";
 	
@@ -73,6 +78,7 @@ public class HashUtil {
 	 * The name of the {@code HMAC-SHA512} MAC algorithm.
 	 * <p>
 	 * The Java platform is <b>not</b> required to support this algorithm.
+	 * @since 1.3
 	 */
 	public static final String HMAC_SHA512 = "HmacSHA512";
 	
