@@ -3,7 +3,7 @@ package de.tomatengames.util;
 import javax.crypto.Mac;
 
 /**
- * Provides methods to calculate HTOP and TOTP codes.
+ * Provides methods to calculate HOTP and TOTP codes.
  * 
  * @author LukasE7x7
  * @version 2023-06-18

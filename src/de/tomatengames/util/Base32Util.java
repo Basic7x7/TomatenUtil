@@ -8,13 +8,15 @@ import java.io.OutputStream;
  * Provides methods to convert between a byte array and Base32.
  * 
  * @author LukasE7x7
- * @version 2023-06-19
+ * @version 2023-06-18
  * @since 1.3
  */
 public class Base32Util {
 	
 	/**
 	 * Converts the specified Base32 string into a byte array.
+	 * <p>
+	 * Does not currently detect invalid padding.
 	 * @param base32 The Base32 string.
 	 * Each character my be in lower or upper case. Must not be {@code null}.
 	 * @return The bytes represented by the Base32 string. Not {@code null}.
@@ -32,6 +34,8 @@ public class Base32Util {
 	
 	/**
 	 * Writes the bytes represented by the specified Base32 string into the {@link OutputStream}.
+	 * <p>
+	 * Does not currently detect invalid padding.
 	 * @param base32Chars The characters of the Base32 string.
 	 * Each character my be in lower or upper case. Must not be {@code null}.
 	 * @param out The output stream. Must not be {@code null}.
