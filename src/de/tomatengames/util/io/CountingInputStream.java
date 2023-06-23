@@ -8,11 +8,14 @@ import java.io.InputStream;
  * A {@link FilterInputStream} that counts the bytes read from it.
  * 
  * @author Basic7x7
- * @version 2023-04-12
+ * @version
+ * 2023-06-23 modified<br>
+ * 2023-04-12 created
  * @since 1.2
  */
 public class CountingInputStream extends FilterInputStream {
 	private long byteCount;
+	private long markedByteCount;
 	
 	/**
 	 * Creates a new {@link CountingInputStream}.
@@ -21,6 +24,7 @@ public class CountingInputStream extends FilterInputStream {
 	public CountingInputStream(InputStream in) {
 		super(in);
 		this.byteCount = 0L;
+		this.markedByteCount = 0L;
 	}
 	
 	/**
@@ -65,5 +69,17 @@ public class CountingInputStream extends FilterInputStream {
 			this.byteCount += len;
 		}
 		return len;
+	}
+	
+	@Override
+	public synchronized void mark(int readlimit) {
+		this.in.mark(readlimit);
+		this.markedByteCount = this.byteCount;
+	}
+	
+	@Override
+	public synchronized void reset() throws IOException {
+		this.in.reset();
+		this.byteCount = this.markedByteCount;
 	}
 }
