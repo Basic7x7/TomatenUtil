@@ -23,6 +23,14 @@ public class CountingInputStream extends FilterInputStream {
 		this.byteCount = 0L;
 	}
 	
+	/**
+	 * Returns the number of read bytes.
+	 * @return The number of read bytes.
+	 */
+	public long getByteCount() {
+		return this.byteCount;
+	}
+	
 	@Override
 	public int read() throws IOException {
 		int r = this.in.read();
@@ -50,11 +58,12 @@ public class CountingInputStream extends FilterInputStream {
 		return n;
 	}
 	
-	/**
-	 * Returns the number of read bytes.
-	 * @return The number of read bytes.
-	 */
-	public long getByteCount() {
-		return this.byteCount;
+	@Override
+	public long skip(long n) throws IOException {
+		long len = this.in.skip(n);
+		if (len > 0L) {
+			this.byteCount += len;
+		}
+		return len;
 	}
 }
