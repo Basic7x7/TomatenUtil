@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -15,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
  * 
  * @author Basic7x7
  * @version
- * 2023-06-18 modified<br>
+ * 2023-07-29 modified<br>
  * 2023-02-13 created
  * @since 1.0
  */
@@ -213,7 +214,7 @@ public class HashUtil {
 	 * Calculates the hash of the specified bytes and returns it.
 	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
 	 * @param bytes The bytes that should be hashed.
-	 * @return The hash.
+	 * @return The hash. Not {@code null}.
 	 */
 	public static byte[] hash(MessageDigest alg, byte[] bytes) {
 		alg.reset();
@@ -226,7 +227,7 @@ public class HashUtil {
 	 * @param bytes Multiple byte arrays that are handled as a single large one.
 	 * Must not be {@code null}, but the inner arrays may be {@code null}.
 	 * Inner arrays that are {@code null} are ignored.
-	 * @return The hash.
+	 * @return The hash. Not {@code null}.
 	 */
 	public static byte[] hash(MessageDigest alg, byte[]... bytes) {
 		alg.reset();
@@ -242,7 +243,7 @@ public class HashUtil {
 	 * Reads data from the input stream and hashes it.
 	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
 	 * @param input The input stream from which the data should be read.
-	 * @return The hash.
+	 * @return The hash. Not {@code null}.
 	 * @throws IOException If an I/O error occurs.
 	 */
 	public static byte[] hash(MessageDigest alg, InputStream input) throws IOException {
@@ -259,7 +260,7 @@ public class HashUtil {
 	 * Reads the content from the specified file and hashes it.
 	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
 	 * @param path A path to the file that should be read.
-	 * @return The hash of the file's content.
+	 * @return The hash of the file's content. Not {@code null}.
 	 * @throws IOException If an I/O error occurs.
 	 */
 	public static byte[] hash(MessageDigest alg, Path path) throws IOException {
@@ -268,4 +269,53 @@ public class HashUtil {
 		}
 	}
 	
+	/**
+	 * UTF8-encodes the specified {@link String} and passes it to the specified {@link MessageDigest}.
+	 * <p>
+	 * This method behaves like {@code alg.update(str.getBytes(StandardCharsets.UTF_8))},
+	 * but requires only constant memory for large strings.
+	 * @param alg The {@link MessageDigest} that should be updated.
+	 * @param str The string that should be encoded.
+	 * @since 1.3
+	 */
+	public static void updateUTF8(MessageDigest alg, String str) {
+		int strLen = str.length();
+		
+		// Creates a buffer for the encoded data.
+		// If the String is not too long, the buffer's length is str.length+4.
+		// So, assuming the String contains only ASCII characters,
+		// only one hash-update iteration is needed.
+		// Also, the buffer size is proportional to the size of the string.
+		// The max offset guarantees that 4 bytes are available in the buffer
+		// to store the encoded code point in all cases.
+		int maxBufOffset = NumberUtil.limit(strLen, 0, 2048);
+		int bufLen = maxBufOffset + 4;
+		byte[] buf = new byte[bufLen];
+		
+		int charIndex = 0;
+		while (charIndex < strLen) {
+			// Fill the buffer with encoded code points.
+			int bufOff = 0;
+			while (bufOff <= maxBufOffset && charIndex < strLen) {
+				int ch = str.codePointAt(charIndex);
+				bufOff += CharsetUtil.encodeUTF8(ch, buf, bufOff);
+				charIndex += Character.charCount(ch);
+			}
+			// Update the hash using the buffer.
+			alg.update(buf, 0, bufOff);
+		}
+	}
+	
+	/**
+	 * UTF8-encodes the specified {@link String} and hashes it.
+	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
+	 * @param str The string that should be encoded.
+	 * @return The hash. Not {@code null}.
+	 * @since 1.3
+	 */
+	public static byte[] hashUTF8(MessageDigest alg, String str) {
+		alg.reset();
+		updateUTF8(alg, str);
+		return alg.digest();
+	}
 }
