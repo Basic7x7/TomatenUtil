@@ -19,6 +19,7 @@ const int MAX_FUNCTION_N = 9;
 ##
 
 run-inplace -io "@src;/ArrayUtil.java"
+run-inplace -io "@src;/NumberUtil.java"
 
 ##
 for (object type in types) {
