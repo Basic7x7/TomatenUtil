@@ -1,5 +1,6 @@
 package de.tomatengames.util.test;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +48,37 @@ class HashUtilTest {
 				HexUtil.bytesToHex(HashUtil.hash(sha256, dir.resolve("1.txt"))));
 		assertEquals("5c2d62601975a253afdc823f04026b380c4e94664f04c41ed6c3bf8fc4248039",
 				HexUtil.bytesToHex(HashUtil.hash(sha256, dir.resolve("2.txt"))));
+	}
+	
+	@Test
+	void testUTF8Hash() {
+		MessageDigest sha256 = HashUtil.getSHA256();
+		
+		assertEquals("9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+				HexUtil.bytesToHex(HashUtil.hashUTF8(sha256, "test")));
+		assertEquals("2e99758548972a8e8822ad47fa1017ff72f06f3ff6a016851f45c398732bc50c",
+				HexUtil.bytesToHex(HashUtil.hashUTF8(sha256, "this is a test")));
+		
+		assertUTF8Hash(sha256, "test");
+		assertUTF8Hash(sha256, "test öäü ? 10€");
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertUTF8Hash(sha256, "Mình nói tiếng Việt");
+		assertUTF8Hash(sha256, "𨉟呐㗂越");
+		
+		// Long input string.
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < 10000; i++) {
+			builder.append("Mình nói tiếng Việt");
+			builder.append("test");
+			builder.append("𨉟呐㗂越");
+		}
+		assertUTF8Hash(sha256, builder.toString());
+	}
+	
+	private static void assertUTF8Hash(MessageDigest sha256, String str) {
+		assertArrayEquals(HashUtil.hash(sha256, str.getBytes(StandardCharsets.UTF_8)),
+				HashUtil.hashUTF8(sha256, str));
 	}
 	
 }
