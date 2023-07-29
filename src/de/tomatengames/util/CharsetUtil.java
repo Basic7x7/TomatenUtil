@@ -127,31 +127,7 @@ public class CharsetUtil {
 					i--; // Revert the ++i
 				}
 			}
-			
-			if (codePoint <= 0x7F) {
-				out.write(codePoint);
-				continue;
-			}
-			if (codePoint <= 0x7FF) {
-				out.write(0b110_00000 | ((codePoint >>> 6) & 0b11111)); // Bits 6-11
-				out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-				continue;
-			}
-			if (codePoint <= 0xFFFF) {
-				out.write(0b1110_0000 | ((codePoint >>> 12) & 0b1111)); // Bits 12-16
-				out.write(0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
-				out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-				continue;
-			}
-			// Only allow 0x10FFFF codePoints [https://www.rfc-editor.org/rfc/rfc3629#section-3]
-			if (codePoint <= 0x10FFFF) {
-				out.write(0b11110_000 | ((codePoint >>> 18) & 0b111)); // Bits 18-21
-				out.write(0b10_000000 | ((codePoint >>> 12) & 0b111111)); // Bits 12-18
-				out.write(0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
-				out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-				continue;
-			}
-			throw new IOException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+			encodeUTF8(codePoint, out);
 		}
 	}
 }
