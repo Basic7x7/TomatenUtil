@@ -114,20 +114,10 @@ public class CharsetUtil {
 	 */
 	public static void encodeUTF8(String str, OutputStream out) throws IOException {
 		int n = str.length();
-		for (int i = 0; i < n; i++) {
-			char ch = str.charAt(i);
-			// Get the code point at the current index.
-			int codePoint = ch;
-			if (Character.isHighSurrogate(ch) && ++i < n) {
-				char low = str.charAt(i);
-				if (Character.isLowSurrogate(low)) {
-					codePoint = Character.toCodePoint(ch, low);
-				}
-				else {
-					i--; // Revert the ++i
-				}
-			}
+		for (int i = 0; i < n;) {
+			int codePoint = str.codePointAt(i);
 			encodeUTF8(codePoint, out);
+			i += Character.charCount(codePoint);
 		}
 	}
 	
