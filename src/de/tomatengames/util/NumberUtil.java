@@ -15,6 +15,10 @@ package de.tomatengames.util;
  */
 public class NumberUtil {
 	
+	// Static class
+	private NumberUtil() {
+	}
+	
 /* txs-begin limit
 # for (string type in ["int", "long", "double"]) {
 	
