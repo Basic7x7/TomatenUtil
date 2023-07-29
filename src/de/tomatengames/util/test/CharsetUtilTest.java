@@ -2,13 +2,17 @@ package de.tomatengames.util.test;
 
 import static de.tomatengames.util.CharsetUtil.encodeUTF8;
 import static de.tomatengames.util.TestUtil.assertOutputStream;
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
+
+import de.tomatengames.util.HexUtil;
 
 class CharsetUtilTest {
 	
@@ -57,5 +61,41 @@ class CharsetUtilTest {
 				out -> encodeUTF8("Mình nói tiếng Việt", out));
 		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
 				out -> encodeUTF8("𨉟呐㗂越", out));
+	}
+	
+	@Test
+	void testEncodeUTF8ToByteArray() throws IOException {
+		assertEncToArr("41", 'A');
+		assertEncToArr("C3B6", 'ö');
+		
+		// Test offset
+		byte[] out = new byte[5];
+		out[0] = 24;
+		assertEquals(1, encodeUTF8('B', out, 1));
+		assertEquals(1, encodeUTF8('D', out, 2));
+		assertEquals(2, encodeUTF8('ö', out, 3));
+		assertArrayEquals(new byte[] { 24, 0x42, 0x44, (byte) 0xC3, (byte) 0xB6 }, out);
+		
+		// Test errors
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(-1, out, 0));
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xFFFFFF, out, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8('A', out, 5));
+		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8('ö', out, 4)); // 2 bytes
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertEncToArr("24", '$');
+		assertEncToArr("C2A3", '£'); // U+00A3
+		assertEncToArr("D098", 'И'); // U+0418
+		assertEncToArr("E0A4B9", 'ह'); // U+0939
+		assertEncToArr("E282AC", '€'); // U+20AC
+		assertEncToArr("ED959C", '한'); // U+D55C
+		assertEncToArr("F0908D88", 0x10348);
+	}
+	
+	private void assertEncToArr(String expectedHex, int codePoint) {
+		byte[] expected = HexUtil.hexToBytes(expectedHex);
+		byte[] out = new byte[4];
+		assertEquals(expected.length, encodeUTF8(codePoint, out, 0));
+		assertArrayEquals(Arrays.copyOf(expected, 4), out);
 	}
 }
