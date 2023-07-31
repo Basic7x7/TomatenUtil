@@ -4,7 +4,7 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link IntHashMap}.
+ * This entry type is used by the {@link LongHashMap}.
  * 
  * @param <V> The type of the value.
  * 
@@ -13,13 +13,13 @@ import java.util.ConcurrentModificationException;
  * @since 1.3
  */
 // !!! TextScript generated !!!
-public interface IntEntry<V> {
+public interface LongEntry<V> {
 	
 	/**
 	 * Returns the key of this mapping.
 	 * @return The key.
 	 */
-	public int getKey();
+	public long getKey();
 	
 	
 	/**

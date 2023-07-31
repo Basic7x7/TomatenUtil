@@ -1,10 +1,18 @@
 package de.tomatengames.util.map;
+##
+:inline=%
+
+extern final string namePrefix;
+final string Entry = namePrefix :: "Entry";
+
+extern final string[] keyTypes;
+##
 
 import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link IntHashMap}.
+ * This entry type is used by the {@link %namePrefix;HashMap}.
  * 
  * @param <V> The type of the value.
  * 
@@ -12,15 +20,21 @@ import java.util.ConcurrentModificationException;
  * @version 2023-07-31
  * @since 1.3
  */
-// !!! TextScript generated !!!
-public interface IntEntry<V> {
+// %txsinfo();
+public interface %Entry;<V> {
 	
+##
+for (string key in keyTypes) with (index) {
+	##
 	/**
-	 * Returns the key of this mapping.
-	 * @return The key.
+	 * Returns %? keyTypes.length > 1 && "part "::(index+1)::" of"; the key of this mapping.
+	 * @return The key %? keyTypes.length > 1 && "part";.
 	 */
-	public int getKey();
+	public %keyTypes[index]; getKey%keyTypes.length > 1 && index+1;();
 	
+	##
+}
+##
 	
 	/**
 	 * Returns the value of this mapping.

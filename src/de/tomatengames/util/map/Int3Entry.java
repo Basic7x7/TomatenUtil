@@ -4,7 +4,7 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link IntHashMap}.
+ * This entry type is used by the {@link Int3HashMap}.
  * 
  * @param <V> The type of the value.
  * 
@@ -13,13 +13,25 @@ import java.util.ConcurrentModificationException;
  * @since 1.3
  */
 // !!! TextScript generated !!!
-public interface IntEntry<V> {
+public interface Int3Entry<V> {
 	
 	/**
-	 * Returns the key of this mapping.
-	 * @return The key.
+	 * Returns part 1 of the key of this mapping.
+	 * @return The key part.
 	 */
-	public int getKey();
+	public int getKey1();
+	
+	/**
+	 * Returns part 2 of the key of this mapping.
+	 * @return The key part.
+	 */
+	public int getKey2();
+	
+	/**
+	 * Returns part 3 of the key of this mapping.
+	 * @return The key part.
+	 */
+	public int getKey3();
 	
 	
 	/**

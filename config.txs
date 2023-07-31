@@ -51,3 +51,10 @@ for (object type in types) {
 	}
 }
 ##
+
+run -i "@txs;/Entry.txs" -o "@src;/map/IntEntry.java" -v namePrefix="Int" keyTypes=["int"]
+run -i "@txs;/Entry.txs" -o "@src;/map/Int2Entry.java" -v namePrefix="Int2" keyTypes=["int", "int"]
+run -i "@txs;/Entry.txs" -o "@src;/map/Int3Entry.java" -v namePrefix="Int3" keyTypes=["int", "int", "int"]
+run -i "@txs;/Entry.txs" -o "@src;/map/LongEntry.java" -v namePrefix="Long" keyTypes=["long"]
+run -i "@txs;/Entry.txs" -o "@src;/map/Long2Entry.java" -v namePrefix="Long2" keyTypes=["long", "long"]
+run -i "@txs;/Entry.txs" -o "@src;/map/Long3Entry.java" -v namePrefix="Long3" keyTypes=["long", "long", "long"]
