@@ -294,8 +294,7 @@ public final class Long2HashMap<V> implements Iterable<Long2Entry<V>> {
 	
 	private final Node<V> findOrCreate(long key1, long key2) {
 		// If the key is already present in the map, it is returned.
-		int mask = this.mask;
-		Node<V> node = findNode(key1, key2, table, mask);
+		Node<V> node = findNode(key1, key2, table, this.mask);
 		if (node != null) {
 			return node;
 		}
@@ -308,9 +307,10 @@ public final class Long2HashMap<V> implements Iterable<Long2Entry<V>> {
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		insertNode(new Node<>(key1, key2), table, mask);
+		Node<V> newNode = new Node<>(key1, key2);
+		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
-		return null;
+		return newNode;
 	}
 	
 	/**
@@ -463,6 +463,7 @@ public final class Long2HashMap<V> implements Iterable<Long2Entry<V>> {
 			else {
 				table[currentIndex] = current.next;
 			}
+			size--;
 			
 			// Mark the current node as removed.
 			this.currentNode = null;

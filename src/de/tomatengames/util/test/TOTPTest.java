@@ -1,9 +1,13 @@
 package de.tomatengames.util.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.nio.charset.StandardCharsets;
+
 import javax.crypto.Mac;
+
 import org.junit.jupiter.api.Test;
+
 import de.tomatengames.util.HashUtil;
 import de.tomatengames.util.TOTPUtil;
 

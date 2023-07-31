@@ -290,8 +290,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	
 	private final Node<V> findOrCreate(int key) {
 		// If the key is already present in the map, it is returned.
-		int mask = this.mask;
-		Node<V> node = findNode(key, table, mask);
+		Node<V> node = findNode(key, table, this.mask);
 		if (node != null) {
 			return node;
 		}
@@ -304,9 +303,10 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		insertNode(new Node<>(key), table, mask);
+		Node<V> newNode = new Node<>(key);
+		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
-		return null;
+		return newNode;
 	}
 	
 	/**
@@ -452,6 +452,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 			else {
 				table[currentIndex] = current.next;
 			}
+			size--;
 			
 			// Mark the current node as removed.
 			this.currentNode = null;
