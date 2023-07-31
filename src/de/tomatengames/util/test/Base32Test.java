@@ -1,8 +1,11 @@
 package de.tomatengames.util.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.nio.charset.StandardCharsets;
+
 import org.junit.jupiter.api.Test;
+
 import de.tomatengames.util.Base32Util;
 
 class Base32Test {
