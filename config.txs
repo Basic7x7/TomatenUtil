@@ -53,8 +53,25 @@ for (object type in types) {
 ##
 
 run -i "@txs;/Entry.txs" -o "@src;/map/IntEntry.java" -v namePrefix="Int" keyTypes=["int"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/IntHashMap.java"
+	-v namePrefix="Int" keyTypes=["int"] hash="key"
+
 run -i "@txs;/Entry.txs" -o "@src;/map/Int2Entry.java" -v namePrefix="Int2" keyTypes=["int", "int"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/Int2HashMap.java"
+	-v namePrefix="Int2" keyTypes=["int", "int"] hash="(key2*31 + key1)"
+
 run -i "@txs;/Entry.txs" -o "@src;/map/Int3Entry.java" -v namePrefix="Int3" keyTypes=["int", "int", "int"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/Int3HashMap.java"
+	-v namePrefix="Int3" keyTypes=["int", "int", "int"] hash="(((key3*31) + key2)*31 + key1)"
+
 run -i "@txs;/Entry.txs" -o "@src;/map/LongEntry.java" -v namePrefix="Long" keyTypes=["long"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/LongHashMap.java"
+	-v namePrefix="Long" keyTypes=["long"] hash="Long.hashCode(key)"
+
 run -i "@txs;/Entry.txs" -o "@src;/map/Long2Entry.java" -v namePrefix="Long2" keyTypes=["long", "long"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/Long2HashMap.java"
+	-v namePrefix="Long2" keyTypes=["long", "long"] hash="(Long.hashCode(key2)*31 + Long.hashCode(key1))"
+
 run -i "@txs;/Entry.txs" -o "@src;/map/Long3Entry.java" -v namePrefix="Long3" keyTypes=["long", "long", "long"]
+run -i "@txs;/HashMap.txs" -o "@src;/map/Long3HashMap.java"
+	-v namePrefix="Long3" keyTypes=["long", "long", "long"] hash="(((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1))"

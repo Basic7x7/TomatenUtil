@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A {@link HashMap}-like data structure that maps {@code int} keys to object values.
+ * A {@link HashMap}-like data structure that maps {@code long} keys to object values.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  * @since 1.3
  */
 // !!! TextScript generated !!!
-public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
+public final class LongHashMap<V> implements Iterable<LongEntry<V>> {
 	private static final double ENLARGE_LOAD_FACTOR = 0.75;
 	private static final int MIN_TABLE_SIZE = 16;
 	private static final int MAX_TABLE_SIZE = 1 << 30;
@@ -33,9 +33,9 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	private int modcount;
 	
 	/**
-	 * Creates a new and empty {@link IntHashMap}.
+	 * Creates a new and empty {@link LongHashMap}.
 	 */
-	public IntHashMap() {
+	public LongHashMap() {
 		this.size = 0L;
 		this.mask = 0;
 		this.enlargeThreshold = 0;
@@ -44,10 +44,10 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	}
 	
 	/**
-	 * Creates a new {@link IntHashMap} that contains all the mappings of the specified map.
+	 * Creates a new {@link LongHashMap} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public IntHashMap(IntHashMap<? extends V> map) {
+	public LongHashMap(LongHashMap<? extends V> map) {
 		this();
 		this.putAll(map);
 	}
@@ -77,7 +77,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * If the key was not present in this map, {@code null} is returned. 
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
-	public V put(int key, V value) {
+	public V put(long key, V value) {
 		requireNotNull(value, "The value ...");
 		this.modcount++;
 		Node<V> node = this.findOrCreate(key);
@@ -96,7 +96,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * Otherwise, the previous value is still present.
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
-	public V putIfAbsent(int key, V value) {
+	public V putIfAbsent(long key, V value) {
 		requireNotNull(value, "The value ...");
 		Node<V> node = this.findOrCreate(key);
 		
@@ -118,7 +118,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
-	public V get(int key) {
+	public V get(long key) {
 		Node<V> node = findNode(key, this.table, this.mask);
 		return node != null ? node.value : null;
 	}
@@ -130,7 +130,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * @param key The key that should be checked.
 	 * @return If the specified key is present in this map.
 	 */
-	public boolean containsKey(int key) {
+	public boolean containsKey(long key) {
 		return findNode(key, this.table, this.mask) != null;
 	}
 	
@@ -141,7 +141,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * @return The value of the entry that was removed.
 	 * If no entry was removed, {@code null} is returned.
 	 */
-	public V remove(int key) {
+	public V remove(long key) {
 		Node<V>[] table = this.table;
 		if (table == null) {
 			return null; // No elements in the map
@@ -193,7 +193,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	}
 	
 	@Override
-	public void forEach(Consumer<? super IntEntry<V>> action) {
+	public void forEach(Consumer<? super LongEntry<V>> action) {
 		Node<V>[] table = this.table;
 		if (table == null) {
 			return; // The map is empty
@@ -216,7 +216,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(IntHashMap<? extends V> otherMap) {
+	public void putAll(LongHashMap<? extends V> otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
@@ -236,13 +236,13 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		}
 		
 		// Checks the sizes.
-		IntHashMap<?> other = (IntHashMap<?>) obj;
+		LongHashMap<?> other = (LongHashMap<?>) obj;
 		if (this.size != other.size) {
 			return false;
 		}
 		
 		// Checks that this map is a subset of the other map.
-		for (IntEntry<V> entry : this) {
+		for (LongEntry<V> entry : this) {
 			Object otherValue = other.get(entry.getKey());
 			if (otherValue == null) {
 				return false; // Other does not contain the current entry
@@ -261,7 +261,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	public int hashCode() {
 		// The order of the loop is undefined, but '+' is commutative.
 		int result = 0;
-		for (IntEntry<V> entry : this) {
+		for (LongEntry<V> entry : this) {
 			result += entry.hashCode();
 		}
 		return result;
@@ -269,11 +269,11 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	
 	
 	
-	private static final int indexOf(int key, int mask) {
-		return key & mask;
+	private static final int indexOf(long key, int mask) {
+		return Long.hashCode(key) & mask;
 	}
 	
-	private static final <V> Node<V> findNode(int key, Node<V>[] table, int mask) {
+	private static final <V> Node<V> findNode(long key, Node<V>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -288,7 +288,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		return null;
 	}
 	
-	private final Node<V> findOrCreate(int key) {
+	private final Node<V> findOrCreate(long key) {
 		// If the key is already present in the map, it is returned.
 		int mask = this.mask;
 		Node<V> node = findNode(key, table, mask);
@@ -356,19 +356,19 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		table[index] = node;
 	}
 	
-	private static class Node<V> implements IntEntry<V> {
-		private final int key;
+	private static class Node<V> implements LongEntry<V> {
+		private final long key;
 		private V value;
 		private Node<V> next;
 		
-		private Node(int key) {
+		private Node(long key) {
 			this.key = key;
 			this.value = null;
 			this.next = null;
 		}
 		
 		@Override
-		public int getKey() {
+		public long getKey() {
 			return this.key;
 		}
 		
@@ -399,17 +399,17 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(this.value) + key;
+			return Objects.hashCode(this.value) + Long.hashCode(key);
 		}
 	}
 	
 	
 	@Override
-	public Iterator<IntEntry<V>> iterator() {
+	public Iterator<LongEntry<V>> iterator() {
 		return new NodeIterator();
 	}
 	
-	private final class NodeIterator implements Iterator<IntEntry<V>> {
+	private final class NodeIterator implements Iterator<LongEntry<V>> {
 		private Node<V> prevNode, currentNode, nextNode;
 		private int initModCount;
 		
@@ -426,7 +426,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		}
 		
 		@Override
-		public IntEntry<V> next() {
+		public LongEntry<V> next() {
 			Node<V> next = this.nextNode;
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
