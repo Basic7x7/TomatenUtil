@@ -1,3 +1,22 @@
+Version 1.3 (2023-07-31)
++ RequirementUtil
+    e.g. requireNotNull(obj, message)
++ NumberUtil
+    e.g. limit(value, min, max)
++ TOTPUtil
+    Enables to generate TOTP and HOTP tokens.
++ Base32Util
+    Enables to encode/decode byte arrays in Base32.
++ CharsetUtil: encodeUTF8(codePoint, byte[], offset)
+    Writes the encoded code point into the byte array.
++ HashUtil: hashUTF8(...)
+    Enables to hash long Strings using UTF-8 encoding.
++ HashUtil: getHmacSHA1(), etc.
++ IntHashMap, Int3HashMap, LongHashMap, etc.
+    HashMap-like implementation that uses e.g. int, (int, int, int) or long as key type.
+* Bugfix (medium): CountingInputStream supports skip(), mark() and reset()
+
+
 Version 1.2 (2023-04-14)
 + XToXFunction interfaces
 + ConsumerWithThrows interfaces
