@@ -63,6 +63,7 @@ class CharsetUtilTest {
 				out -> encodeUTF8("𨉟呐㗂越", out));
 	}
 	
+	
 	@Test
 	void testEncodeUTF8ToByteArray() throws IOException {
 		assertEncToArr("41", 'A');
