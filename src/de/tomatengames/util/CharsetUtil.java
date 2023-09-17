@@ -3,6 +3,8 @@ package de.tomatengames.util;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.tomatengames.util.exception.LimitException;
+
 /**
  * Provides utilities to work with character encodings.
  * 
@@ -122,6 +124,33 @@ public class CharsetUtil {
 		for (int i = 0; i < n;) {
 			int codePoint = str.codePointAt(i);
 			written += encodeUTF8(codePoint, out);
+			i += Character.charCount(codePoint);
+		}
+		return written;
+	}
+	
+	/**
+	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
+	 * <p>
+	 * Up to {@code maxOutput+3} bytes may be written to the output.
+	 * If more than {@code maxOutput} bytes are written to the output, an {@link LimitException} is thrown.
+	 * @param str The string that should be encoded.
+	 * @param out The output stream.
+	 * @param maxOutput The maximum output byte length. Must not be negative.
+	 * @return The amount of bytes written.
+	 * @throws IOException If an I/O error occurs or a code point is out of range.
+	 * @throws LimitException If the maximum output length is exceeded.
+	 * @since 1.4
+	 */
+	public static long encodeUTF8(String str, OutputStream out, long maxOutput) throws IOException {
+		long written = 0L;
+		int n = str.length();
+		for (int i = 0; i < n;) {
+			int codePoint = str.codePointAt(i);
+			written += encodeUTF8(codePoint, out);
+			if (written > maxOutput) {
+				throw new LimitException();
+			}
 			i += Character.charCount(codePoint);
 		}
 		return written;
