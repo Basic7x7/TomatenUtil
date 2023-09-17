@@ -147,10 +147,10 @@ public class CharsetUtil {
 		int n = str.length();
 		for (int i = 0; i < n;) {
 			int codePoint = str.codePointAt(i);
-			written += encodeUTF8(codePoint, out);
-			if (written > maxOutput) {
+			if (written >= maxOutput) {
 				throw new LimitException();
 			}
+			written += encodeUTF8(codePoint, out);
 			i += Character.charCount(codePoint);
 		}
 		return written;
