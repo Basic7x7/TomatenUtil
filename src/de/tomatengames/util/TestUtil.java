@@ -130,8 +130,10 @@ public class TestUtil {
 			action.accept(out);
 		} catch (Throwable t) {
 			assertEquals(expectedType, t.getClass());
+			return out;
 		}
-		return out;
+		fail("Expected " + expectedType.getName() + " to be thrown, but nothing was thrown.");
+		return null;
 	}
 	
 	/**
