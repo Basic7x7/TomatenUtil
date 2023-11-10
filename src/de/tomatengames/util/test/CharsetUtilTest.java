@@ -89,6 +89,8 @@ class CharsetUtilTest {
 				LimitException.class, out -> encodeUTF8("Mình nói tiếng Việt", out, 11)));
 		assertOutputStream("F0A8899F E59190", assertOutputStreamThrows(LimitException.class,
 				out -> encodeUTF8("𨉟呐㗂越", out, 6)));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("𨉟呐㗂越", out, 12)));
 	}
 	
 	@Test
@@ -118,6 +120,17 @@ class CharsetUtilTest {
 		assertEncToArr("E282AC", '€'); // U+20AC
 		assertEncToArr("ED959C", '한'); // U+D55C
 		assertEncToArr("F0908D88", 0x10348);
+		
+		
+		assertEncToArr("41", "A");
+		assertEncToArr("42 44 C3 B6", "BDö");
+		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test", out, -1));
+		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test12", out, 0));
+		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test", out, 2));
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertEncToArr("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74", "Mình nói tiếng Việt");
+		assertEncToArr("F0A8899F E59190 E39782 E8B68A", "𨉟呐㗂越");
 	}
 	
 	private void assertEncToArr(String expectedHex, int codePoint) {
@@ -125,5 +138,11 @@ class CharsetUtilTest {
 		byte[] out = new byte[4];
 		assertEquals(expected.length, encodeUTF8(codePoint, out, 0));
 		assertArrayEquals(Arrays.copyOf(expected, 4), out);
+	}
+	private void assertEncToArr(String expectedHex, String str) {
+		byte[] expected = HexUtil.hexToBytes(expectedHex.replace(" ", ""));
+		byte[] out = new byte[4*str.length()];
+		assertEquals(expected.length, encodeUTF8(str, out, 0));
+		assertArrayEquals(Arrays.copyOf(expected, 4*str.length()), out);
 	}
 }

@@ -59,6 +59,13 @@ class HashUtilTest {
 		assertEquals("2e99758548972a8e8822ad47fa1017ff72f06f3ff6a016851f45c398732bc50c",
 				HexUtil.bytesToHex(HashUtil.hashUTF8(sha256, "this is a test")));
 		
+		assertEquals("2e99758548972a8e8822ad47fa1017ff72f06f3ff6a016851f45c398732bc50c",
+				HexUtil.bytesToHex(HashUtil.hashUTF8(sha256, "this is a test".toCharArray())));
+		
+		HashUtil.updateUTF8(sha256, "this is a test".toCharArray(), 5, 6); // "is a t"
+		assertEquals("0e7e49a3d0b71d87686f1c1cba8bcaa3f0103f71958c5b97c86337b71fad4c29",
+				HexUtil.bytesToHex(sha256.digest()));
+		
 		assertUTF8Hash(sha256, "test");
 		assertUTF8Hash(sha256, "test öäü ? 10€");
 		
@@ -79,6 +86,8 @@ class HashUtilTest {
 	private static void assertUTF8Hash(MessageDigest sha256, String str) {
 		assertArrayEquals(HashUtil.hash(sha256, str.getBytes(StandardCharsets.UTF_8)),
 				HashUtil.hashUTF8(sha256, str));
+		assertArrayEquals(HashUtil.hash(sha256, str.getBytes(StandardCharsets.UTF_8)),
+				HashUtil.hashUTF8(sha256, str.toCharArray()));
 	}
 	
 }
