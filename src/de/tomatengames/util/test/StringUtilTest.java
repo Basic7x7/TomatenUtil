@@ -4,6 +4,7 @@ import static de.tomatengames.util.StringUtil.containsIgnoreCase;
 import static de.tomatengames.util.StringUtil.count;
 import static de.tomatengames.util.StringUtil.countFront;
 import static de.tomatengames.util.StringUtil.endsWithIgnoreCase;
+import static de.tomatengames.util.StringUtil.isEqualCT;
 import static de.tomatengames.util.StringUtil.startsWithIgnoreCase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -139,5 +140,21 @@ class StringUtilTest {
 		assertEquals(false, containsIgnoreCase(null, "a"));
 		assertEquals(false, containsIgnoreCase(null, null));
 		assertEquals(false, containsIgnoreCase("a", null));
+	}
+	
+	@Test
+	void testIsEqualCT() {
+		assertEquals(true, isEqualCT("test", "test"));
+		assertEquals(false, isEqualCT("test", "test1"));
+		assertEquals(false, isEqualCT("test", "text"));
+		assertEquals(false, isEqualCT("test", "Test"));
+		assertEquals(true, isEqualCT("Test", "Test"));
+		assertEquals(false, isEqualCT("ABC", "Test"));
+		assertEquals(false, isEqualCT("", "Test"));
+		assertEquals(true, isEqualCT("", ""));
+		assertEquals(false, isEqualCT("Test", ""));
+		assertEquals(false, isEqualCT("Test123456789", "Test"));
+		assertEquals(false, isEqualCT("Test", "Test123456789"));
+		assertEquals(true, isEqualCT("Test123456789", "Test123456789"));
 	}
 }

@@ -246,4 +246,35 @@ public class StringUtil {
 		}
 		return false;
 	}
+	
+	
+	/**
+	 * Performs a near-constant-time comparison for the specified Strings.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both Strings.
+	 * @param expected The expected String. Not {@code null}.
+	 * @param actual The String that should be tested to match the expected String. Not {@code null}.
+	 * @return If both Strings are equal.
+	 * @since 1.4
+	 */
+	public static boolean isEqualCT(String expected, String actual) {
+		int expectedLen = expected.length();
+		int actualLen = actual.length();
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses).
+		int result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			int ch1 = expected.charAt(i < expectedLen ? i : 0);
+			int ch2 = actual.charAt(i);
+			result |= ch1 ^ ch2;
+		}
+		return result == 0;
+	}
 }
