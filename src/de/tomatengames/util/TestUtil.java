@@ -114,6 +114,44 @@ public class TestUtil {
 		assertArrayEquals(expectedBytes, fileBytes);
 	}
 	
+	/**
+	 * Runs the specified action on a new {@link OutputStream} and
+	 * asserts that a {@link Throwable} of the specified type is thrown.
+	 * @param expectedType The expected type of the {@link Throwable} thrown by the action. Not {@code null}.
+	 * @param action The action that should output bytes to the output stream. Not {@code null}.
+	 * @return The output stream in which the action has written. Not {@code null}.
+	 * @since 1.4
+	 */
+	public static ByteArrayOutputStream assertOutputStreamThrows(Class<?> expectedType,
+			RefConsumerWithThrows<OutputStream, Throwable> action) {
+		
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			action.accept(out);
+		} catch (Throwable t) {
+			assertEquals(expectedType, t.getClass());
+		}
+		return out;
+	}
+	
+	/**
+	 * Asserts that the bytes written to the output stream match the expected hexadecimal string.
+	 * <p>
+	 * This method can be chained with {@link #assertOutputStreamThrows(Class, RefConsumerWithThrows)}
+	 * to check the data written to an output stream if an exception occurred.
+	 * <pre>
+	 * assertOutputStream("...", assertOutputStreamThrows(IOException.class,
+	 *     out -> out.write(...)))
+	 * </pre>
+	 * @param expectedHex A hex string that represents the expected bytes.
+	 * Whitespace characters are ignored. Must not be {@code null}.
+	 * @param outputStream The output stream that should be checked. Must not be {@code null}.
+	 * @since 1.4
+	 */
+	public static void assertOutputStream(String expectedHex, ByteArrayOutputStream outputStream) {
+		assertEquals(expectedHex.toLowerCase(Locale.ROOT).replaceAll("\\s", ""),
+				HexUtil.bytesToHex(outputStream.toByteArray()));
+	}
 	
 	/**
 	 * Runs the specified action on a new {@link OutputStream} and
@@ -129,8 +167,7 @@ public class TestUtil {
 		
 		try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 			action.accept(out);
-			assertEquals(expectedHex.toLowerCase(Locale.ROOT).replaceAll("\\s", ""),
-					HexUtil.bytesToHex(out.toByteArray()));
+			assertOutputStream(expectedHex, out);
 		}
 	}
 	

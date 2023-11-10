@@ -2,6 +2,7 @@ package de.tomatengames.util.test;
 
 import static de.tomatengames.util.CharsetUtil.encodeUTF8;
 import static de.tomatengames.util.TestUtil.assertOutputStream;
+import static de.tomatengames.util.TestUtil.assertOutputStreamThrows;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 
 import de.tomatengames.util.HexUtil;
+import de.tomatengames.util.exception.LimitException;
 
 class CharsetUtilTest {
 	
@@ -57,10 +59,36 @@ class CharsetUtilTest {
 		assertOutputStream("C3B641C3B6", out -> encodeUTF8("öAö", out));
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
-		assertOutputStream("4D C3 AC 6E 68 20 6E C3 B3 69 20 74 69 E1 BA BF 6E 67 20 56 69 E1 BB 87 74",
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
 				out -> encodeUTF8("Mình nói tiếng Việt", out));
 		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
 				out -> encodeUTF8("𨉟呐㗂越", out));
+	}
+	
+	@Test
+	void testEncodeUTF8StringWithLimit() throws IOException {
+		assertOutputStream("41", out -> encodeUTF8("A", out, 1));
+		assertOutputStream("", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("A", out, 0)));
+		assertOutputStream("414243", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("ABCD", out, 3)));
+		assertOutputStream("41", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("ABCD", out, 1)));
+		
+		assertOutputStream("", out -> encodeUTF8("", out, 0));
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
+				out -> encodeUTF8("Mình nói tiếng Việt", out, 100));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
+				out -> encodeUTF8("𨉟呐㗂越", out, 13));
+		
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF", assertOutputStreamThrows(
+				LimitException.class, out -> encodeUTF8("Mình nói tiếng Việt", out, 15)));
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20", assertOutputStreamThrows(
+				LimitException.class, out -> encodeUTF8("Mình nói tiếng Việt", out, 11)));
+		assertOutputStream("F0A8899F E59190", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("𨉟呐㗂越", out, 6)));
 	}
 	
 	@Test

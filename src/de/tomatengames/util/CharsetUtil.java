@@ -3,6 +3,8 @@ package de.tomatengames.util;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import de.tomatengames.util.exception.LimitException;
+
 /**
  * Provides utilities to work with character encodings.
  * 
@@ -72,27 +74,30 @@ public class CharsetUtil {
 	 * and writes the result into the {@link OutputStream}.
 	 * @param codePoint The code point that should be encoded.
 	 * @param out The output stream. Must not be {@code null}.
+	 * @return The amount of bytes written. Minimum 1 and maximum 4.
 	 * @throws IOException If an I/O error occurs.
 	 * @throws IllegalArgumentException If the code point is out of range.
+	 * @implNote In most cases the return value is summed.
+	 * To make it easier to sum large outputs, the return type is {@code long} instead of {@code int}.
 	 */
-	public static void encodeUTF8(int codePoint, OutputStream out) throws IOException {
+	public static long encodeUTF8(int codePoint, OutputStream out) throws IOException {
 		if (codePoint < 0) {
 			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
 		}
 		if (codePoint <= 0x7F) {
 			out.write(codePoint);
-			return;
+			return 1L;
 		}
 		if (codePoint <= 0x7FF) {
 			out.write(0b110_00000 | ((codePoint >>> 6) & 0b11111)); // Bits 6-11
 			out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-			return;
+			return 2L;
 		}
 		if (codePoint <= 0xFFFF) {
 			out.write(0b1110_0000 | ((codePoint >>> 12) & 0b1111)); // Bits 12-16
 			out.write(0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
 			out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-			return;
+			return 3L;
 		}
 		// Only allow 0x10FFFF codePoints [https://www.rfc-editor.org/rfc/rfc3629#section-3]
 		if (codePoint <= 0x10FFFF) {
@@ -100,7 +105,7 @@ public class CharsetUtil {
 			out.write(0b10_000000 | ((codePoint >>> 12) & 0b111111)); // Bits 12-18
 			out.write(0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
 			out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
-			return;
+			return 4L;
 		}
 		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
 	}
@@ -110,15 +115,45 @@ public class CharsetUtil {
 	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
 	 * @param str The string that should be encoded.
 	 * @param out The output stream.
+	 * @return The amount of bytes written.
 	 * @throws IOException If an I/O error occurs or a code point is out of range.
 	 */
-	public static void encodeUTF8(String str, OutputStream out) throws IOException {
+	public static long encodeUTF8(String str, OutputStream out) throws IOException {
+		long written = 0L;
 		int n = str.length();
 		for (int i = 0; i < n;) {
 			int codePoint = str.codePointAt(i);
-			encodeUTF8(codePoint, out);
+			written += encodeUTF8(codePoint, out);
 			i += Character.charCount(codePoint);
 		}
+		return written;
+	}
+	
+	/**
+	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
+	 * <p>
+	 * Up to {@code maxOutput+3} bytes may be written to the output.
+	 * If more than {@code maxOutput} bytes are written to the output, an {@link LimitException} is thrown.
+	 * @param str The string that should be encoded.
+	 * @param out The output stream.
+	 * @param maxOutput The maximum output byte length. Must not be negative.
+	 * @return The amount of bytes written.
+	 * @throws IOException If an I/O error occurs or a code point is out of range.
+	 * @throws LimitException If the maximum output length is exceeded.
+	 * @since 1.4
+	 */
+	public static long encodeUTF8(String str, OutputStream out, long maxOutput) throws IOException {
+		long written = 0L;
+		int n = str.length();
+		for (int i = 0; i < n;) {
+			int codePoint = str.codePointAt(i);
+			if (written >= maxOutput) {
+				throw new LimitException();
+			}
+			written += encodeUTF8(codePoint, out);
+			i += Character.charCount(codePoint);
+		}
+		return written;
 	}
 	
 	/**
