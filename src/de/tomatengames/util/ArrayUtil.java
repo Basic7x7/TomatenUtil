@@ -17,7 +17,9 @@ import java.util.function.Supplier;
  * Provides methods to work with arrays.
  * 
  * @author Basic7x7
- * @version 2023-01-21
+ * @version
+ * 2023-11-10 last modified<br>
+ * 2023-01-21 created
  * @since 1.0
  */
 public class ArrayUtil {
@@ -3253,4 +3255,204 @@ for (string type in types) {
 	
 	// txs-end-gen addElement
 	
+	
+	/* txs-begin isEqualCT
+	##
+	final string[] ctTypes = ["int", "long", "byte", "char", "short"];
+	for (string type in ctTypes) {
+		final string numType = type == "long" ? "long" : "int";
+		##
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 *$'/';
+	// $txsinfo();
+	public static boolean isEqualCT($type;[] expected, $type;[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		$numType; result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			$numType; value1 = expected[i < expectedLen ? i : 0];
+			$numType; value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+		##
+	}
+	##
+	txs-end isEqualCT */
+	
+	// txs-begin-gen isEqualCT
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 */
+	// !!! TextScript generated !!!
+	public static boolean isEqualCT(int[] expected, int[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		int result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			int value1 = expected[i < expectedLen ? i : 0];
+			int value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 */
+	// !!! TextScript generated !!!
+	public static boolean isEqualCT(long[] expected, long[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		long result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			long value1 = expected[i < expectedLen ? i : 0];
+			long value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 */
+	// !!! TextScript generated !!!
+	public static boolean isEqualCT(byte[] expected, byte[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		int result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			int value1 = expected[i < expectedLen ? i : 0];
+			int value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 */
+	// !!! TextScript generated !!!
+	public static boolean isEqualCT(char[] expected, char[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		int result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			int value1 = expected[i < expectedLen ? i : 0];
+			int value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+	/**
+	 * Performs a near-constant-time comparison for the specified arrays.
+	 * <p>
+	 * The calculation time depends mostly on the length of {@code actual}.
+	 * In some situations it may depend slightly on the length of {@code expected}.
+	 * It does not depend on the contents of both arrays.
+	 * @param expected The expected array. Not {@code null}.
+	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+	 * @return If both arrays are equal.
+	 * @since 1.4
+	 */
+	// !!! TextScript generated !!!
+	public static boolean isEqualCT(short[] expected, short[] actual) {
+		int expectedLen = expected.length;
+		int actualLen = actual.length;
+		
+		if (actualLen > 0 && expectedLen == 0) {
+			return false;
+		}
+		
+		// Near-constant-time comparison.
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+		int result = expectedLen ^ actualLen;
+		for (int i = 0; i < actualLen; i++) {
+			int value1 = expected[i < expectedLen ? i : 0];
+			int value2 = actual[i];
+			result |= value1 ^ value2;
+		}
+		return result == 0;
+	}
+	
+	// txs-end-gen isEqualCT
 }
