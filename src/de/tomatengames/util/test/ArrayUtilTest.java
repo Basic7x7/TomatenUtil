@@ -4,6 +4,7 @@ import static de.tomatengames.util.ArrayUtil.concat;
 import static de.tomatengames.util.ArrayUtil.contains;
 import static de.tomatengames.util.ArrayUtil.containsEqual;
 import static de.tomatengames.util.ArrayUtil.indexOf;
+import static de.tomatengames.util.ArrayUtil.isEqualCT;
 import static de.tomatengames.util.ArrayUtil.lastIndexOf;
 import static de.tomatengames.util.ArrayUtil.reverse;
 import static org.junit.Assert.assertArrayEquals;
@@ -261,6 +262,42 @@ class ArrayUtilTest {
 		assertArrayEquals(a, ArrayUtil.remove(a, 20));
 	}
 	
+	@Test
+	void testIsEqualCT() {
+		assertEquals(true, isEqualCT(new int[] {1,2,3}, new int[] {1,2,3}));
+		assertEquals(false, isEqualCT(new int[] {1,2,4}, new int[] {1,2,3}));
+		assertEquals(false, isEqualCT(new int[] {2,2,3}, new int[] {1,2,3}));
+		assertEquals(false, isEqualCT(new int[] {1,2,3,4}, new int[] {1,2,3}));
+		assertEquals(false, isEqualCT(new int[] {1,2,3}, new int[] {1,2,3,4}));
+		assertEquals(true, isEqualCT(new int[] {1,2,3,4}, new int[] {1,2,3,4}));
+		assertEquals(true, isEqualCT(new int[] {}, new int[] {}));
+		assertEquals(false, isEqualCT(new int[] {1}, new int[] {}));
+		assertEquals(false, isEqualCT(new int[] {}, new int[] {1}));
+		
+		assertEquals(true, isEqualCT(new byte[] {1,2,3}, new byte[] {1,2,3}));
+		assertEquals(false, isEqualCT(new byte[] {1,2,4}, new byte[] {1,2,3}));
+		assertEquals(false, isEqualCT(new byte[] {2,2,3}, new byte[] {1,2,3}));
+		assertEquals(false, isEqualCT(new byte[] {1,2,3,4}, new byte[] {1,2,3}));
+		assertEquals(false, isEqualCT(new byte[] {1,2,3}, new byte[] {1,2,3,4}));
+		assertEquals(true, isEqualCT(new byte[] {1,2,3,4}, new byte[] {1,2,3,4}));
+		assertEquals(true, isEqualCT(new byte[] {}, new byte[] {}));
+		assertEquals(false, isEqualCT(new byte[] {1}, new byte[] {}));
+		assertEquals(false, isEqualCT(new byte[] {}, new byte[] {1}));
+		
+		assertEquals(true, isEqualCT("ABC".toCharArray(), "ABC".toCharArray()));
+		assertEquals(false, isEqualCT("ABD".toCharArray(), "ABC".toCharArray()));
+		assertEquals(true, isEqualCT("Test".toCharArray(), "Test".toCharArray()));
+		assertEquals(false, isEqualCT("Test".toCharArray(), "test".toCharArray()));
+		assertEquals(false, isEqualCT("Test".toCharArray(), "This is a test".toCharArray()));
+		assertEquals(true, isEqualCT(new char[] {}, new char[] {}));
+		assertEquals(false, isEqualCT(new char[] {}, "test".toCharArray()));
+		assertEquals(false, isEqualCT("test".toCharArray(), new char[] {}));
+		assertEquals(true, isEqualCT("Hällo".toCharArray(), "Hällo".toCharArray()));
+		assertEquals(false, isEqualCT("Hello".toCharArray(), "Hällo".toCharArray()));
+		assertEquals(true, isEqualCT("𨉟呐㗂越".toCharArray(), "𨉟呐㗂越".toCharArray()));
+		assertEquals(false, isEqualCT("𨉟呐a越".toCharArray(), "𨉟呐㗂越".toCharArray()));
+		assertEquals(false, isEqualCT("𨉟呐㗂越".toCharArray(), "𨉟呐b越".toCharArray()));
+	}
 	
 	
 	private static class A {

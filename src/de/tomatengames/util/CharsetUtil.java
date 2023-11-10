@@ -9,7 +9,9 @@ import de.tomatengames.util.exception.LimitException;
  * Provides utilities to work with character encodings.
  * 
  * @author Basic7x7
- * @version 2023-04-11
+ * @version
+ * 2023-11-10 last modified<br>
+ * 2023-04-11 created
  * @since 1.2
  */
 public class CharsetUtil {

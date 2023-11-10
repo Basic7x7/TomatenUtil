@@ -6,7 +6,9 @@ import java.util.function.IntPredicate;
  * Provides methods to handle {@link String}s.
  * 
  * @author Basic7x7
- * @version 2023-02-12
+ * @version
+ * 2023-11-10 last modified<br>
+ * 2023-02-12 created
  * @since 1.0
  */
 public class StringUtil {
@@ -268,7 +270,7 @@ public class StringUtil {
 		}
 		
 		// Near-constant-time comparison.
-		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses).
+		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
 		int result = expectedLen ^ actualLen;
 		for (int i = 0; i < actualLen; i++) {
 			int ch1 = expected.charAt(i < expectedLen ? i : 0);

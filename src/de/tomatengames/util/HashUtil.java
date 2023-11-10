@@ -17,7 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  * 
  * @author Basic7x7
  * @version
- * 2023-07-29 modified<br>
+ * 2023-11-10 modified<br>
  * 2023-02-13 created
  * @since 1.0
  */

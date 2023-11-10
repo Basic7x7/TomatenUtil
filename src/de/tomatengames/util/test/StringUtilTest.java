@@ -156,5 +156,8 @@ class StringUtilTest {
 		assertEquals(false, isEqualCT("Test123456789", "Test"));
 		assertEquals(false, isEqualCT("Test", "Test123456789"));
 		assertEquals(true, isEqualCT("Test123456789", "Test123456789"));
+		assertEquals(true, isEqualCT("𨉟呐㗂越", "𨉟呐㗂越"));
+		assertEquals(false, isEqualCT("𨉟呐a越", "𨉟呐㗂越"));
+		assertEquals(false, isEqualCT("𨉟呐㗂越", "𨉟呐b越"));
 	}
 }
