@@ -89,6 +89,8 @@ class CharsetUtilTest {
 				LimitException.class, out -> encodeUTF8("Mình nói tiếng Việt", out, 11)));
 		assertOutputStream("F0A8899F E59190", assertOutputStreamThrows(LimitException.class,
 				out -> encodeUTF8("𨉟呐㗂越", out, 6)));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("𨉟呐㗂越", out, 12)));
 	}
 	
 	@Test

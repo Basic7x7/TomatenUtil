@@ -153,6 +153,10 @@ public class CharsetUtil {
 			written += encodeUTF8(codePoint, out);
 			i += Character.charCount(codePoint);
 		}
+		// Check if the last character exceeded the maxOutput limit.
+		if (written > maxOutput) {
+			throw new LimitException();
+		}
 		return written;
 	}
 	
