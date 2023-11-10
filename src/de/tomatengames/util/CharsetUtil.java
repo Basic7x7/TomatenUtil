@@ -113,8 +113,8 @@ public class CharsetUtil {
 	
 	/**
 	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
-	 * @param str The string that should be encoded.
-	 * @param out The output stream.
+	 * @param str The string that should be encoded. Not {@code null}.
+	 * @param out The output stream. Not {@code null}.
 	 * @return The amount of bytes written.
 	 * @throws IOException If an I/O error occurs or a code point is out of range.
 	 */
@@ -134,8 +134,8 @@ public class CharsetUtil {
 	 * <p>
 	 * Up to {@code maxOutput+3} bytes may be written to the output.
 	 * If more than {@code maxOutput} bytes are written to the output, an {@link LimitException} is thrown.
-	 * @param str The string that should be encoded.
-	 * @param out The output stream.
+	 * @param str The string that should be encoded. Not {@code null}.
+	 * @param out The output stream. Not {@code null}.
 	 * @param maxOutput The maximum output byte length. Must not be negative.
 	 * @return The amount of bytes written.
 	 * @throws IOException If an I/O error occurs or a code point is out of range.
@@ -201,5 +201,31 @@ public class CharsetUtil {
 			return 4;
 		}
 		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+	}
+	
+	/**
+	 * Encodes the specified {@link String} using UTF-8 and writes the result into the byte array.
+	 * @param str The string that should be encoded. Not {@code null}.
+	 * @param out The output array into which the encoded data should be written.
+	 * Must not be {@code null}. Must be long enough to store the encoded data.
+	 * It is recommended that the length is at least {@code offset+4*str.length()}.
+	 * @param offset The start position in the output array to be written. Must not be negative.
+	 * @return The amount of bytes written.
+	 * @throws IndexOutOfBoundsException If the offset is negative
+	 * or the output array is too short to store the encoded code point.
+	 * @throws IllegalArgumentException If a code point is out of range.
+	 * @since 1.4
+	 */
+	public static int encodeUTF8(String str, byte[] out, int offset) {
+		int written = 0;
+		int n = str.length();
+		for (int i = 0; i < n;) {
+			int codePoint = str.codePointAt(i);
+			int b = encodeUTF8(codePoint, out, offset);
+			written += b;
+			offset += b;
+			i += Character.charCount(codePoint);
+		}
+		return written;
 	}
 }
