@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -308,14 +309,81 @@ public class HashUtil {
 	
 	/**
 	 * UTF8-encodes the specified {@link String} and hashes it.
-	 * @param alg The {@link MessageDigest} that should be used to calculate the hash.
-	 * @param str The string that should be encoded.
+	 * @param alg The {@link MessageDigest} that should be used to calculate the hash. Must not be {@code null}.
+	 * @param str The string that should be encoded. Must not be {@code null}.
 	 * @return The hash. Not {@code null}.
 	 * @since 1.3
 	 */
 	public static byte[] hashUTF8(MessageDigest alg, String str) {
 		alg.reset();
 		updateUTF8(alg, str);
+		return alg.digest();
+	}
+	
+	
+	/**
+	 * UTF8-encodes the specified {@link char} array and passes it to the specified {@link MessageDigest}.
+	 * <p>
+	 * This method behaves like
+	 * <pre>
+	 * alg.update(new String(chars, offset, length).getBytes(StandardCharsets.UTF_8))
+	 * </pre>
+	 * but requires only constant memory for large strings and overwrites additional copies of the {@code char} array.
+	 * @param alg The {@link MessageDigest} that should be updated. Must not be {@code null}.
+	 * @param chars The {@code char} array that should be encoded. Must not be {@code null}.
+	 * @param offset The first index of the {@code char} array that should be encoded.
+	 * Must not be negative. Must fulfill {@code offset+length <= chars.length}.
+	 * @param length The amount of characters of the {@code char} array that should be encoded, starting at {@code offset}.
+	 * Must not be negative.
+	 * @since 1.4
+	 */
+	public static void updateUTF8(MessageDigest alg, char[] chars, int offset, int length) {
+		// --- Analog to updateUTF8(MessageDigest, String) ---
+		int maxBufOffset = NumberUtil.limit(length, 0, 2048);
+		int bufLen = maxBufOffset + 4;
+		byte[] buf = new byte[bufLen];
+		
+		int charIndex = offset;
+		int end = offset+length;
+		while (charIndex < end) {
+			// Fill the buffer with encoded code points.
+			int bufOff = 0;
+			while (bufOff <= maxBufOffset && charIndex < end) {
+				int ch = Character.codePointAt(chars, charIndex, end);
+				bufOff += CharsetUtil.encodeUTF8(ch, buf, bufOff);
+				charIndex += Character.charCount(ch);
+			}
+			// Update the hash using the buffer.
+			alg.update(buf, 0, bufOff);
+		}
+		
+		// Overwrite the buffer to delete the encoded char data.
+		Arrays.fill(buf, (byte) 0);
+	}
+	
+	/**
+	 * UTF8-encodes the specified {@link char} array and passes it to the specified {@link MessageDigest}.
+	 * <p>
+	 * This method behaves like {@code alg.update(new String(chars).getBytes(StandardCharsets.UTF_8))},
+	 * but requires only constant memory for large strings and overwrites additional copies of the {@code char} array.
+	 * @param alg The {@link MessageDigest} that should be updated. Must not be {@code null}.
+	 * @param chars The {@code char} array that should be encoded. Must not be {@code null}.
+	 * @since 1.4
+	 */
+	public static void updateUTF8(MessageDigest alg, char[] chars) {
+		updateUTF8(alg, chars, 0, chars.length);
+	}
+	
+	/**
+	 * UTF8-encodes the specified {@link char} array and hashes it.
+	 * @param alg The {@link MessageDigest} that should be used to calculate the hash. Must not be {@code null}.
+	 * @param str The {@code char} array that should be encoded. Must not be {@code null}.
+	 * @return The hash. Not {@code null}.
+	 * @since 1.4
+	 */
+	public static byte[] hashUTF8(MessageDigest alg, char[] chars) {
+		alg.reset();
+		updateUTF8(alg, chars);
 		return alg.digest();
 	}
 }
