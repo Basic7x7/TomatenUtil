@@ -25,10 +25,43 @@ for (int i = 0; i < n; i++) {
 	keyDec .= keyTypes[i] :: " " :: keyNames[i];
 }
 
-function string getEntryKey(string entry) {
+extern final string[] GenKeys;
+string GenKey = join(", ", GenKeys);
+if (GenKey.length == 0) {
+	GenKey = null;
+}
+final string Gen = GenKey ? (GenKey :: ", V") : "V";
+final string[] questionMarks = split(Gen, `,`);
+for (int i = 0; i < questionMarks.length; i++) {
+	questionMarks[i] = "?";
+}
+final string wildcardGen = join(", ", questionMarks);
+
+
+extern final string since;
+extern string createDate, lastModDate;
+if (leq(lastModDate, createDate)) {
+	lastModDate = null;
+}
+
+function bool leq(string date1, string date2) {
+	for (int i = 0; i < date1.length; i++) {
+		if (date1[i] < date2[i]) {
+			return true;
+		}
+		if (date1[i] > date2[i]) {
+			return false;
+		}
+	}
+	return true; // equals 
+}
+
+
+function string getEntryKey(string entry, bool cast) {
 	string[] arr = new string[n];
 	for (int i = 0; i < n; i++) {
-		arr[i] = entry :: ".getKey"::(n > 1 && i+1)::"()";
+		arr[i] = (cast && GenKeys && GenKeys[i] && "("::GenKeys[i]::") ") ::
+			entry :: ".getKey"::(n > 1 && i+1)::"()";
 	}
 	return join(", ", arr);
 }
@@ -70,6 +103,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code %keyTuple;} keys to object values.
+ * Equality of keys is checked by using the {@code ==} operator.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -77,18 +111,22 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version 2023-07-31
- * @since 1.3
+ * @version
+ * %lastModDate ? (lastModDate :: " last modified<br>") : createDate;
+ # if (lastModDate) {
+ * %createDate; created
+ # }
+ * @since %since;
  */
 // %txsinfo();
-public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
+public final class %HashMap;<%Gen;> implements Iterable<%Entry;<%Gen;>> {
 	private static final double ENLARGE_LOAD_FACTOR = 0.75;
 	private static final int MIN_TABLE_SIZE = 16;
 	private static final int MAX_TABLE_SIZE = 1 << 30;
 	
 	private int mask;
 	private long enlargeThreshold;
-	private Node<V>[] table;
+	private Node<%Gen;>[] table;
 	private long size;
 	private int modcount;
 	
@@ -107,7 +145,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	 * Creates a new {@link %HashMap;} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public %HashMap;(%HashMap;<? extends V> map) {
+	public %HashMap;(%HashMap;<%Gen;> map) {
 		this();
 		this.putAll(map);
 	}
@@ -140,7 +178,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	public V put(%keyDec;, V value) {
 		requireNotNull(value, "The value ...");
 		this.modcount++;
-		Node<V> node = this.findOrCreate(%key;);
+		Node<%Gen;> node = this.findOrCreate(%key;);
 		V prev = node.value;
 		node.value = value; // Might replace the previous value
 		return prev;
@@ -158,7 +196,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	 */
 	public V putIfAbsent(%keyDec;, V value) {
 		requireNotNull(value, "The value ...");
-		Node<V> node = this.findOrCreate(%key;);
+		Node<%Gen;> node = this.findOrCreate(%key;);
 		
 		// If the Node did not exist before (value == null), then set the value.
 		V prev = node.value;
@@ -179,7 +217,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
 	public V get(%keyDec;) {
-		Node<V> node = findNode(%key;, this.table, this.mask);
+		Node<%Gen;> node = findNode(%key;, this.table, this.mask);
 		return node != null ? node.value : null;
 	}
 	
@@ -202,7 +240,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	 * If no entry was removed, {@code null} is returned.
 	 */
 	public V remove(%keyDec;) {
-		Node<V>[] table = this.table;
+		Node<%Gen;>[] table = this.table;
 		if (table == null) {
 			return null; // No elements in the map
 		}
@@ -210,8 +248,8 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		int index = indexOf(%key;, this.mask);
 		
 		// Search for the key.
-		Node<V> node = table[index];
-		Node<V> prev = null;
+		Node<%Gen;> node = table[index];
+		Node<%Gen;> prev = null;
 		while (node != null) {
 			if (%equalNodeKey("node", (string) null);) {
 				// Unlink the found node.
@@ -240,7 +278,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		this.modcount++;
 		this.size = 0L;
 		
-		Node<V>[] table = this.table;
+		Node<%Gen;>[] table = this.table;
 		if (table == null) {
 			return; // Table is already empty
 		}
@@ -253,8 +291,8 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	}
 	
 	@Override
-	public void forEach(Consumer<? super %Entry;<V>> action) {
-		Node<V>[] table = this.table;
+	public void forEach(Consumer<? super %Entry;<%Gen;>> action) {
+		Node<%Gen;>[] table = this.table;
 		if (table == null) {
 			return; // The map is empty
 		}
@@ -262,7 +300,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		// Iterate all nodes.
 		int n = table.length;
 		for (int i = 0; i < n; i++) {
-			Node<V> node = table[i];
+			Node<%Gen;> node = table[i];
 			while (node != null) {
 				action.accept(node);
 				node = node.next;
@@ -276,14 +314,14 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(%HashMap;<? extends V> otherMap) {
+	public void putAll(%HashMap;<%Gen;> otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
 			return;
 		}
 		
-		otherMap.forEach(entry -> this.put(%getEntryKey("entry");, entry.getValue()));
+		otherMap.forEach(entry -> this.put(%getEntryKey("entry", false);, entry.getValue()));
 	}
 	
 	@Override
@@ -296,23 +334,31 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		}
 		
 		// Checks the sizes.
-		%HashMap;<?> other = (%HashMap;<?>) obj;
+		%HashMap;<%wildcardGen;> other = (%HashMap;<%wildcardGen;>) obj;
 		if (this.size != other.size) {
 			return false;
 		}
 		
-		// Checks that this map is a subset of the other map.
-		for (%Entry;<V> entry : this) {
-			Object otherValue = other.get(%getEntryKey("entry"););
-			if (otherValue == null) {
-				return false; // Other does not contain the current entry
+		// Checks that the other map is a subset of this map.
+		for (%Entry;<%wildcardGen;> entry : other) {
+		##
+		if (GenKeys) {
+			##
+			// get() returns null if the key has the wrong type ==> The map are not equal
+			@SuppressWarnings("unchecked")
+			##
+		}
+		##
+			V thisValue = this.get(%getEntryKey("entry", true););
+			if (thisValue == null) {
+				return false; // This does not contain the current entry
 			}
-			if (!otherValue.equals(entry.getValue())) {
+			if (!thisValue.equals(entry.getValue())) {
 				return false; // The values for the current key differ.
 			}
 		}
 		
-		// If other contains all entries of this map and the sizes are the same,
+		// If this map contains all entries of the other map and the sizes are the same,
 		// the maps are equal.
 		return true;
 	}
@@ -321,7 +367,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	public int hashCode() {
 		// The order of the loop is undefined, but '+' is commutative.
 		int result = 0;
-		for (%Entry;<V> entry : this) {
+		for (%Entry;<%Gen;> entry : this) {
 			result += entry.hashCode();
 		}
 		return result;
@@ -329,16 +375,16 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	
 	
 	
-	private static final int indexOf(%keyDec;, int mask) {
+	private static final %? GenKey && "<"::GenKey::">"; int indexOf(%keyDec;, int mask) {
 		return %hash; & mask;
 	}
 	
-	private static final <V> Node<V> findNode(%keyDec;, Node<V>[] table, int mask) {
+	private static final <%Gen;> Node<%Gen;> findNode(%keyDec;, Node<%Gen;>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
 		int index = indexOf(%key;, mask);
-		Node<V> node = table[index];
+		Node<%Gen;> node = table[index];
 		while (node != null) {
 			if (%equalNodeKey("node", (string) null);) {
 				return node;
@@ -348,22 +394,22 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		return null;
 	}
 	
-	private final Node<V> findOrCreate(%keyDec;) {
+	private final Node<%Gen;> findOrCreate(%keyDec;) {
 		// If the key is already present in the map, it is returned.
-		Node<V> node = findNode(%key;, table, this.mask);
+		Node<%Gen;> node = findNode(%key;, table, this.mask);
 		if (node != null) {
 			return node;
 		}
 		
 		// Initialize the table if needed.
-		Node<V>[] table = this.table;
+		Node<%Gen;>[] table = this.table;
 		if (table == null) {
 			table = this.resize(MIN_TABLE_SIZE);
 		}
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		Node<V> newNode = new Node<>(%key;);
+		Node<%Gen;> newNode = new Node<>(%key;);
 		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
 		return newNode;
@@ -386,21 +432,21 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		}
 	}
 	
-	private Node<V>[] resize(int newTableSize) {
+	private Node<%Gen;>[] resize(int newTableSize) {
 		int newMask = newTableSize-1; // = 2^n-1 = 0b0..01..1
 		this.mask = newMask;
 		this.enlargeThreshold = (long) (newTableSize * ENLARGE_LOAD_FACTOR);
 		
-		Node<V>[] oldTable = this.table;
+		Node<%Gen;>[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node<V>[] newTable = new Node[newTableSize];
+		Node<%Gen;>[] newTable = new Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
-			for (Node<V> rootNode : oldTable) {
-				Node<V> node = rootNode;
+			for (Node<%Gen;> rootNode : oldTable) {
+				Node<%Gen;> node = rootNode;
 				while (node != null) {
-					Node<V> next = node.next;
+					Node<%Gen;> next = node.next;
 					insertNode(node, newTable, newMask);
 					node = next;
 				}
@@ -410,18 +456,18 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		return this.table = newTable;
 	}
 	
-	private static final <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
+	private static final <%Gen;> void insertNode(Node<%Gen;> node, Node<%Gen;>[] table, int mask) {
 		int index = indexOf(%getNodeKey("node");, mask);
 		node.next = table[index];
 		table[index] = node;
 	}
 	
-	private static class Node<V> implements %Entry;<V> {
+	private static class Node<%Gen;> implements %Entry;<%Gen;> {
 	# for (int i = 0; i < n; i++) {
 		private final %keyTypes[i]; %keyNames[i];;
 	# }
 		private V value;
-		private Node<V> next;
+		private Node<%Gen;> next;
 		
 		private Node(%keyDec;) {
 		# for (int i = 0; i < n; i++) {
@@ -459,7 +505,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 				return false;
 			}
 			
-			Node<?> other = (Node<?>) obj;
+			Node<%wildcardGen;> other = (Node<%wildcardGen;>) obj;
 			return %equalNodeKey("this", "other"); && Objects.equals(this.value, other.value);
 		}
 		
@@ -471,12 +517,12 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 	
 	
 	@Override
-	public Iterator<%Entry;<V>> iterator() {
+	public Iterator<%Entry;<%Gen;>> iterator() {
 		return new NodeIterator();
 	}
 	
-	private final class NodeIterator implements Iterator<%Entry;<V>> {
-		private Node<V> prevNode, currentNode, nextNode;
+	private final class NodeIterator implements Iterator<%Entry;<%Gen;>> {
+		private Node<%Gen;> prevNode, currentNode, nextNode;
 		private int initModCount;
 		
 		private NodeIterator() {
@@ -492,8 +538,8 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		}
 		
 		@Override
-		public %Entry;<V> next() {
-			Node<V> next = this.nextNode;
+		public %Entry;<%Gen;> next() {
+			Node<%Gen;> next = this.nextNode;
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
 			this.nextNode = findNextNode(next);
@@ -502,7 +548,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 		
 		@Override
 		public void remove() {
-			Node<V> current = this.currentNode;
+			Node<%Gen;> current = this.currentNode;
 			if (current == null) {
 				throw new IllegalStateException("No element to remove!");
 			}
@@ -511,7 +557,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 			// If the index of the prev node differs from the current node,
 			// the prev node is in another bucket.
 			int currentIndex = indexOf(%getNodeKey("current");, mask);
-			Node<V> prev = this.prevNode;
+			Node<%Gen;> prev = this.prevNode;
 			if (prev != null && indexOf(%getNodeKey("prev");, mask) == currentIndex) {
 				prev.next = current.next;
 			}
@@ -524,21 +570,21 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 			this.currentNode = null;
 		}
 		
-		private Node<V> findNextNode(Node<V> startNode) {
+		private Node<%Gen;> findNextNode(Node<%Gen;> startNode) {
 			if (this.initModCount != modcount) {
 				throw new ConcurrentModificationException();
 			}
 			
 			// If the current node has a next node, return it.
 			if (startNode != null) {
-				Node<V> next = startNode.next;
+				Node<%Gen;> next = startNode.next;
 				if (next != null) {
 					return next;
 				}
 			}
 			
 			// If the current node has no next node, the next buckets have to be checked.
-			Node<V>[] t = table;
+			Node<%Gen;>[] t = table;
 			if (t == null) {
 				return null; // The map is empty
 			}
@@ -548,7 +594,7 @@ public final class %HashMap;<V> implements Iterable<%Entry;<V>> {
 			int n = t.length;
 			int startIndex = startNode != null ? indexOf(%getNodeKey("startNode");, mask)+1 : 0;
 			for (int i = startIndex; i < n; i++) {
-				Node<V> el = t[i];
+				Node<%Gen;> el = t[i];
 				if (el != null) {
 					return el;
 				}

@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code int} keys to object values.
+ * Equality of keys is checked by using the {@code ==} operator.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -17,7 +18,9 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version 2023-07-31
+ * @version
+ * 2023-11-26 last modified<br>
+ * 2023-07-31 created
  * @since 1.3
  */
 // !!! TextScript generated !!!
@@ -47,7 +50,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * Creates a new {@link IntHashMap} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public IntHashMap(IntHashMap<? extends V> map) {
+	public IntHashMap(IntHashMap<V> map) {
 		this();
 		this.putAll(map);
 	}
@@ -216,7 +219,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(IntHashMap<? extends V> otherMap) {
+	public void putAll(IntHashMap<V> otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
@@ -241,18 +244,18 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 			return false;
 		}
 		
-		// Checks that this map is a subset of the other map.
-		for (IntEntry<V> entry : this) {
-			Object otherValue = other.get(entry.getKey());
-			if (otherValue == null) {
-				return false; // Other does not contain the current entry
+		// Checks that the other map is a subset of this map.
+		for (IntEntry<?> entry : other) {
+			V thisValue = this.get(entry.getKey());
+			if (thisValue == null) {
+				return false; // This does not contain the current entry
 			}
-			if (!otherValue.equals(entry.getValue())) {
+			if (!thisValue.equals(entry.getValue())) {
 				return false; // The values for the current key differ.
 			}
 		}
 		
-		// If other contains all entries of this map and the sizes are the same,
+		// If this map contains all entries of the other map and the sizes are the same,
 		// the maps are equal.
 		return true;
 	}

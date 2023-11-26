@@ -9,7 +9,8 @@ import java.util.ConcurrentModificationException;
  * @param <V> The type of the value.
  * 
  * @author Basic7x7
- * @version 2023-07-31
+ * @version
+ * 2023-07-31
  * @since 1.3
  */
 // !!! TextScript generated !!!
