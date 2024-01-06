@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code K} keys to object values.
- * Equality of keys is checked by using the {@code ==} operator.
+ 	* Equality of keys is checked by using the abstract {@code keyEquals(key1, key2);} method.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -19,25 +19,25 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- * 2023-11-26
+ * 2024-01-06
  * @since 1.5
  */
 // !!! TextScript generated !!!
-public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, V>> {
+public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K, V>> {
 	private static final double ENLARGE_LOAD_FACTOR = 0.75;
 	private static final int MIN_TABLE_SIZE = 16;
 	private static final int MAX_TABLE_SIZE = 1 << 30;
 	
 	private int mask;
 	private long enlargeThreshold;
-	private Node<K, V>[] table;
+	private Node[] table;
 	private long size;
 	private int modcount;
 	
 	/**
-	 * Creates a new and empty {@link ReferenceHashMap}.
+	 * Creates a new and empty {@link AbstractHashMap}.
 	 */
-	public ReferenceHashMap() {
+	public AbstractHashMap() {
 		this.size = 0L;
 		this.mask = 0;
 		this.enlargeThreshold = 0;
@@ -46,10 +46,10 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	}
 	
 	/**
-	 * Creates a new {@link ReferenceHashMap} that contains all the mappings of the specified map.
+	 * Creates a new {@link AbstractHashMap} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public ReferenceHashMap(ReferenceHashMap<K, V> map) {
+	public AbstractHashMap(AbstractHashMap<K, V> map) {
 		this();
 		this.putAll(map);
 	}
@@ -82,7 +82,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	public V put(K key, V value) {
 		requireNotNull(value, "The value ...");
 		this.modcount++;
-		Node<K, V> node = this.findOrCreate(key);
+		Node node = this.findOrCreate(key);
 		V prev = node.value;
 		node.value = value; // Might replace the previous value
 		return prev;
@@ -100,7 +100,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	 */
 	public V putIfAbsent(K key, V value) {
 		requireNotNull(value, "The value ...");
-		Node<K, V> node = this.findOrCreate(key);
+		Node node = this.findOrCreate(key);
 		
 		// If the Node did not exist before (value == null), then set the value.
 		V prev = node.value;
@@ -121,7 +121,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
 	public V get(K key) {
-		Node<K, V> node = findNode(key, this.table, this.mask);
+		Node node = findNode(key, this.table, this.mask);
 		return node != null ? node.value : null;
 	}
 	
@@ -144,7 +144,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	 * If no entry was removed, {@code null} is returned.
 	 */
 	public V remove(K key) {
-		Node<K, V>[] table = this.table;
+		Node[] table = this.table;
 		if (table == null) {
 			return null; // No elements in the map
 		}
@@ -152,10 +152,10 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		int index = indexOf(key, this.mask);
 		
 		// Search for the key.
-		Node<K, V> node = table[index];
-		Node<K, V> prev = null;
+		Node node = table[index];
+		Node prev = null;
 		while (node != null) {
-			if (node.key == key) {
+			if (keyEquals(node.key, key)) {
 				// Unlink the found node.
 				this.modcount++;
 				if (prev != null) {
@@ -182,7 +182,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		this.modcount++;
 		this.size = 0L;
 		
-		Node<K, V>[] table = this.table;
+		Node[] table = this.table;
 		if (table == null) {
 			return; // Table is already empty
 		}
@@ -195,8 +195,8 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	}
 	
 	@Override
-	public void forEach(Consumer<? super ReferenceEntry<K, V>> action) {
-		Node<K, V>[] table = this.table;
+	public void forEach(Consumer<? super AbstractEntry<K, V>> action) {
+		Node[] table = this.table;
 		if (table == null) {
 			return; // The map is empty
 		}
@@ -204,7 +204,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		// Iterate all nodes.
 		int n = table.length;
 		for (int i = 0; i < n; i++) {
-			Node<K, V> node = table[i];
+			Node node = table[i];
 			while (node != null) {
 				action.accept(node);
 				node = node.next;
@@ -218,7 +218,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(ReferenceHashMap<K, V> otherMap) {
+	public void putAll(AbstractHashMap<K, V> otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
@@ -238,13 +238,13 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		}
 		
 		// Checks the sizes.
-		ReferenceHashMap<?, ?> other = (ReferenceHashMap<?, ?>) obj;
+		AbstractHashMap<?, ?> other = (AbstractHashMap<?, ?>) obj;
 		if (this.size != other.size) {
 			return false;
 		}
 		
 		// Checks that the other map is a subset of this map.
-		for (ReferenceEntry<?, ?> entry : other) {
+		for (AbstractEntry<?, ?> entry : other) {
 			// get() returns null if the key has the wrong type ==> The map are not equal
 			@SuppressWarnings("unchecked")
 			V thisValue = this.get((K) entry.getKey());
@@ -265,26 +265,37 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 	public int hashCode() {
 		// The order of the loop is undefined, but '+' is commutative.
 		int result = 0;
-		for (ReferenceEntry<K, V> entry : this) {
+		for (AbstractEntry<K, V> entry : this) {
 			result += entry.hashCode();
 		}
 		return result;
 	}
 	
+		/**
+		 * Calculate the hash code of the specified key.
+		 * @param key The key whose hash code should be calculated.
+		 * @return The hash code.
+		 */
+		public abstract int keyHash(K key);
+		
+		/**
+		 * Returns if the specified keys should be considered equal.
+		 */
+		public abstract boolean keyEquals(K key1, K key2);
+		
 	
-	
-	private static final <K> int indexOf(K key, int mask) {
-		return (key.hashCode()) & mask;
+	private final int indexOf(K key, int mask) {
+		return keyHash(key) & mask;
 	}
 	
-	private static final <K, V> Node<K, V> findNode(K key, Node<K, V>[] table, int mask) {
+	private final Node findNode(K key, Node[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
 		int index = indexOf(key, mask);
-		Node<K, V> node = table[index];
+		Node node = table[index];
 		while (node != null) {
-			if (node.key == key) {
+			if (keyEquals(node.key, key)) {
 				return node;
 			}
 			node = node.next;
@@ -292,22 +303,22 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		return null;
 	}
 	
-	private final Node<K, V> findOrCreate(K key) {
+	private final Node findOrCreate(K key) {
 		// If the key is already present in the map, it is returned.
-		Node<K, V> node = findNode(key, table, this.mask);
+		Node node = findNode(key, table, this.mask);
 		if (node != null) {
 			return node;
 		}
 		
 		// Initialize the table if needed.
-		Node<K, V>[] table = this.table;
+		Node[] table = this.table;
 		if (table == null) {
 			table = this.resize(MIN_TABLE_SIZE);
 		}
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		Node<K, V> newNode = new Node<>(key);
+		Node newNode = new Node(key);
 		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
 		return newNode;
@@ -330,21 +341,21 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		}
 	}
 	
-	private Node<K, V>[] resize(int newTableSize) {
+	private Node[] resize(int newTableSize) {
 		int newMask = newTableSize-1; // = 2^n-1 = 0b0..01..1
 		this.mask = newMask;
 		this.enlargeThreshold = (long) (newTableSize * ENLARGE_LOAD_FACTOR);
 		
-		Node<K, V>[] oldTable = this.table;
+		Node[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node<K, V>[] newTable = new Node[newTableSize];
+		Node[] newTable = new AbstractHashMap.Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
-			for (Node<K, V> rootNode : oldTable) {
-				Node<K, V> node = rootNode;
+			for (Node rootNode : oldTable) {
+				Node node = rootNode;
 				while (node != null) {
-					Node<K, V> next = node.next;
+					Node next = node.next;
 					insertNode(node, newTable, newMask);
 					node = next;
 				}
@@ -354,16 +365,17 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		return this.table = newTable;
 	}
 	
-	private static final <K, V> void insertNode(Node<K, V> node, Node<K, V>[] table, int mask) {
+	private final void insertNode(Node node, Node[] table, int mask) {
 		int index = indexOf(node.key, mask);
 		node.next = table[index];
 		table[index] = node;
 	}
 	
-	private static class Node<K, V> implements ReferenceEntry<K, V> {
+	
+	private class Node implements AbstractEntry<K, V> {
 		private final K key;
 		private V value;
-		private Node<K, V> next;
+		private Node next;
 		
 		private Node(K key) {
 			this.key = key;
@@ -397,24 +409,25 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 				return false;
 			}
 			
-			Node<?, ?> other = (Node<?, ?>) obj;
-			return this.key == other.key && Objects.equals(this.value, other.value);
+				@SuppressWarnings("unchecked")
+			Node other = (Node) obj;
+			return keyEquals(this.key, other.key) && Objects.equals(this.value, other.value);
 		}
 		
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(this.value) + (key.hashCode());
+			return Objects.hashCode(this.value) + keyHash(key);
 		}
 	}
 	
 	
 	@Override
-	public Iterator<ReferenceEntry<K, V>> iterator() {
+	public Iterator<AbstractEntry<K, V>> iterator() {
 		return new NodeIterator();
 	}
 	
-	private final class NodeIterator implements Iterator<ReferenceEntry<K, V>> {
-		private Node<K, V> prevNode, currentNode, nextNode;
+	private final class NodeIterator implements Iterator<AbstractEntry<K, V>> {
+		private Node prevNode, currentNode, nextNode;
 		private int initModCount;
 		
 		private NodeIterator() {
@@ -430,8 +443,8 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		}
 		
 		@Override
-		public ReferenceEntry<K, V> next() {
-			Node<K, V> next = this.nextNode;
+		public AbstractEntry<K, V> next() {
+			Node next = this.nextNode;
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
 			this.nextNode = findNextNode(next);
@@ -440,7 +453,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 		
 		@Override
 		public void remove() {
-			Node<K, V> current = this.currentNode;
+			Node current = this.currentNode;
 			if (current == null) {
 				throw new IllegalStateException("No element to remove!");
 			}
@@ -449,7 +462,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 			// If the index of the prev node differs from the current node,
 			// the prev node is in another bucket.
 			int currentIndex = indexOf(current.key, mask);
-			Node<K, V> prev = this.prevNode;
+			Node prev = this.prevNode;
 			if (prev != null && indexOf(prev.key, mask) == currentIndex) {
 				prev.next = current.next;
 			}
@@ -462,21 +475,21 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 			this.currentNode = null;
 		}
 		
-		private Node<K, V> findNextNode(Node<K, V> startNode) {
+		private Node findNextNode(Node startNode) {
 			if (this.initModCount != modcount) {
 				throw new ConcurrentModificationException();
 			}
 			
 			// If the current node has a next node, return it.
 			if (startNode != null) {
-				Node<K, V> next = startNode.next;
+				Node next = startNode.next;
 				if (next != null) {
 					return next;
 				}
 			}
 			
 			// If the current node has no next node, the next buckets have to be checked.
-			Node<K, V>[] t = table;
+			Node[] t = table;
 			if (t == null) {
 				return null; // The map is empty
 			}
@@ -486,7 +499,7 @@ public final class ReferenceHashMap<K, V> implements Iterable<ReferenceEntry<K, 
 			int n = t.length;
 			int startIndex = startNode != null ? indexOf(startNode.key, mask)+1 : 0;
 			for (int i = startIndex; i < n; i++) {
-				Node<K, V> el = t[i];
+				Node el = t[i];
 				if (el != null) {
 					return el;
 				}

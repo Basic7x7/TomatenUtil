@@ -90,9 +90,9 @@ run -i "@txs;/HashMap.txs" -o "@src;/map/Long3HashMap.java"
 	-v namePrefix="Long3" keyTypes=["long", "long", "long"] hash="(((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1))"
 		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 	
-run -i "@txs;/Entry.txs" -o "@src;/map/ReferenceEntry.java"
-	-v namePrefix="Reference" keyTypes=["K"] GenKeys=["K"]
-		since="1.5" lastModDate=@tson(entryLastMod); createDate="2023-11-26"
-run -i "@txs;/HashMap.txs" -o "@src;/map/ReferenceHashMap.java"
-	-v namePrefix="Reference" keyTypes=["K"] GenKeys=["K"] hash="(key.hashCode())"
-		since="1.5" lastModDate=@tson(mapLastMod); createDate="2023-11-26"
+run -i "@txs;/Entry.txs" -o "@src;/map/AbstractEntry.java"
+	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"]
+		since="1.5" lastModDate=@tson(entryLastMod); createDate="2024-01-06"
+run -i "@txs;/HashMap.txs" -o "@src;/map/AbstractHashMap.java"
+	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"] hash=null
+		since="1.5" lastModDate=@tson(mapLastMod); createDate="2024-01-06"

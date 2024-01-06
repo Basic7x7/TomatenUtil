@@ -9,15 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
+import de.tomatengames.util.map.AbstractHashMap;
 import de.tomatengames.util.map.Int3HashMap;
 import de.tomatengames.util.map.IntEntry;
 import de.tomatengames.util.map.IntHashMap;
 import de.tomatengames.util.map.Long2HashMap;
 import de.tomatengames.util.map.LongHashMap;
-import de.tomatengames.util.map.ReferenceHashMap;
 
 class HashMapTest {
 	
@@ -357,13 +358,14 @@ class HashMapTest {
 	
 	
 	@Test
-	void testReferenceMap() {
+	void testAbstractMap() {
 		A a1 = new A(1);
 		A a2 = new A(2);
 		A a3 = new A(1); // equals a1
 		A a4 = new A(4);
 		
-		ReferenceHashMap<A, String> map = new ReferenceHashMap<>(); assertEquals(0, map.size());
+		ReferenceHashMap<A, String> map = new ReferenceHashMap<>();
+		assertEquals(0, map.size());
 		assertEquals(null, map.put(a1, "A")); assertEquals(1, map.size());
 		assertEquals(null, map.put(a2, "B")); assertEquals(2, map.size());
 		assertEquals("A", map.get(a1));
@@ -384,7 +386,7 @@ class HashMapTest {
 	}
 	
 	@Test
-	void testReferenceMapEquals() {
+	void testAbstractMapEquals() {
 		A a1 = new A(1);
 		A a3 = new A(1); // equals a1
 		
@@ -419,6 +421,17 @@ class HashMapTest {
 		@Override
 		public int hashCode() {
 			return this.x;
+		}
+	}
+	
+	private static class ReferenceHashMap<K, V> extends AbstractHashMap<K, V> {
+		@Override
+		public boolean keyEquals(K key1, K key2) {
+			return key1 == key2;
+		}
+		@Override
+		public int keyHash(K key) {
+			return Objects.hashCode(key);
 		}
 	}
 }

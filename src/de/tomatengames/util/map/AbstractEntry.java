@@ -4,17 +4,17 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link ReferenceHashMap}.
+ * This entry type is used by the {@link AbstractHashMap}.
  * 
  * @param <V> The type of the value.
  * 
  * @author Basic7x7
  * @version
- * 2023-11-26
+ * 2024-01-06
  * @since 1.5
  */
 // !!! TextScript generated !!!
-public interface ReferenceEntry<K, V> {
+public interface AbstractEntry<K, V> {
 	
 	/**
 	 * Returns the key of this mapping.

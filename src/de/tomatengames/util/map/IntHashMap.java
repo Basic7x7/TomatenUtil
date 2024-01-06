@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code int} keys to object values.
- * Equality of keys is checked by using the {@code ==} operator.
+ 	* Equality of keys is checked by using the {@code ==} operator.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -271,12 +271,11 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 	}
 	
 	
-	
-	private static final int indexOf(int key, int mask) {
+	private final static int indexOf(int key, int mask) {
 		return key & mask;
 	}
 	
-	private static final <V> Node<V> findNode(int key, Node<V>[] table, int mask) {
+	private final static <V> Node<V> findNode(int key, Node<V>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -306,7 +305,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		Node<V> newNode = new Node<>(key);
+		Node<V> newNode = new Node<V>(key);
 		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
 		return newNode;
@@ -336,7 +335,7 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		
 		Node<V>[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node<V>[] newTable = new Node[newTableSize];
+		Node<V>[] newTable = new IntHashMap.Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
@@ -353,11 +352,12 @@ public final class IntHashMap<V> implements Iterable<IntEntry<V>> {
 		return this.table = newTable;
 	}
 	
-	private static final <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
+	private final static <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
 		int index = indexOf(node.key, mask);
 		node.next = table[index];
 		table[index] = node;
 	}
+	
 	
 	private static class Node<V> implements IntEntry<V> {
 		private final int key;
