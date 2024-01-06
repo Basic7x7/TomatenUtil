@@ -10,6 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code (int, int, int)} keys to object values.
+ 	* Equality of keys is checked by using the {@code ==} operator.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -17,7 +18,9 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version 2023-07-31
+ * @version
+ * 2023-11-26 last modified<br>
+ * 2023-07-31 created
  * @since 1.3
  */
 // !!! TextScript generated !!!
@@ -47,7 +50,7 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 	 * Creates a new {@link Int3HashMap} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public Int3HashMap(Int3HashMap<? extends V> map) {
+	public Int3HashMap(Int3HashMap<V> map) {
 		this();
 		this.putAll(map);
 	}
@@ -224,7 +227,7 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(Int3HashMap<? extends V> otherMap) {
+	public void putAll(Int3HashMap<V> otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
@@ -249,18 +252,18 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 			return false;
 		}
 		
-		// Checks that this map is a subset of the other map.
-		for (Int3Entry<V> entry : this) {
-			Object otherValue = other.get(entry.getKey1(), entry.getKey2(), entry.getKey3());
-			if (otherValue == null) {
-				return false; // Other does not contain the current entry
+		// Checks that the other map is a subset of this map.
+		for (Int3Entry<?> entry : other) {
+			V thisValue = this.get(entry.getKey1(), entry.getKey2(), entry.getKey3());
+			if (thisValue == null) {
+				return false; // This does not contain the current entry
 			}
-			if (!otherValue.equals(entry.getValue())) {
+			if (!thisValue.equals(entry.getValue())) {
 				return false; // The values for the current key differ.
 			}
 		}
 		
-		// If other contains all entries of this map and the sizes are the same,
+		// If this map contains all entries of the other map and the sizes are the same,
 		// the maps are equal.
 		return true;
 	}
@@ -276,12 +279,11 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 	}
 	
 	
-	
-	private static final int indexOf(int key1, int key2, int key3, int mask) {
+	private final static int indexOf(int key1, int key2, int key3, int mask) {
 		return (((key3*31) + key2)*31 + key1) & mask;
 	}
 	
-	private static final <V> Node<V> findNode(int key1, int key2, int key3, Node<V>[] table, int mask) {
+	private final static <V> Node<V> findNode(int key1, int key2, int key3, Node<V>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -311,7 +313,7 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		Node<V> newNode = new Node<>(key1, key2, key3);
+		Node<V> newNode = new Node<V>(key1, key2, key3);
 		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
 		return newNode;
@@ -341,7 +343,7 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 		
 		Node<V>[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node<V>[] newTable = new Node[newTableSize];
+		Node<V>[] newTable = new Int3HashMap.Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
@@ -358,11 +360,12 @@ public final class Int3HashMap<V> implements Iterable<Int3Entry<V>> {
 		return this.table = newTable;
 	}
 	
-	private static final <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
+	private final static <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
 		int index = indexOf(node.key1, node.key2, node.key3, mask);
 		node.next = table[index];
 		table[index] = node;
 	}
+	
 	
 	private static class Node<V> implements Int3Entry<V> {
 		private final int key1;

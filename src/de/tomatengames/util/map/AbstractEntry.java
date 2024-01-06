@@ -4,23 +4,23 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link IntHashMap}.
+ * This entry type is used by the {@link AbstractHashMap}.
  * 
  * @param <V> The type of the value.
  * 
  * @author Basic7x7
  * @version
- * 2023-07-31
- * @since 1.3
+ * 2024-01-06
+ * @since 1.5
  */
 // !!! TextScript generated !!!
-public interface IntEntry<V> {
+public interface AbstractEntry<K, V> {
 	
 	/**
 	 * Returns the key of this mapping.
 	 * @return The key.
 	 */
-	public int getKey();
+	public K getKey();
 	
 	
 	/**

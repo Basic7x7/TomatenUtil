@@ -9,9 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 
+import de.tomatengames.util.map.AbstractHashMap;
 import de.tomatengames.util.map.Int3HashMap;
 import de.tomatengames.util.map.IntEntry;
 import de.tomatengames.util.map.IntHashMap;
@@ -352,5 +354,84 @@ class HashMapTest {
 		assertFalse(map4.equals(new IntHashMap<String>()));
 		assertTrue(new IntHashMap<String>().equals(new IntHashMap<String>()));
 		assertFalse(map1.equals(null));
+	}
+	
+	
+	@Test
+	void testAbstractMap() {
+		A a1 = new A(1);
+		A a2 = new A(2);
+		A a3 = new A(1); // equals a1
+		A a4 = new A(4);
+		
+		ReferenceHashMap<A, String> map = new ReferenceHashMap<>();
+		assertEquals(0, map.size());
+		assertEquals(null, map.put(a1, "A")); assertEquals(1, map.size());
+		assertEquals(null, map.put(a2, "B")); assertEquals(2, map.size());
+		assertEquals("A", map.get(a1));
+		assertEquals(null, map.get(a3)); // by reference
+		
+		assertEquals(null, map.put(a3, "C")); assertEquals(3, map.size());
+		assertEquals("A", map.get(a1));
+		assertEquals("C", map.get(a3));
+		
+		assertEquals("A", map.remove(a1)); assertEquals(2, map.size());
+		assertEquals("C", map.get(a3));
+		assertEquals("B", map.get(a2));
+		
+		assertEquals(null, map.remove(a4)); assertEquals(2, map.size());
+		
+		map.clear(); assertEquals(0, map.size());
+		assertEquals(null, map.get(a2));
+	}
+	
+	@Test
+	void testAbstractMapEquals() {
+		A a1 = new A(1);
+		A a3 = new A(1); // equals a1
+		
+		ReferenceHashMap<A, String> map1 = new ReferenceHashMap<>();
+		ReferenceHashMap<A, String> map2 = new ReferenceHashMap<>();
+		ReferenceHashMap<String, String> map3 = new ReferenceHashMap<>();
+		
+		assertEquals(true, map1.equals(map2));
+		assertEquals(true, map1.equals(map3)); // Both are equal. The generic type cannot be checked.
+		
+		map1.put(a1, "A");
+		map2.put(a3, "A");
+		assertEquals(false, map1.equals(map2));
+		assertEquals(false, map1.equals(map3));
+		
+		map3.put("test", "A");
+		assertEquals(false, map1.equals(map3));
+	}
+	
+	private static class A {
+		private final int x;
+		
+		public A(int x) {
+			this.x = x;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			return obj.getClass() == this.getClass() && ((A) obj).x == this.x;
+		}
+		
+		@Override
+		public int hashCode() {
+			return this.x;
+		}
+	}
+	
+	private static class ReferenceHashMap<K, V> extends AbstractHashMap<K, V> {
+		@Override
+		public boolean keyEquals(K key1, K key2) {
+			return key1 == key2;
+		}
+		@Override
+		public int keyHash(K key) {
+			return Objects.hashCode(key);
+		}
 	}
 }

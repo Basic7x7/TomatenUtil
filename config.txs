@@ -52,26 +52,47 @@ for (object type in types) {
 }
 ##
 
+# final string mapLastMod = "2023-11-26";
+# final string entryLastMod = "2023-07-31";
 run -i "@txs;/Entry.txs" -o "@src;/map/IntEntry.java" -v namePrefix="Int" keyTypes=["int"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/IntHashMap.java"
 	-v namePrefix="Int" keyTypes=["int"] hash="key"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 
 run -i "@txs;/Entry.txs" -o "@src;/map/Int2Entry.java" -v namePrefix="Int2" keyTypes=["int", "int"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/Int2HashMap.java"
 	-v namePrefix="Int2" keyTypes=["int", "int"] hash="(key2*31 + key1)"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 
 run -i "@txs;/Entry.txs" -o "@src;/map/Int3Entry.java" -v namePrefix="Int3" keyTypes=["int", "int", "int"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/Int3HashMap.java"
 	-v namePrefix="Int3" keyTypes=["int", "int", "int"] hash="(((key3*31) + key2)*31 + key1)"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 
 run -i "@txs;/Entry.txs" -o "@src;/map/LongEntry.java" -v namePrefix="Long" keyTypes=["long"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/LongHashMap.java"
 	-v namePrefix="Long" keyTypes=["long"] hash="Long.hashCode(key)"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 
 run -i "@txs;/Entry.txs" -o "@src;/map/Long2Entry.java" -v namePrefix="Long2" keyTypes=["long", "long"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/Long2HashMap.java"
 	-v namePrefix="Long2" keyTypes=["long", "long"] hash="(Long.hashCode(key2)*31 + Long.hashCode(key1))"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
 
 run -i "@txs;/Entry.txs" -o "@src;/map/Long3Entry.java" -v namePrefix="Long3" keyTypes=["long", "long", "long"]
+		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
 run -i "@txs;/HashMap.txs" -o "@src;/map/Long3HashMap.java"
 	-v namePrefix="Long3" keyTypes=["long", "long", "long"] hash="(((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1))"
+		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
+	
+run -i "@txs;/Entry.txs" -o "@src;/map/AbstractEntry.java"
+	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"]
+		since="1.5" lastModDate=@tson(entryLastMod); createDate="2024-01-06"
+run -i "@txs;/HashMap.txs" -o "@src;/map/AbstractHashMap.java"
+	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"] hash=null
+		since="1.5" lastModDate=@tson(mapLastMod); createDate="2024-01-06"
