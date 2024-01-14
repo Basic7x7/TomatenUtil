@@ -1,69 +1,49 @@
 package de.tomatengames.util.map;
 ##
-:inline=%
+include <src/txs/include.txs>
 
-extern final string namePrefix;
-final string Entry = namePrefix :: "Entry";
+extern mapName;
+final map = mapData[mapName];
 
-extern final string[] keyTypes;
-
-extern final string[] GenKeys;
-string GenKey = join(", ", GenKeys);
-if (GenKey.length == 0) {
-	GenKey = null;
-}
-extern final string Gen = GenKey ? (GenKey :: ", V") : "V";
-
-extern final string since;
-extern string createDate, lastModDate;
-if (leq(lastModDate, createDate)) {
-	lastModDate = null;
-}
-
-function bool leq(string date1, string date2) {
-	for (int i = 0; i < date1.length; i++) {
-		if (date1[i] < date2[i]) {
-			return true;
-		}
-		if (date1[i] > date2[i]) {
-			return false;
-		}
-	}
-	return true; // equals 
-}
+final Gen = "<" * (map.genKeys+["V"]).join(", ") * ">"
+final Entry = "%map.namePrefix;Entry%Gen;" 
 ##
 
 import java.util.ConcurrentModificationException;
 
 /**
  * Represents a key-value mapping.
- * This entry type is used by the {@link %namePrefix;HashMap}.
+ * This entry type is used by the {@link %map.namePrefix;HashMap}.
  * 
  * @param <V> The type of the value.
  * 
  * @author Basic7x7
  * @version
- * %lastModDate ? (lastModDate :: " last modified<br>") : createDate;
- # if (lastModDate) {
- * %createDate; created
- # }
- * @since %since;
+ ##
+ if (entryLastMod && entryLastMod > map.createDate) {
+ 	##
+ 	* %entryLastMod; last modified<br>
+ 	##
+ }
+ ##
+ * %map.createDate; created
+ * @since %map.since;
  */
-// %txsinfo();
-public interface %Entry;<%Gen;> {
-	
-##
-for (string key in keyTypes) with (index) {
-	##
-	/**
-	 * Returns %? keyTypes.length > 1 && "part "::(index+1)::" of"; the key of this mapping.
-	 * @return The key %? keyTypes.length > 1 && "part";.
-	 */
-	public %keyTypes[index]; getKey%keyTypes.length > 1 && index+1;();
+// %cli.txsinfo();
+public interface %Entry; {
 	
 	##
-}
-##
+	for (key in map.keys) {
+		##
+		/**
+		 * Returns the %keyTypes.length > 1 ? "key" : "component '%key.name;' of the key"; of this mapping.
+		 * @return The key %keyTypes.length > 1 && "component";.
+		 */
+		public %key.type; get%firstUpper(key.name);();
+		
+		##
+	}
+	##
 	
 	/**
 	 * Returns the value of this mapping.

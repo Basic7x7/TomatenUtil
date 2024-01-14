@@ -1,35 +1,22 @@
-// @txsinfo();
 package de.tomatengames.util.function;
 ##
-:inline=$
+include <src/txs/include.txs>
 
-extern object inp, out;
+extern inpName;
+extern outName;
+final inp = typeData[inpName];
+final out = typeData[outName];
 
-if (!inp.prim) {
-	inp.java = "I";
-}
-string Igeneric = !inp.prim && <string> inp.java;
+final inpJava = inp.generic ? "I" : inp.java;
+final outJava = out.generic ? "O" : out.java;
 
-if (!out.prim) {
-	out.java = "O";
-}
-string Ogeneric = !out.prim && <string> out.java;
-
-string generic;
-{
-	string str = join(", ", [Igeneric, Ogeneric]);
-	generic = (str.length > 0 ? "<"::str::">" : (string) null);
-}
-
-final string Function = inp.name::"To"::out.name::"Function";
+final Gen = "<" * [inp.generic && "I", out.generic && "O"].join(", ") * ">";
+final Function = inp.name::"To"::out.name::"Function";
 ##
 
 /**
- * A function that accepts ##
-	if (inp.java == "void") { ##no parameters## }
-	else { ##$inp.a; {@code $inp.docName;}## } ## and returns ##
-	if (out.java == "void") { ##nothing## }
-	else { ##$out.a; {@code $out.docName;}## } ##.
+ * A function that accepts %inpJava == "void" ? "no parameters" : "%inp.a; {@code %inp.docName;}";
+ * and returns %outJava == "void" ? "nothing" : "%out.a; {@code %out.docName;}";.
  * 
  * @author Basic7x7
  * @version
@@ -37,60 +24,66 @@ final string Function = inp.name::"To"::out.name::"Function";
  * 2021-10-21 created
  * @since 1.2
  */
+// %cli.txsinfo();
 @FunctionalInterface
-public interface $Function;$generic; {
+public interface %Function;%Gen; {
 	
 	/**
 	 * Applies the function.
-	 # if (inp.java != "void") {
-	 * @param e The argument.
-	 # }
-	 # if (out.java != "void") {
-	 * @return The result.
-	 # }
+	 ##
+	 if (inpJava != "void") {
+	 	##
+	 	* @param e The argument.
+	 	##
+	 }
+	 if (outJava != "void") {
+	 	##
+	 	* @return The result.
+	 	##
+	 }
+	 ##
 	 */
-	public $out.java; apply(##
-			if (inp.java != "void") {
-				##$inp.java; e##
-			}
-			##);
-#
-#
-# if (inp.name == out.name && inp.java != "void") {
+	public %outJava; apply(%inpJava != "void" && "%inpuJava; e";);
 	
-	
-	/**
-	 * Returns the {@code $inp.docName;} identity function.
-	 * The identity function always returns the input argument.
-	 * @return The identity function.
-	 */
-	public static $? !inp.prim && "<T>"; $Function;$!inp.prim && "<T, T>"; identity() {
-		return e -> e;
-	}
-# }
-#
-#
-# if (out.java == "boolean") {
-	# string gen = !inp.prim && "<I>";
-	# string arg = inp.java != "void" && "e";
-	
-	
-	/**
-	 * Returns $inp.a; $Function; that represents {@code !this.apply(e)}.
-	 * @return The logical negation of this function.
-	 */
-	public default $Function;$generic; negate() {
-		return ($arg;) -> !this.apply($arg;);
+	##
+	if (inp.name == out.name && inpJava != "void") {
+		##
+		/**
+		 * Returns the {@code $inp.docName;} identity function.
+		 * The identity function always returns the input argument.
+		 * @return The identity function.
+		 */
+		public static %!inp.generic && "<T>"; %Function;%!inp.generic && "<T, T>"; identity() {
+			return e -> e;
+		}
+		
+		##
 	}
 	
-	/**
-	 * Returns $inp.a; $Function; that represents {@code !func.apply(e)}.
-	 * @param func The function to negate. Must not be {@code null}.
-	 * @return The logical negation of the specified function.
-	 * @throws NullPointerException If the specified function is {@code null}.
-	 */
-	public static $?gen; $Function;$gen; not($Function;$gen; func) {
-		return func.negate();
+	if (outJava == "boolean") {
+		final generic = inp.generic && "<I>";
+		final arg = inpJava != "void" && "e";
+		
+		##
+		/**
+		 * Returns %inp.a; %Function; that represents {@code !this.apply(e)}.
+		 * @return The logical negation of this function.
+		 */
+		public default %Function;%Gen; negate() {
+			return ($arg;) -> !this.apply($arg;);
+		}
+		
+		/**
+		 * Returns %inp.a; %Function; that represents {@code !func.apply(e)}.
+		 * @param func The function to negate. Must not be {@code null}.
+		 * @return The logical negation of the specified function.
+		 * @throws NullPointerException If the specified function is {@code null}.
+		 */
+		public static %generic; %Function;%generic; not(%Function;%generic; func) {
+			return func.negate();
+		}
+		
+		##
 	}
-# }
+	##
 }

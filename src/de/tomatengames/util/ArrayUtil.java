@@ -1,8 +1,6 @@
 /* txs-begin static
 ##
-:inline=$
-final string[] types = ["T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
-final string[] typesWithEqual = ["T", "T", "int", "long", "byte", "short", "char", "float", "double", "boolean"];
+const types = ["T", "int", "long", "byte", "short", "char", "float", "double", "boolean"]
 ##
 txs-end static */
 
@@ -29,129 +27,150 @@ public class ArrayUtil {
 	}
 	
 	/* txs-begin contains
-	# for (string type in typesWithEqual) with (first eq) {
-	
-	/**
-	 * Returns the first index that is greater than or equal to the {@code startIndex} for which
-	 * {@code array[index] $eq ? "equals" : "=="; element} applies.
-	 * If the array is {@code null}, it does not contain any elements.
-	 # if (type == 'T') {
-	 * @param <T> The type of the elements.
-	 # }
-	 * @param array The array. May be {@code null}.
-	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
-	 * @param startIndex The index where to start the search.
-	 * @return The first index of the specified element &ge; startIndex.
-	 * If no such index exists, {@code -1} is returned.
-	 *$'/';
-	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int indexOf$eq&&"Equal";($type;[] array, $type; element, int startIndex) {
-		if (array == null) {
-			return -1;
-		}
-		int n = array.length;
-		for (int i = startIndex; i < n; i++) {
-			# if (eq) {
-			if (Objects.equals(array[i], element)) {
-			# } else {
-			if (array[i] == element) {
-			# }
-				return i;
+	##
+	const typeObjects = {java: "T", equals: true, generic: "T"}, {java: "T", eq: false, generic: "T"},
+		{java: "int"}, {java: "long"}, {java: "byte"}, {java: "short"}, {java: "char"},
+		{java: "float"}, {java: "double"}, {java: "boolean"}
+		]
+		
+	for (type in typeObjects) {
+		final gen = "<" * type.generic * ">";
+		final genDoc = "* @param " * gen * " The type of the elements.";
+		
+		##
+		/**
+		 * Returns the first index that is greater than or equal to the {@code startIndex} for which
+		 * {@code array[index] %type.equals ? "equals" : "=="; element} applies.
+		 * If the array is {@code null}, it does not contain any elements.
+		 %genDoc;
+		 * 
+		 * @param array The array. May be {@code null}.
+		 * @param element The element. %type.generic && 'May be {@code null}.';
+		 * @param startIndex The index where to start the search.
+		 * @return The first index of the specified element &ge; startIndex.
+		 * If no such index exists, {@code -1} is returned.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %gen; int indexOf%type.equals&&"Equal";(%type.java;[] array, %type.java; element, int startIndex) {
+			if (array == null) {
+				return -1;
 			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * Returns the first index of $eq
-	 	? "an element in the array that is equal to the specified element."
-	 	: "the specified element in the array.";
-	 * If the array is {@code null}, it does not contain any elements.
-	 # if (type == 'T') {
-	 * @param <T> The type of the elements.
-	 # }
-	 * @param array The array. May be {@code null}.
-	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
-	 * @return The first index of the specified element.
-	 * If the array does not contain the specified element, {@code -1} is returned.
-	 *$'/';
-	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int indexOf$eq&&"Equal";($type;[] array, $type; element) {
-		return indexOf$eq&&"Equal";(array, element, 0);
-	}
-	
-	/**
-	 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
-	 * {@code array[index] $eq ? "equals" : "=="; element} applies.
-	 * If the array is {@code null}, it does not contain any elements.
-	 # if (type == 'T') {
-	 * @param <T> The type of the elements.
-	 # }
-	 * @param array The array. May be {@code null}.
-	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
-	 * @param startIndex The index where to start the search.
-	 * @return The last index of the specified element &le; startIndex.
-	 * If no such index exists, {@code -1} is returned.
-	 *$'/';
-	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int lastIndexOf$eq&&"Equal";($type;[] array, $type; element, int startIndex) {
-		if (array == null) {
-			return -1;
-		}
-		if (startIndex >= array.length) {
-			startIndex = array.length-1;
-		}
-		for (int i = startIndex; i >= 0; i--) {
-			# if (eq) {
-			if (Objects.equals(array[i], element)) {
-			# } else {
-			if (array[i] == element) {
-			# }
-				return i;
+			int n = array.length;
+			for (int i = startIndex; i < n; i++) {
+				##
+				if (type.equals) {
+					##
+					if (Objects.equals(array[i], element)) {
+						return i;
+					}
+					##
+				else {
+					##
+					if (array[i] == element) {
+						return i;
+					}
+					##
+				}
+				##
 			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * Returns the last index of $eq
-	 	? "an element in the array that is equal to the specified element."
-	 	: "the specified element in the array.";
-	 * If the array is {@code null}, it does not contain any elements.
-	 # if (type == 'T') {
-	 * @param <T> The type of the elements.
-	 # }
-	 * @param array The array. May be {@code null}.
-	 * @param element The element. $? type == 'T' && 'May be {@code null}.';
-	 * @return The last index of the specified element.
-	 * If the array does not contain the element, {@code -1} is returned.
-	 *$'/';
-	// $txsinfo();
-	public static $? type == 'T' && '<T>'; int lastIndexOf$eq&&"Equal";($type;[] array, $type; element) {
-		if (array == null) {
 			return -1;
 		}
-		return lastIndexOf$eq&&"Equal";(array, element, array.length-1);
-	}
 	
-	/**
-	 * Returns if the specified array contains $eq
-	 	? "an element that is equal to the specified element."
-	 	: "the specified element.";
-	 * The array {@code null} does not contain any elements.
-	 # if (type == 'T') {
-	 * @param <T> The type of the array elements.
-	 # }
-	 * @param array The array. May be {@code null}.
-	 * @param el The element. $? type == 'T' && 'May be {@code null}.';
-	 * @return If the array contains the specified element.
-	 *$'/';
-	// $txsinfo();
-	public static $? type == 'T' && '<T>'; boolean contains$eq&&"Equal";($type;[] array, $type; element) {
-		return indexOf$eq&&"Equal";(array, element, 0) >= 0;
-	}
+		/**
+		 * Returns the first index of %type.equals
+		 	? "an element in the array that is equal to the specified element."
+		 	: "the specified element in the array.";
+		 * If the array is {@code null}, it does not contain any elements.
+		 %genDoc;
+		 * 
+		 * @param array The array. May be {@code null}.
+		 * @param element The element. %type.generic && 'May be {@code null}.';
+		 * @return The first index of the specified element.
+		 * If the array does not contain the specified element, {@code -1} is returned.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %gen; int indexOf$type.equals&&"Equal";($type.java;[] array, $type.java; element) {
+			return indexOf$type.equals&&"Equal";(array, element, 0);
+		}
 	
-	# }
+		/**
+		 * Returns the last index in the array that is less than or equal to the {@code startIndex} for which
+		 * {@code array[index] %type.equals ? "equals" : "=="; element} applies.
+		 * If the array is {@code null}, it does not contain any elements.
+		 %genDoc;
+		 * 
+		 * @param array The array. May be {@code null}.
+		 * @param element The element. $type.generic && 'May be {@code null}.';
+		 * @param startIndex The index where to start the search.
+		 * @return The last index of the specified element &le; startIndex.
+		 * If no such index exists, {@code -1} is returned.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %gen; int lastIndexOf$type.equals&&"Equal";($type.java;[] array, $type.java; element, int startIndex) {
+			if (array == null) {
+				return -1;
+			}
+			if (startIndex >= array.length) {
+				startIndex = array.length-1;
+			}
+			for (int i = startIndex; i >= 0; i--) {
+				##
+				if (type.equals) {
+					##
+					if (Objects.equals(array[i], element)) {
+						return i;
+					}
+					##
+				}
+				else {
+					##
+					if (array[i] == element) {
+						return i;
+					}
+					##
+				}
+				##
+			}
+			return -1;
+		}
+		
+		/**
+		 * Returns the last index of %type.equals
+		 	? "an element in the array that is equal to the specified element."
+		 	: "the specified element in the array.";
+		 * If the array is {@code null}, it does not contain any elements.
+		 %genDoc;
+		 * @param array The array. May be {@code null}.
+		 * @param element The element. %type.generic && 'May be {@code null}.';
+		 * @return The last index of the specified element.
+		 * If the array does not contain the element, {@code -1} is returned.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %gen; int lastIndexOf$type.equals&&"Equal";($type.java;[] array, $type.java; element) {
+			if (array == null) {
+				return -1;
+			}
+			return lastIndexOf$type.equals&&"Equal";(array, element, array.length-1);
+		}
+		
+		/**
+		 * Returns if the specified array contains %type.equals
+		 	? "an element that is equal to the specified element."
+		 	: "the specified element.";
+		 * The array {@code null} does not contain any elements.
+		 %genDoc;
+		 * @param array The array. May be {@code null}.
+		 * @param el The element. %type.generic && 'May be {@code null}.';
+		 * @return If the array contains the specified element.
+		 *$'/';
+		// %cli.txsinfo();
+		public static %gen; boolean contains$type.equals&&"Equal";($type.java;[] array, $type.java; element) {
+			return indexOf$type.equals&&"Equal";(array, element, 0) >= 0;
+		}
+		
+		##
+	}
+	##
 	txs-end contains */
 	// txs-begin-gen contains
 	
@@ -1183,68 +1202,71 @@ public class ArrayUtil {
 	}
 	
 	/* txs-begin concat
-	# for (string type in types) {
-		## // The generic type has an own implementation with an array factory.
+	##
+	for (type in types) {
+		// The generic type has an own implementation with an array factory.
 		if (type == 'T') {
 			continue;
 		}
 		##
-	
-	/**
-	 * Concatenates both arrays.
-	 * If an array is {@code null}, it is handled like an empty array.
-	 * <p>
-	 * All elements from {@code array1} are before all from {@code array2}.
-	 * The order of the elements is preserved.
-	 * @param array1 The first array. May be {@code null}.
-	 * @param array2 The second array. May be {@code null}.
-	 * @return An array that contains all elements from both specified arrays.
-	 * Not {@code null}. A new array is created.
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] concat($type;[] array1, $type;[] array2) {
-		int n1 = array1 != null ? array1.length : 0;
-		int n2 = array2 != null ? array2.length : 0;
-		$type;[] target = new $type;[n1+n2];
-		if (array1 != null) {
-			System.arraycopy(array1, 0, target, 0, n1);
-		}
-		if (array2 != null) {
-			System.arraycopy(array2, 0, target, n1, n2);
-		}
-		return target;
-	}
-	
-	/**
-	 * Concatenates all specified arrays.
-	 * If an array is {@code null}, it is handled like an empty array.
-	 * The order of the arrays and the order of the elements inside each array are preserved.
-	 * @param arrays The arrays that should be concatenated. Must not be {@code null},
-	 * but the arrays inside may be {@code null}.
-	 * @return An array that contains all elements from all specified arrays.
-	 * Not {@code null}. A new array is created.
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] concat($type;[]... arrays) {
-		int n = 0;
-		for ($type;[] arr : arrays) {
-			if (arr != null) {
-				n += arr.length;
+		/**
+		 * Concatenates both arrays.
+		 * If an array is {@code null}, it is handled like an empty array.
+		 * <p>
+		 * All elements from {@code array1} are before all from {@code array2}.
+		 * The order of the elements is preserved.
+		 * @param array1 The first array. May be {@code null}.
+		 * @param array2 The second array. May be {@code null}.
+		 * @return An array that contains all elements from both specified arrays.
+		 * Not {@code null}. A new array is created.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] concat(%type;[] array1, %type;[] array2) {
+			int n1 = array1 != null ? array1.length : 0;
+			int n2 = array2 != null ? array2.length : 0;
+			%type;[] target = new $type;[n1+n2];
+			if (array1 != null) {
+				System.arraycopy(array1, 0, target, 0, n1);
 			}
+			if (array2 != null) {
+				System.arraycopy(array2, 0, target, n1, n2);
+			}
+			return target;
 		}
 		
-		$type;[] target = new $type;[n];
-		int i = 0;
-		for ($type;[] arr : arrays) {
-			if (arr != null) {
-				int len = arr.length;
-				System.arraycopy(arr, 0, target, i, len);
-				i += len;
+		/**
+		 * Concatenates all specified arrays.
+		 * If an array is {@code null}, it is handled like an empty array.
+		 * The order of the arrays and the order of the elements inside each array are preserved.
+		 * @param arrays The arrays that should be concatenated. Must not be {@code null},
+		 * but the arrays inside may be {@code null}.
+		 * @return An array that contains all elements from all specified arrays.
+		 * Not {@code null}. A new array is created.
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] concat(%type;[]... arrays) {
+			int n = 0;
+			for (%type;[] arr : arrays) {
+				if (arr != null) {
+					n += arr.length;
+				}
 			}
+			
+			%type;[] target = new %type;[n];
+			int i = 0;
+			for (%type;[] arr : arrays) {
+				if (arr != null) {
+					int len = arr.length;
+					System.arraycopy(arr, 0, target, i, len);
+					i += len;
+				}
+			}
+			return target;
 		}
-		return target;
+		
+		##
 	}
-	# }
+	##
 	txs-end concat */
 	// txs-begin-gen concat
 	
@@ -1691,29 +1713,37 @@ public class ArrayUtil {
 	
 	
 	/* txs-begin reverse
-# for (string type in types) {
-	/**
-	 * Reverses the specified array inplace.
-	 * If the array is {@code null}, nothing happens and {@code null} is returned.
-	 # if (type == "T") {
-	 * @param <T> The element type.
-	 # }
-	 * @param array The array that should be reversed. May be {@code null}.
-	 * @return The specified array for piping.
-	 *$'/';
-	public static $? type=="T" && "<T>"; $type;[] reverse($type;[] array) {
-		if (array == null) {
-			return null;
+	##
+	for (type in types) {
+		##
+		/**
+		 * Reverses the specified array inplace.
+		 * If the array is {@code null}, nothing happens and {@code null} is returned.
+		 ##
+		 if (type == "T") {
+		 	##
+		 	* @param <T> The element type.
+		 	##
+		 }
+		 ##
+		 * @param array The array that should be reversed. May be {@code null}.
+		 * @return The specified array for piping.
+		 *%'/';
+		public static %type=="T" && "<T>"; %type;[] reverse(%type;[] array) {
+			if (array == null) {
+				return null;
+			}
+			for (int i = 0, j = array.length-1; i < j; i++, j--) {
+				%type; temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+			return array;
 		}
-		for (int i = 0, j = array.length-1; i < j; i++, j--) {
-			$type; temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
-		}
-		return array;
+		
+		##
 	}
-	
-# }
+	##
 	 txs-end reverse */
 	// txs-begin-gen reverse
 	/**
@@ -2054,147 +2084,147 @@ public class ArrayUtil {
 	}
 	
 	/* txs-begin addElement
-##
-for (string type in types) {
-	if (type == "T") {
-		continue;
-	}
 	##
-	/**
-	 * Copies the array and inserts the specified element at the specified index.
-	 * If the array is {@code null}, it is handled like an empty array.
-	 * @param array The array. May be {@code null}.
-	 * @param el The element that should be inserted.
-	 * @param index The index where the element should be inserted.
-	 * Must not be negative and must not be greater than {@code array.length}.
-	 * @return A new array that contains all elements from the specified array and the specified element.
-	 * Not {@code null}.
-	 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
-	 * @since 1.1
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] add($type;[] array, $type; el, int index) {
-		if (array == null) {
-			if (index != 0) {
-				throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+	for (type in types) {
+		if (type == "T") {
+			continue;
+		}
+		##
+		/**
+		 * Copies the array and inserts the specified element at the specified index.
+		 * If the array is {@code null}, it is handled like an empty array.
+		 * @param array The array. May be {@code null}.
+		 * @param el The element that should be inserted.
+		 * @param index The index where the element should be inserted.
+		 * Must not be negative and must not be greater than {@code array.length}.
+		 * @return A new array that contains all elements from the specified array and the specified element.
+		 * Not {@code null}.
+		 * @throws IndexOutOfBoundsException If the index is negative or greater than the length of the array.
+		 * @since 1.1
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] add(%type;[] array, %type; el, int index) {
+			if (array == null) {
+				if (index != 0) {
+					throw new IndexOutOfBoundsException("Array length is 0, but target index is " + index + "!");
+				}
+				return new %type;[] { el };
 			}
-			return new $type;[] { el };
+			
+			int n = array.length;
+			if (index < 0 || index > n) {
+				throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+			}
+			
+			%type;[] newArray = new %type;[n+1];
+			System.arraycopy(array, 0, newArray, 0, index);
+			newArray[index] = el;
+			System.arraycopy(array, index, newArray, index+1, n-index);
+			return newArray;
 		}
 		
-		int n = array.length;
-		if (index < 0 || index > n) {
-			throw new IndexOutOfBoundsException("Array length is " + n + ", but target index is " + index + "!");
+		/**
+		 * Copies the array and inserts the specified element to the front.
+		 * The resulting array is
+		 * <pre>
+		 * [el, array...]
+		 * </pre>
+		 * If the array is {@code null}, it is handled like an empty array.
+		 * @param array The array. May be {@code null}.
+		 * @param el The element that should be inserted.
+		 * @return A new array that contains the specified element and all elements from the specified array.
+		 * Not {@code null}.
+		 * @since 1.1
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] addFirst(%type;[] array, %type; el) {
+			if (array == null) {
+				return new %type;[] { el };
+			}
+			int n = array.length;
+			%type;[] newArray = new %type;[n+1];
+			newArray[0] = el;
+			System.arraycopy(array, 0, newArray, 1, n);
+			return newArray;
 		}
 		
-		$type;[] newArray = new $type;[n+1];
-		System.arraycopy(array, 0, newArray, 0, index);
-		newArray[index] = el;
-		System.arraycopy(array, index, newArray, index+1, n-index);
-		return newArray;
-	}
-	
-	/**
-	 * Copies the array and inserts the specified element to the front.
-	 * The resulting array is
-	 * <pre>
-	 * [el, array...]
-	 * </pre>
-	 * If the array is {@code null}, it is handled like an empty array.
-	 * @param array The array. May be {@code null}.
-	 * @param el The element that should be inserted.
-	 * @return A new array that contains the specified element and all elements from the specified array.
-	 * Not {@code null}.
-	 * @since 1.1
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] addFirst($type;[] array, $type; el) {
-		if (array == null) {
-			return new $type;[] { el };
-		}
-		int n = array.length;
-		$type;[] newArray = new $type;[n+1];
-		newArray[0] = el;
-		System.arraycopy(array, 0, newArray, 1, n);
-		return newArray;
-	}
-	
-	/**
-	 * Copies the array and inserts the specified element at the end.
-	 * The resulting array is
-	 * <pre>
-	 * [array..., el]
-	 * </pre>
-	 * If the array is {@code null}, it is handled like an empty array.
-	 * @param array The array. May be {@code null}.
-	 * @param el The element that should be inserted.
-	 * @return A new array that contains all elements from the specified array and the specified element.
-	 * Not {@code null}.
-	 * @since 1.1
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] addLast($type;[] array, $type; el) {
-		if (array == null) {
-			return new $type;[] { el };
-		}
-		int n = array.length;
-		$type;[] newArray = new $type;[n+1];
-		System.arraycopy(array, 0, newArray, 0, n);
-		newArray[n] = el;
-		return newArray;
-	}
-	
-	/**
-	 * Copies the array, but skips the specified index.
-	 * The result is an array with one element less.
-	 * If the array is {@code null}, it is handled like an empty array.
-	 * @param array The array. May be {@code null}.
-	 * @param index The index that should be removed. Must be in range.
-	 * @return A new array without the element at the specified index. Not {@code null}.
-	 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
-	 * Occurs always if the array is empty or {@code null}.
-	 * @since 1.1
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] removeIndex($type;[] array, int index) {
-		if (array == null) {
-			throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
-		}
-		int n = array.length;
-		if (index < 0 || index >= n) {
-			throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+		/**
+		 * Copies the array and inserts the specified element at the end.
+		 * The resulting array is
+		 * <pre>
+		 * [array..., el]
+		 * </pre>
+		 * If the array is {@code null}, it is handled like an empty array.
+		 * @param array The array. May be {@code null}.
+		 * @param el The element that should be inserted.
+		 * @return A new array that contains all elements from the specified array and the specified element.
+		 * Not {@code null}.
+		 * @since 1.1
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] addLast(%type;[] array, %type; el) {
+			if (array == null) {
+				return new $type;[] { el };
+			}
+			int n = array.length;
+			%type;[] newArray = new %type;[n+1];
+			System.arraycopy(array, 0, newArray, 0, n);
+			newArray[n] = el;
+			return newArray;
 		}
 		
-		$type;[] newArray = new $type;[n-1];
-		System.arraycopy(array, 0, newArray, 0, index);
-		System.arraycopy(array, index+1, newArray, index, n-index-1);
-		return newArray;
-	}
-	
-	/**
-	 * Copies the array, but skips the first appearance of the specified element.
-	 * The result is an array with one element less if the array contains the specified element.
-	 * If the array does not contain the specified element, the input array is returned and not copied.
-	 * To find out if an element was removed, the length of the input array and the result array can be compared.
-	 * If the array is {@code null}, it is handled as an empty array.
-	 * @param array The array. May be {@code null}.
-	 * @param el The element that should be removed.
-	 * @return A new array without the first appearance of the specified element.
-	 * Might be {@code null} if the input array is {@code null}.
-	 * @since 1.1
-	 *$'/';
-	// $txsinfo();
-	public static $type;[] remove($type;[] array, $type; el) {
-		int index = indexOf(array, el);
-		if (index < 0) {
-			return array;
+		/**
+		 * Copies the array, but skips the specified index.
+		 * The result is an array with one element less.
+		 * If the array is {@code null}, it is handled like an empty array.
+		 * @param array The array. May be {@code null}.
+		 * @param index The index that should be removed. Must be in range.
+		 * @return A new array without the element at the specified index. Not {@code null}.
+		 * @throws IndexOutOfBoundsException If {@code index < 0} or {@code index >= array.length}.
+		 * Occurs always if the array is empty or {@code null}.
+		 * @since 1.1
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] removeIndex(%type;[] array, int index) {
+			if (array == null) {
+				throw new IndexOutOfBoundsException("index: " + index + ", length: 0");
+			}
+			int n = array.length;
+			if (index < 0 || index >= n) {
+				throw new IndexOutOfBoundsException("index: " + index + ", length: " + n);
+			}
+			
+			%type;[] newArray = new $type;[n-1];
+			System.arraycopy(array, 0, newArray, 0, index);
+			System.arraycopy(array, index+1, newArray, index, n-index-1);
+			return newArray;
 		}
-		return removeIndex(array, index);
+		
+		/**
+		 * Copies the array, but skips the first appearance of the specified element.
+		 * The result is an array with one element less if the array contains the specified element.
+		 * If the array does not contain the specified element, the input array is returned and not copied.
+		 * To find out if an element was removed, the length of the input array and the result array can be compared.
+		 * If the array is {@code null}, it is handled as an empty array.
+		 * @param array The array. May be {@code null}.
+		 * @param el The element that should be removed.
+		 * @return A new array without the first appearance of the specified element.
+		 * Might be {@code null} if the input array is {@code null}.
+		 * @since 1.1
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type;[] remove(%type;[] array, %type; el) {
+			int index = indexOf(array, el);
+			if (index < 0) {
+				return array;
+			}
+			return removeIndex(array, index);
+		}
+		
+		
+		##
 	}
-	
-	
 	##
-}
-##
 	txs-end addElement */
 	// txs-begin-gen addElement
 	/**
@@ -3258,41 +3288,41 @@ for (string type in types) {
 	
 	/* txs-begin isEqualCT
 	##
-	final string[] ctTypes = ["int", "long", "byte", "char", "short"];
-	for (string type in ctTypes) {
-		final string numType = type == "long" ? "long" : "int";
+	final ctTypes = ["int", "long", "byte", "char", "short"];
+	for (type in ctTypes) {
+		final numType = type == "long" ? "long" : "int";
 		##
-	/**
-	 * Performs a near-constant-time comparison for the specified arrays.
-	 * <p>
-	 * The calculation time depends mostly on the length of {@code actual}.
-	 * In some situations it may depend slightly on the length of {@code expected}.
-	 * It does not depend on the contents of both arrays.
-	 * @param expected The expected array. Not {@code null}.
-	 * @param actual The array that should be tested to match the expected array. Not {@code null}.
-	 * @return If both arrays are equal.
-	 * @since 1.4
-	 *$'/';
-	// $txsinfo();
-	public static boolean isEqualCT($type;[] expected, $type;[] actual) {
-		int expectedLen = expected.length;
-		int actualLen = actual.length;
-		
-		if (actualLen > 0 && expectedLen == 0) {
-			return false;
+		/**
+		 * Performs a near-constant-time comparison for the specified arrays.
+		 * <p>
+		 * The calculation time depends mostly on the length of {@code actual}.
+		 * In some situations it may depend slightly on the length of {@code expected}.
+		 * It does not depend on the contents of both arrays.
+		 * @param expected The expected array. Not {@code null}.
+		 * @param actual The array that should be tested to match the expected array. Not {@code null}.
+		 * @return If both arrays are equal.
+		 * @since 1.4
+		 *%'/';
+		// %cli.txsinfo();
+		public static boolean isEqualCT(%type;[] expected, %type;[] actual) {
+			int expectedLen = expected.length;
+			int actualLen = actual.length;
+			
+			if (actualLen > 0 && expectedLen == 0) {
+				return false;
+			}
+			
+			// Near-constant-time comparison.
+			// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
+			%numType; result = expectedLen ^ actualLen;
+			for (int i = 0; i < actualLen; i++) {
+				%numType; value1 = expected[i < expectedLen ? i : 0];
+				%numType; value2 = actual[i];
+				result |= value1 ^ value2;
+			}
+			return result == 0;
 		}
 		
-		// Near-constant-time comparison.
-		// The length of "expected" might be leaked due to potential time differences (i vs 0, cache-misses, branch-prediction, ...).
-		$numType; result = expectedLen ^ actualLen;
-		for (int i = 0; i < actualLen; i++) {
-			$numType; value1 = expected[i < expectedLen ? i : 0];
-			$numType; value2 = actual[i];
-			result |= value1 ^ value2;
-		}
-		return result == 0;
-	}
-	
 		##
 	}
 	##

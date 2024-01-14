@@ -1,0 +1,103 @@
+##
+const types = ["Boolean", "Byte", "Short", "Int", "Long", "Float", "Double", "Char", "Void", "Ref"]
+const typeData = {
+	"Boolean": { name: "Boolean", java: "boolean", prim: true, docName: "boolean", a: "a" }
+	"Byte": { name: "Byte", java: "byte", prim: true, docName: "byte", a: "a" }
+	"Short": { name: "Short", java: "short", prim: true, docName: "short", a: "a" }
+	"Int": { name: "Int", java: "int", prim: true, docName: "int", a: "an" }
+	"Long": { name: "Long", java: "long", prim: true, docName: "long", a: "a" }
+	"Float": { name: "Float", java: "float", prim: true, docName: "float", a: "a" }
+	"Double": { name: "Double", java: "double", prim: true, docName: "double", a: "a" }
+	"Char": { name: "Char", java: "char", prim: true, docName: "char", a: "a" }
+	"Void": { name: "Void", java: "void", prim: true, docName: "void", a: "a" }
+	"Ref": {
+		name: "Ref", java: "T", docName: "Object", a: "an", prim: false
+		generic: "T"
+	}
+}
+
+function firstUpper(str) {
+	if (str.length <= 0) {
+		return str
+	}
+	return str[0].uppercase + str.slice(1)
+}
+
+const mapLastMod = "2023-11-26"
+const entryLastMod = "2023-07-31"
+const maps = ["Int", "Int2", "Int3", "Long", "Long2", "Long3", "Abstract"]
+const mapData = {
+	"Int": {
+		namePrefix: "Int"
+		keys: [{name: "key", type: "int"}]
+		hash: "key"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Int2": {
+		namePrefix: "Int2"
+		keys: [{name: "key1", type: "int"}, {name: "key2", type: "int"}]
+		hash: "(key2*31 + key1)"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Int3": {
+		namePrefix: "Int3"
+		keys: [{name: "key1", type: "int"}, {name: "key2", type: "int"}, {name: "key3", type: "int"}]
+		hash: "(((key3*31) + key2)*31 + key1)"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Long": {
+		namePrefix: "Int"
+		keys: [{name: "key", type: "long"}]
+		hash: "Long.hashCode(key)"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Long2": {
+		namePrefix: "Long2"
+		keys: [{name: "key1", type: "long"}, {name: "key2", type: "long"}]
+		hash: "(Long.hashCode(key2)*31 + Long.hashCode(key1))"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Long3": {
+		namePrefix: "Long3"
+		keys: [{name: "key1", type: "long"}, {name: "key2", type: "long"}, {name: "key3", type: "long"}]
+		hash: "(((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1))"
+		since: "1.3"
+		createDate: "2023-07-31"
+	}
+	"Abstract": {
+		namePrefix: "Abstract"
+		abstractMap: true
+		genKeys: ["K"]
+		keys: [{name: "key", type: "K"}]
+		extraMapCode: function() {
+			##
+			/**
+			 * Calculate the hash code of the specified key.
+			 * @param key The key whose hash code should be calculated.
+			 * @return The hash code.
+			 */
+			public abstract int keyHash(K key);
+			
+			/**
+			 * Returns if the specified keys should be considered equal.
+			 * @param key1 The first key.
+			 * @param key2 The second key.
+			 * @return If both keys should be considered equal.
+			 */
+			public abstract boolean keyEquals(K key1, K key2);
+			
+			##
+		}
+		hash: (key) => "keyHash(@key;)"
+		equals: (node1, node2) => "keyEquals(@node1.key;, @node2.key;)"
+		equalsDoc: "Equality of keys is checked by using the abstract {@code keyEquals(key1, key2);} method."
+		since: "1.5"
+		createDate: "2024-01-06"
+	}
+}
+##
