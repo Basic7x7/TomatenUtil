@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts 7 generic input parameters and returns a {@code boolean}.
+ * A function that accepts 7 generic input parameters and returns
+ * a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2023-02-19 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface Ref7ToBooleanFunction<A, B, C, D, E, F, G> {
 	
@@ -25,6 +26,7 @@ public interface Ref7ToBooleanFunction<A, B, C, D, E, F, G> {
 	 * @return The result.
 	 */
 	public boolean apply(A a, B b, C c, D d, E e, F f, G g);
+	
 	
 	
 	/**

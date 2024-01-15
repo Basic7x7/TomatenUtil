@@ -1,86 +1,92 @@
-// @txsinfo();
 package de.tomatengames.util.function;
 ##
-:inline=§
+include <src/txs/include.txs>
 
-extern final int n;
-extern final object out;
+extern n
+extern outName
+final out = typeData[outName]
 
-final string[] genericTypes = new string[n+1];
-genericTypes[0] = !out.prim && "T";
-for (int i = 0; i < n; i++) {
-	genericTypes[i+1] = toChar(`A`+i);
+var args = []
+for (i := 0; i < n; i++) {
+	final type = std.char(std.int(`A`)+i)
+	args += { type: type, name: type.lowercase()}
 }
-final string gen = join(", ", genericTypes);
-final string generic = gen.length > 0 && "<"::gen::">";
 
-final string Function = "Ref"::n::"To"::out.name::"Function";
+
+var genericTypes = []
+if (out.generic) {
+	genericTypes += out.generic
+}
+genericTypes += args.map(a => a.type)
+final Gen = "<" * genericTypes.join(", ") * ">"
+
+final Function = "Ref%n;To%out.name;Function";
 ##
 
 /**
- * A function that accepts §n; generic input parameter§n!=1&&"s"; and returns ##
-	if (out.java == "void") { ##nothing## }
-	else { ##§out.a; {@code §out.docName;}## } ##.
+ * A function that accepts %n; generic input parameter%n!=1&&'s'; and returns
+ * %out.java == "void" ? "nothing" : "%out.a; {@code %out.docName;}";.
  * 
- # if (!out.prim) {
- * @param <T> The return type.
- * 
- # }
+##
+if (out.generic) {
+	##
+	 * @param <T> The return type.
+	 * 
+	##
+}
+##
  * @author Basic7x7
  * @version
  * 2023-04-11 last modified<br>
  * 2023-02-19 created
  * @since 1.2
  */
+// %cli.txsinfo();
 @FunctionalInterface
-public interface §Function;§generic; {
+public interface %Function;%Gen; {
 	
 	/**
 	 * Applies the function.
-	 # for (int i = 0; i < n; i++) {
-	 * @param §toChar(`a`+i); An argument.
-	 # }
-	 # if (out.java != "void") {
-	 * @return The result.
-	 # }
-	 */
-	public §out.java; apply(##
-			for (int i = 0; i < n; i++) {
-				string type = toChar(`A`+i);
-				string name = lowercase(type);
-				##§i>0 && ", ";§type; §name;##
-			}
-			##);
-##
-
-if (out.java == "boolean") {
-	string[] argNames = new string[n];
-	for (int i = 0; i < n; i++) {
-		argNames[i] = toChar(`a`+i);
-	}
-	string args = join(", ", argNames);
 	##
-	
-	
-	/**
-	 * Returns a §Function; that represents {@code !this.apply(...)}.
-	 * @return The logical negation of this function.
-	 */
-	public default §Function;§generic; negate() {
-		return (§args;) -> !this.apply(§args;);
+	for (arg in args) {
+		##
+		 * @param %arg.name; An argument.
+		##
 	}
-	
-	/**
-	 * Returns a §Function; that represents {@code !func.apply(...)}.
-	 * @param func The function to negate. Must not be {@code null}.
-	 * @return The logical negation of the specified function.
-	 * @throws NullPointerException If the specified function is {@code null}.
-	 */
-	public static §?generic; §Function;§generic; not(§Function;§generic; func) {
-		return func.negate();
+	if (out.java != "void") {
+		##
+		 * @return The result.
+		##
 	}
 	##
-}
-##
+	 */
+	public %out.java; apply(%args.map(a => "%a.type; %a.name;").join(", "););
 	
+	##
+	if (out.java == "boolean") {
+		final argNamesStr = args.map(a => a.name).join(", ")
+		##
+		
+		
+		/**
+		 * Returns a %Function; that represents {@code !this.apply(...)}.
+		 * @return The logical negation of this function.
+		 */
+		public default %Function;%Gen; negate() {
+			return (%argNamesStr;) -> !this.apply(%argNamesStr;);
+		}
+		
+		/**
+		 * Returns a %Function; that represents {@code !func.apply(...)}.
+		 * @param func The function to negate. Must not be {@code null}.
+		 * @return The logical negation of the specified function.
+		 * @throws NullPointerException If the specified function is {@code null}.
+		 */
+		public static %Gen; %Function;%Gen; not(%Function;%Gen; func) {
+			return func.negate();
+		}
+		
+		##
+	}
+	##
 }

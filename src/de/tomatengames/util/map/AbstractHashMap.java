@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code K} keys to object values.
- 	* Equality of keys is checked by using the abstract {@code keyEquals(key1, key2);} method.
+ * Equality of keys is checked by using the abstract {@code keyEquals(key1, key2)} method.
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -19,7 +19,7 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- * 2024-01-06
+ * 2024-01-06 created
  * @since 1.5
  */
 // !!! TextScript generated !!!
@@ -271,18 +271,23 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 		return result;
 	}
 	
-		/**
-		 * Calculate the hash code of the specified key.
-		 * @param key The key whose hash code should be calculated.
-		 * @return The hash code.
-		 */
-		public abstract int keyHash(K key);
-		
-		/**
-		 * Returns if the specified keys should be considered equal.
-		 */
-		public abstract boolean keyEquals(K key1, K key2);
-		
+	
+	/**
+	 * Calculate the hash code of the specified key.
+	 * @param key The key whose hash code should be calculated.
+	 * @return The hash code.
+	 */
+	public abstract int keyHash(K key);
+	
+	/**
+	 * Returns if the specified keys should be considered equal.
+	 * @param key1 The first key.
+	 * @param key2 The second key.
+	 * @return If both keys should be considered equal.
+	 */
+	public abstract boolean keyEquals(K key1, K key2);
+	
+	
 	
 	private final int indexOf(K key, int mask) {
 		return keyHash(key) & mask;
@@ -409,7 +414,7 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 				return false;
 			}
 			
-				@SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked")
 			Node other = (Node) obj;
 			return keyEquals(this.key, other.key) && Objects.equals(this.value, other.value);
 		}

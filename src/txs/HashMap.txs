@@ -1,97 +1,52 @@
 package de.tomatengames.util.map;
 ##
-:inline=%
+include <src/txs/include.txs>
 
-extern final string namePrefix;
-final string HashMap = namePrefix :: "HashMap";
-final string Entry = namePrefix :: "Entry";
+extern mapName;
+final map = mapData[mapName];
 
-extern string hash;
-final bool abstractEquals = !hash;
+final abstr = map.abstractMap;
 
-extern final string[] keyTypes;
-final int n = keyTypes.length;
-final string keyTuple = n>1 ? "(" :: join(", ", keyTypes) :: ")" : keyTypes[0];
+final HashMap = "%map.namePrefix;HashMap";
+final Entry = "%map.namePrefix;Entry";
 
-final string[] keyNames = new string[n];
-for (int i = 0; i < n; i++) {
-	keyNames[i] = n > 1 ? "key"::(i+1) : "key";
-}
-final string key = join(", ", keyNames);
-string keyDec = .."";
-for (int i = 0; i < n; i++) {
-	if (i > 0) {
-		keyDec .= ", ";
-	}
-	keyDec .= keyTypes[i] :: " " :: keyNames[i];
-}
+final GenKeys = "<" * map.genKeys?.join(", ") * ">";
+final genArray = map.genKeys + ["V"];
+final Gen = "<" * genArray.join(", ") * ">";
+final Node = "Node%!abstr && Gen;";
+final wildcardGen = "<" * genArray.map(s => "?").join(", ") * ">";
 
-extern final string[] GenKeys;
-string GenKey = join(", ", GenKeys);
-if (GenKey.length == 0) {
-	GenKey = null;
-}
-final string Gen = GenKey ? (GenKey :: ", V") : "V";
-final string[] questionMarks = split(Gen, `,`);
-for (int i = 0; i < questionMarks.length; i++) {
-	questionMarks[i] = "?";
-}
-final string wildcardGen = join(", ", questionMarks);
+final key = (node, suffix) => map.keys.map(k => (node && node + ".") + k.name + suffix).join(", ");
+final entryKey = (entry, cast) => map.keys.map(
+		k => (cast && "(%k.type;) ") + "%entry;.get%k.name.uppercase(0);()").join(", ");
+final keyDec = (suffix) => map.keys.map(k => "%k.type; %k.name;%suffix;").join(", ");
 
-final string Node = "Node" :: (!abstractEquals && "<"::Gen::">");
+final keyTypeTuple = (map.keys.length > 1 ? "(" : "") +
+	map.keys.map(k => k.type).join(", ") +
+	(map.keys.length > 1 ? ")" : "");
 
-extern final string since;
-extern string createDate, lastModDate;
-if (leq(lastModDate, createDate)) {
-	lastModDate = null;
-}
 
-function bool leq(string date1, string date2) {
-	for (int i = 0; i < date1.length; i++) {
-		if (date1[i] < date2[i]) {
-			return true;
+function equalKey(node1, node2) {
+	final prefix1 = node1 && node1 + ".";
+	final prefix2 = node2 && node2 + ".";
+	
+	if (map.equals) {
+		final n1 = {};
+		final n2 = {};
+		for (key in map.keys) {
+			n1[key.name] = prefix1 + key.name;
+			n2[key.name] = prefix2 + key.name;
 		}
-		if (date1[i] > date2[i]) {
-			return false;
-		}
+		return map.equals(n1, n2);
 	}
-	return true; // equals 
+	
+	return map.keys.map(k => "%prefix1;%k.name; == %prefix2;%k.name;").join(" && ");
 }
 
-
-function string getEntryKey(string entry, bool cast) {
-	string[] arr = new string[n];
-	for (int i = 0; i < n; i++) {
-		arr[i] = (cast && GenKeys && GenKeys[i] && "("::GenKeys[i]::") ") ::
-			entry :: ".getKey"::(n > 1 && i+1)::"()";
-	}
-	return join(", ", arr);
-}
-
-function string getNodeKey(string node) {
-	string[] arr = new string[n];
-	for (int i = 0; i < n; i++) {
-		arr[i] = (node ? node :: "." : "") :: keyNames[i];
-	}
-	return join(", ", arr);
-}
-
-function string equalNodeKey(string node1, string node2) {
-	if (abstractEquals) {
-		return "keyEquals(" :: getNodeKey(node1) :: ", " :: getNodeKey(node2) :: ")";
-	}
-	string[] arr = new string[n];
-	for (int i = 0; i < n; i++) {
-		arr[i] = (node1 != null ? node1::"." : "") :: keyNames[i] :: " == " ::
-			(node2 != null ? node2::"." : "") :: keyNames[i];
-	}
-	return join(" && ", arr);
-}
-
-function void printKeyDoc(string suffix) {
-	for (int i = 0; i < n; i++) {
+function keyDoc(doc, keySuffix) {
+	for (key in map.keys) {
 		##
-	 * @param key%n>1 && i+1; ## if (n>1) { ##Part %i+1; of the key## } else { ##The key## } ##%suffix;
+		* @param %key.name;%keySuffix; %map.keys.length>1 ? "A component of the key" : "The key";%doc;
 		##
 	}
 }
@@ -107,18 +62,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A {@link HashMap}-like data structure that maps {@code %keyTuple;} keys to object values.
- ##
- if (abstractEquals) {
- 	##
- 	* Equality of keys is checked by using the abstract {@code keyEquals(key1, key2);} method.
- 	##
- } else {
- 	##
- 	* Equality of keys is checked by using the {@code ==} operator.
- 	##
- }
- ##
+ * A {@link HashMap}-like data structure that maps {@code %keyTypeTuple;} keys to object values.
+ * %map.equalsDoc ? map.equalsDoc : "Equality of keys is checked by using the {@code ==} operator";
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -127,14 +72,18 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- * %lastModDate ? (lastModDate :: " last modified<br>") : createDate;
- # if (lastModDate) {
- * %createDate; created
- # }
- * @since %since;
+##
+if (entryLastMod && entryLastMod > map.createDate) {
+	##
+	 * %entryLastMod; last modified<br>
+	##
+}
+##
+ * %map.createDate; created
+ * @since %map.since;
  */
-// %txsinfo();
-public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements Iterable<%Entry;<%Gen;>> {
+// %cli.txsinfo();
+public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%Entry;%Gen;> {
 	private static final double ENLARGE_LOAD_FACTOR = 0.75;
 	private static final int MIN_TABLE_SIZE = 16;
 	private static final int MAX_TABLE_SIZE = 1 << 30;
@@ -160,7 +109,7 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	 * Creates a new {@link %HashMap;} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned.
 	 */
-	public %HashMap;(%HashMap;<%Gen;> map) {
+	public %HashMap;(%HashMap;%Gen; map) {
 		this();
 		this.putAll(map);
 	}
@@ -184,16 +133,16 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	/**
 	 * Associates the specified key with the specified value.
 	 * If the key is already present in this map, the previous value is replaced.
-	 # printKeyDoc(" of the new mapping.");
+	 %keyDoc(" of the new mapping.");
 	 * @param value The value of the new mapping. Must not {@code null}.
 	 * @return The value that was previously mapped to the key.
 	 * If the key was not present in this map, {@code null} is returned. 
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
-	public V put(%keyDec;, V value) {
+	public V put(%keyDec();, V value) {
 		requireNotNull(value, "The value ...");
 		this.modcount++;
-		%Node; node = this.findOrCreate(%key;);
+		%Node; node = this.findOrCreate(%key(););
 		V prev = node.value;
 		node.value = value; // Might replace the previous value
 		return prev;
@@ -202,16 +151,16 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	/**
 	 * Associates the specified key with the specified value.
 	 * If the key is already present in this map, nothing happens.
-	 # printKeyDoc(" of the new mapping.");
+	 %keyDoc(" of the new mapping.");
 	 * @param value The value of the new mapping. Must not {@code null}.
 	 * @return The value that was previously mapped to the key.
 	 * If {@code null}, the new value has been put into the map.
 	 * Otherwise, the previous value is still present.
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
-	public V putIfAbsent(%keyDec;, V value) {
+	public V putIfAbsent(%keyDec();, V value) {
 		requireNotNull(value, "The value ...");
-		%Node; node = this.findOrCreate(%key;);
+		%Node; node = this.findOrCreate(%key(););
 		
 		// If the Node did not exist before (value == null), then set the value.
 		V prev = node.value;
@@ -227,12 +176,12 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	/**
 	 * Returns the value that is mapped to the specified key.
 	 * @param key The key whose value should be returned.
-	 # printKeyDoc(" that should be checked.");
+	 %keyDoc(" that should be checked.");
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
-	public V get(%keyDec;) {
-		%Node; node = findNode(%key;, this.table, this.mask);
+	public V get(%keyDec();) {
+		%Node; node = findNode(%key();, this.table, this.mask);
 		return node != null ? node.value : null;
 	}
 	
@@ -240,33 +189,33 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	 * Returns if the specified key is present in this map.
 	 * This method is semantically equivalent to
 	 * <pre>get(key) != null</pre>
-	 # printKeyDoc(" that should be checked.");
+	 %keyDoc(" that should be checked.");
 	 * @return If the specified key is present in this map.
 	 */
-	public boolean containsKey(%keyDec;) {
-		return findNode(%key;, this.table, this.mask) != null;
+	public boolean containsKey(%keyDec();) {
+		return findNode(%key();, this.table, this.mask) != null;
 	}
 	
 	/**
 	 * Removes the entry with the specified key from this map.
 	 * If the map does not contain the key, nothing happens.
-	 * @param key The key of the entry that should be removed.
+	 %keyDoc(" of the entry that should be removed.");
 	 * @return The value of the entry that was removed.
 	 * If no entry was removed, {@code null} is returned.
 	 */
-	public V remove(%keyDec;) {
+	public V remove(%keyDec();) {
 		%Node;[] table = this.table;
 		if (table == null) {
 			return null; // No elements in the map
 		}
 		
-		int index = indexOf(%key;, this.mask);
+		int index = indexOf(%key();, this.mask);
 		
 		// Search for the key.
 		%Node; node = table[index];
 		%Node; prev = null;
 		while (node != null) {
-			if (%equalNodeKey("node", (string) null);) {
+			if (%equalKey("node", null);) {
 				// Unlink the found node.
 				this.modcount++;
 				if (prev != null) {
@@ -306,7 +255,7 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	}
 	
 	@Override
-	public void forEach(Consumer<? super %Entry;<%Gen;>> action) {
+	public void forEach(Consumer<? super %Entry;%Gen;> action) {
 		%Node;[] table = this.table;
 		if (table == null) {
 			return; // The map is empty
@@ -329,14 +278,14 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void putAll(%HashMap;<%Gen;> otherMap) {
+	public void putAll(%HashMap;%Gen; otherMap) {
 		// If the map is null, it is considered empty.
 		// If the other map is this map, all entries are already present. Prevents concurrent modification.
 		if (otherMap == null || otherMap == this) {
 			return;
 		}
 		
-		otherMap.forEach(entry -> this.put(%getEntryKey("entry", false);, entry.getValue()));
+		otherMap.forEach(entry -> this.put(%entryKey("entry");, entry.getValue()));
 	}
 	
 	@Override
@@ -349,22 +298,22 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 		}
 		
 		// Checks the sizes.
-		%HashMap;<%wildcardGen;> other = (%HashMap;<%wildcardGen;>) obj;
+		%HashMap;%wildcardGen; other = (%HashMap;%wildcardGen;) obj;
 		if (this.size != other.size) {
 			return false;
 		}
 		
 		// Checks that the other map is a subset of this map.
-		for (%Entry;<%wildcardGen;> entry : other) {
-		##
-		if (GenKeys) {
+		for (%Entry;%wildcardGen; entry : other) {
 			##
-			// get() returns null if the key has the wrong type ==> The map are not equal
-			@SuppressWarnings("unchecked")
+			if (map.genKeys) {
+				##
+				// get() returns null if the key has the wrong type ==> The map are not equal
+				@SuppressWarnings("unchecked")
+				##
+			}
 			##
-		}
-		##
-			V thisValue = this.get(%getEntryKey("entry", true););
+			V thisValue = this.get(%entryKey("entry", true););
 			if (thisValue == null) {
 				return false; // This does not contain the current entry
 			}
@@ -382,44 +331,28 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 	public int hashCode() {
 		// The order of the loop is undefined, but '+' is commutative.
 		int result = 0;
-		for (%Entry;<%Gen;> entry : this) {
+		for (%Entry;%Gen; entry : this) {
 			result += entry.hashCode();
 		}
 		return result;
 	}
 	
-	##
-	if (abstractEquals) {
-		hash = "keyHash(" :: key :: ")";
-		##
-		/**
-		 * Calculate the hash code of the specified key.
-		 * @param key The key whose hash code should be calculated.
-		 * @return The hash code.
-		 */
-		public abstract int keyHash(%keyDec;);
-		
-		/**
-		 * Returns if the specified keys should be considered equal.
-		 */
-		public abstract boolean keyEquals(%keyDec;1, %keyDec;2);
-		
-		##
-	}
-	##
 	
-	private final %? !abstractEquals && "static"; %? !abstractEquals && GenKey && "<"::GenKey::">"; int indexOf(%keyDec;, int mask) {
-		return %hash; & mask;
+	%map.extraMapCode();
+	
+	
+	private %!abstr && "static"; final %!abstr && GenKeys; int indexOf(%keyDec();, int mask) {
+		return %map.hash; & mask;
 	}
 	
-	private final %? !abstractEquals && "static <"::Gen::">"; %Node; findNode(%keyDec;, %Node;[] table, int mask) {
+	private %!abstr && "static"; final %!abstr && Gen; %Node; findNode(%keyDec();, %Node;[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
-		int index = indexOf(%key;, mask);
+		int index = indexOf(%key();, mask);
 		%Node; node = table[index];
 		while (node != null) {
-			if (%equalNodeKey("node", (string) null);) {
+			if (%equalKey("node", null);) {
 				return node;
 			}
 			node = node.next;
@@ -427,9 +360,9 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 		return null;
 	}
 	
-	private final %Node; findOrCreate(%keyDec;) {
+	private final %Node; findOrCreate(%keyDec();) {
 		// If the key is already present in the map, it is returned.
-		%Node; node = findNode(%key;, table, this.mask);
+		%Node; node = findNode(%key();, table, this.mask);
 		if (node != null) {
 			return node;
 		}
@@ -442,7 +375,7 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 		
 		// If the key is not present, a new Node is inserted.
 		// The size increases by 1.
-		%Node; newNode = new %Node;(%key;);
+		%Node; newNode = new %Node;(%key(););
 		insertNode(newNode, table, this.mask);
 		adjustTableSize(++this.size);
 		return newNode;
@@ -489,35 +422,47 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 		return this.table = newTable;
 	}
 	
-	private final %? !abstractEquals && "static <"::Gen::">"; void insertNode(%Node; node, %Node;[] table, int mask) {
-		int index = indexOf(%getNodeKey("node");, mask);
+	private %!abstr && "static"; final %!abstr && Gen; void insertNode(%Node; node, %Node;[] table, int mask) {
+		int index = indexOf(%key("node");, mask);
 		node.next = table[index];
 		table[index] = node;
 	}
 	
 	
-	private %? !abstractEquals && "static"; class %Node; implements %Entry;<%Gen;> {
-	# for (int i = 0; i < n; i++) {
-		private final %keyTypes[i]; %keyNames[i];;
-	# }
+	private %!abstr && "static"; class %Node; implements %Entry;%Gen; {
+		##
+		for (key in map.keys) {
+			##
+			private final %key.type; %key.name;;
+			##
+		}
+		##
 		private V value;
 		private %Node; next;
 		
-		private Node(%keyDec;) {
-		# for (int i = 0; i < n; i++) {
-			this.%keyNames[i]; = %keyNames[i];;
-		# }
+		private Node(%keyDec();) {
+			##
+			for (key in map.keys) {
+				##
+				this.%key.name; = %key.name;;
+				##
+			}
+			##
 			this.value = null;
 			this.next = null;
 		}
 		
-	# for (int i = 0; i < n; i++) {
-		@Override
-		public %keyTypes[i]; get%uppercaseFirst(keyNames[i]);() {
-			return this.%keyNames[i];;
+		##
+		for (key in map.keys) {
+			##
+			@Override
+			public %key.type; get%key.name.uppercase(0);() {
+				return this.%key.name;;
+			}
+			
+			##
 		}
-		
-	# }
+		##
 		
 		@Override
 		public V getValue() {
@@ -540,29 +485,29 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 			}
 			
 			##
-			if (abstractEquals) {
+			if (abstr) {
 				##
 				@SuppressWarnings("unchecked")
 				##
 			}
 			##
-			Node% !abstractEquals && "<"::wildcardGen::">"; other = (Node% !abstractEquals && "<"::wildcardGen::">";) obj;
-			return %equalNodeKey("this", "other"); && Objects.equals(this.value, other.value);
+			Node%!abstr && wildcardGen; other = (Node%!abstr && wildcardGen;) obj;
+			return %equalKey("this", "other"); && Objects.equals(this.value, other.value);
 		}
 		
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(this.value) + %hash;;
+			return Objects.hashCode(this.value) + %map.hash;;
 		}
 	}
 	
 	
 	@Override
-	public Iterator<%Entry;<%Gen;>> iterator() {
+	public Iterator<%Entry;%Gen;> iterator() {
 		return new NodeIterator();
 	}
 	
-	private final class NodeIterator implements Iterator<%Entry;<%Gen;>> {
+	private final class NodeIterator implements Iterator<%Entry;%Gen;> {
 		private %Node; prevNode, currentNode, nextNode;
 		private int initModCount;
 		
@@ -579,7 +524,7 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 		}
 		
 		@Override
-		public %Entry;<%Gen;> next() {
+		public %Entry;%Gen; next() {
 			%Node; next = this.nextNode;
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
@@ -597,9 +542,9 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 			// Unlink the current node.
 			// If the index of the prev node differs from the current node,
 			// the prev node is in another bucket.
-			int currentIndex = indexOf(%getNodeKey("current");, mask);
+			int currentIndex = indexOf(%key("current");, mask);
 			%Node; prev = this.prevNode;
-			if (prev != null && indexOf(%getNodeKey("prev");, mask) == currentIndex) {
+			if (prev != null && indexOf(%key("prev");, mask) == currentIndex) {
 				prev.next = current.next;
 			}
 			else {
@@ -633,7 +578,7 @@ public %abstractEquals ? "abstract" : "final"; class %HashMap;<%Gen;> implements
 			// Start the search in the bucket after the current node.
 			// If no current node exists, start at the beginning of the table.
 			int n = t.length;
-			int startIndex = startNode != null ? indexOf(%getNodeKey("startNode");, mask)+1 : 0;
+			int startIndex = startNode != null ? indexOf(%key("startNode");, mask)+1 : 0;
 			for (int i = startIndex; i < n; i++) {
 				%Node; el = t[i];
 				if (el != null) {

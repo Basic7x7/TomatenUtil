@@ -1,50 +1,46 @@
-// @txsinfo();
 package de.tomatengames.util.function;
 ##
-:inline=§
+include <src/txs/include.txs>
 
-extern object inp;
+extern inpName;
+final inp = typeData[inpName];
 
-if (!inp.prim) {
-	inp.java = "I";
-}
-string Igeneric = !inp.prim && <string> inp.java;
+final inpJava = inp.generic ? "I" : inp.java;
+final GenDec = "<" * [inp.generic && "I", "T extends Throwable"].join(", ") * ">";
 
-string generic;
-{
-	string str = join(", ", [Igeneric, "T extends Throwable"]);
-	generic = "<"::str::">";
-}
-
-final string Consumer = inp.name::"ConsumerWithThrows";
+final Consumer = inp.name+"ConsumerWithThrows";
 ##
 
 /**
- * A consumer that accepts ##
-	if (inp.java == "void") { ##no parameters## }
-	else { ##§inp.a; {@code §inp.docName;}## } ##.
+ * A consumer that accepts %inpJava == "void" ? "no parameters" : inp.a; {@code %inp.docName;}.
  * 
  * @param T The Throwable that may be thrown by the consumer.
- # if (!inp.prim) {
- * @param I The type of the input parameter.
- # }
+##
+if (inp.generic) {
+	##
+	 * @param I The type of the input parameter.
+	##
+}
+##
  * 
  * @author Basic7x7
  * @version 2023-04-11
  * @since 1.2
  */
+// %cli.txsinfo();
 @FunctionalInterface
-public interface §Consumer;§generic; {
+public interface %Consumer;%GenDec; {
 	
 	/**
 	 * Performs this operation.
-	 # if (inp.java != "void") {
-	 * @param e The argument.
-	 # }
+	##
+	if (inpJava != "void") {
+		##
+		 * @param e The argument.
+		##
+	}
+	##
 	 */
-	public void accept(##
-			if (inp.java != "void") {
-				##§inp.java; e##
-			}
-			##) throws T;
+	public void accept(%inpJava != "void" && "%inpJava; e";) throws T;
+	
 }

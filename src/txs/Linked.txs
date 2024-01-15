@@ -1,34 +1,45 @@
-// @txsinfo();
 package de.tomatengames.util.linked;
 ##
-:inline=§
+include <src/txs/include.txs>
 
-extern object type;
+extern typeName;
+final type = typeData[typeName]
 
-string generic = !type.prim && "<"::type.java::">";
-final string Linked = "Linked" :: (type.name != "Ref" && <string> type.name);
+final Gen = "<" * type.generic * ">"
+final Linked = "Linked" + (type.name != "Ref" && type.name);
 ##
 
 /**
- * Represents §type.a; {@code §type.docName;} value that can be modified.
- # if (!type.prim) {
- * The value may be {@code null}.
- * 
- * @param T The type of the value.
- # }
+ * Represents %type.a; {@code %type.docName;} value that can be modified.
+##
+if (!type.prim) {
+	##
+	 * The value may be {@code null}.
+	##
+}
+##
+ *
+##
+if (type.generic) {
+	##
+	 * @param %Gen; The type of the value.
+	##
+}
+##
  * 
  * @author Basic7x7
  * @version 2023-04-13
  * @since 1.2
  */
-public final class §Linked;§generic; {
-	private §type.java; value;
+// %cli.txsinfo();
+public final class %Linked;%Gen; {
+	private %type.java; value;
 	
 	/**
-	 * Creates a new {@link §Linked;}.
+	 * Creates a new {@link %Linked;}.
 	 * @param initialValue The initial value of this object.
 	 */
-	public §Linked;(§type.java; initialValue) {
+	public %Linked;(%type.java; initialValue) {
 		this.value = initialValue;
 	}
 	
@@ -36,7 +47,7 @@ public final class §Linked;§generic; {
 	 * Sets the value of this object.
 	 * @param value The new value.
 	 */
-	public final void set(§type.java; value) {
+	public final void set(%type.java; value) {
 		this.value = value;
 	}
 	
@@ -44,7 +55,7 @@ public final class §Linked;§generic; {
 	 * Returns the value of this object.
 	 * @return The value.
 	 */
-	public final §type.java; get() {
+	public final %type.java; get() {
 		return this.value;
 	}
 }

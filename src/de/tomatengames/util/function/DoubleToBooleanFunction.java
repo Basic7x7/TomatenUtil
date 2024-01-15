@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code double} and returns a {@code boolean}.
+ * A function that accepts a {@code double}
+ * and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface DoubleToBooleanFunction {
 	
@@ -19,7 +20,6 @@ public interface DoubleToBooleanFunction {
 	 * @return The result.
 	 */
 	public boolean apply(double e);
-	
 	
 	/**
 	 * Returns a DoubleToBooleanFunction that represents {@code !this.apply(e)}.
@@ -38,4 +38,5 @@ public interface DoubleToBooleanFunction {
 	public static DoubleToBooleanFunction not(DoubleToBooleanFunction func) {
 		return func.negate();
 	}
+	
 }

@@ -10,15 +10,15 @@ import java.util.ConcurrentModificationException;
  * 
  * @author Basic7x7
  * @version
- * 2023-07-31
+ * 2023-07-31 created
  * @since 1.3
  */
 // !!! TextScript generated !!!
 public interface LongEntry<V> {
 	
 	/**
-	 * Returns the key of this mapping.
-	 * @return The key.
+	 * Returns the component 'key' of the key of this mapping.
+	 * @return The key of this mapping.
 	 */
 	public long getKey();
 	

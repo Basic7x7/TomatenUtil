@@ -1,98 +1,52 @@
 ##
-const string src = "src/de/tomatengames/util";
-const string txs = "src/txs";
+include <src/txs/include.txs>
+import std
 
-final object[] types = [
-	new { name: "Boolean", 	java: "boolean", prim: true,  docName: "boolean", a: "a" },
-	new { name: "Byte", 	java: "byte",	 prim: true,  docName: "byte",    a: "a" },
-	new { name: "Short",	java: "short",	 prim: true,  docName: "short",   a: "a" },
-	new { name: "Int",		java: "int",	 prim: true,  docName: "int",     a: "an" },
-	new { name: "Long",		java: "long",	 prim: true,  docName: "long",    a: "a" },
-	new { name: "Float",	java: "float",	 prim: true,  docName: "float",   a: "a" },
-	new { name: "Double",	java: "double",	 prim: true,  docName: "double",  a: "a" },
-	new { name: "Char",		java: "char",	 prim: true,  docName: "char",    a: "a" },
-	new { name: "Void",		java: "void",	 prim: true,  docName: "void",    a: "a" },
-	new { name: "Ref",		java: "T",		 prim: false, docName: "Object",  a: "an" }
-];
+const src = "src/de/tomatengames/util";
+const txs = "src/txs";
 
-const int MAX_FUNCTION_N = 9;
+const MAX_FUNCTION_N = 9;
 ##
+config :inline "%"
 
 run-inplace -io "@src;/ArrayUtil.java"
 run-inplace -io "@src;/NumberUtil.java"
 
 ##
-for (object type in types) {
-	for (object type2 in types) {
+for (type in types) {
+	for (type2 in types) {
 		##
-		run -i "@txs;/XToXFunction.txs" -o "@src;/function/@type.name;To@type2.name;Function.java"
-			-v inp=@tson(type); out=@tson(type2);
+		run -i "@txs;/XToXFunction.txs" -o "@src;/function/@type;To@type2;Function.java"
+			-v inpName=@tson(type); outName=@tson(type2);
 		##
 	}
 	
-	for (int i = 0; i <= MAX_FUNCTION_N; i++) {
+	for (i := 0; i <= MAX_FUNCTION_N; i++) {
 		##
-		run -i "@txs;/RefNToXFunction.txs" -o "@src;/function/Ref@i;To@type.name;Function.java"
-			-v n=@i; out=@tson(type);
+		run -i "@txs;/RefNToXFunction.txs" -o "@src;/function/Ref@i;To@type;Function.java"
+			-v n=@i; outName=@tson(type);
 		##
 	}
 	
 	##
-	run -i "@txs;/ConsumerWithThrows.txs" -o "@src;/function/@type.name;ConsumerWithThrows.java"
-		-v inp=@tson(type);
+	run -i "@txs;/ConsumerWithThrows.txs" -o "@src;/function/@type;ConsumerWithThrows.java"
+		-v inpName=@tson(type);
 	##
 	
-	if (type.name != "Void") {
-		string name = type.name != "Ref" && <string> type.name;
+	if (type != "Void") {
+		final name = type != "Ref" && type;
 		##
 		run -i "@txs;/Linked.txs" -o "@src;/linked/Linked@name;.java"
-			-v type=@tson(type);
+			-v typeName=@tson(type);
 		##
 	}
 }
+
+for (mapType in maps) {
+	final map = mapData[mapType];
+	##
+	run -i "@txs;/Entry.txs" -o "@src;/map/@map.namePrefix;Entry.java" -v mapName=@tson(mapType);
+	run -i "@txs;/HashMap.txs" -o "@src;/map/@map.namePrefix;HashMap.java" -v mapName=@tson(mapType);
+	##
+}
 ##
-
-# final string mapLastMod = "2023-11-26";
-# final string entryLastMod = "2023-07-31";
-run -i "@txs;/Entry.txs" -o "@src;/map/IntEntry.java" -v namePrefix="Int" keyTypes=["int"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/IntHashMap.java"
-	-v namePrefix="Int" keyTypes=["int"] hash="key"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-
-run -i "@txs;/Entry.txs" -o "@src;/map/Int2Entry.java" -v namePrefix="Int2" keyTypes=["int", "int"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/Int2HashMap.java"
-	-v namePrefix="Int2" keyTypes=["int", "int"] hash="(key2*31 + key1)"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-
-run -i "@txs;/Entry.txs" -o "@src;/map/Int3Entry.java" -v namePrefix="Int3" keyTypes=["int", "int", "int"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/Int3HashMap.java"
-	-v namePrefix="Int3" keyTypes=["int", "int", "int"] hash="(((key3*31) + key2)*31 + key1)"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-
-run -i "@txs;/Entry.txs" -o "@src;/map/LongEntry.java" -v namePrefix="Long" keyTypes=["long"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/LongHashMap.java"
-	-v namePrefix="Long" keyTypes=["long"] hash="Long.hashCode(key)"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-
-run -i "@txs;/Entry.txs" -o "@src;/map/Long2Entry.java" -v namePrefix="Long2" keyTypes=["long", "long"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/Long2HashMap.java"
-	-v namePrefix="Long2" keyTypes=["long", "long"] hash="(Long.hashCode(key2)*31 + Long.hashCode(key1))"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-
-run -i "@txs;/Entry.txs" -o "@src;/map/Long3Entry.java" -v namePrefix="Long3" keyTypes=["long", "long", "long"]
-		since="1.3" lastModDate=@tson(entryLastMod); createDate="2023-07-31"
-run -i "@txs;/HashMap.txs" -o "@src;/map/Long3HashMap.java"
-	-v namePrefix="Long3" keyTypes=["long", "long", "long"] hash="(((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1))"
-		since="1.3" lastModDate=@tson(mapLastMod); createDate="2023-07-31"
-	
-run -i "@txs;/Entry.txs" -o "@src;/map/AbstractEntry.java"
-	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"]
-		since="1.5" lastModDate=@tson(entryLastMod); createDate="2024-01-06"
-run -i "@txs;/HashMap.txs" -o "@src;/map/AbstractHashMap.java"
-	-v namePrefix="Abstract" keyTypes=["K"] GenKeys=["K"] hash=null
-		since="1.5" lastModDate=@tson(mapLastMod); createDate="2024-01-06"

@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code short} and returns a {@code byte}.
+ * A function that accepts a {@code short}
+ * and returns a {@code byte}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface ShortToByteFunction {
 	
@@ -19,4 +20,5 @@ public interface ShortToByteFunction {
 	 * @return The result.
 	 */
 	public byte apply(short e);
+	
 }

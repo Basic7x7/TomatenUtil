@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code long} and returns a {@code float}.
+ * A function that accepts a {@code long}
+ * and returns a {@code float}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface LongToFloatFunction {
 	
@@ -19,4 +20,5 @@ public interface LongToFloatFunction {
 	 * @return The result.
 	 */
 	public float apply(long e);
+	
 }

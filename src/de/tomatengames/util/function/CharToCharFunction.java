@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code char} and returns a {@code char}.
+ * A function that accepts a {@code char}
+ * and returns a {@code char}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface CharToCharFunction {
 	
@@ -20,7 +21,6 @@ public interface CharToCharFunction {
 	 */
 	public char apply(char e);
 	
-	
 	/**
 	 * Returns the {@code char} identity function.
 	 * The identity function always returns the input argument.
@@ -29,4 +29,5 @@ public interface CharToCharFunction {
 	public static CharToCharFunction identity() {
 		return e -> e;
 	}
+	
 }

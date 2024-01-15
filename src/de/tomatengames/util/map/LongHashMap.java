@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code long} keys to object values.
- 	* Equality of keys is checked by using the {@code ==} operator.
+ * Equality of keys is checked by using the {@code ==} operator
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -19,7 +19,6 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- * 2023-11-26 last modified<br>
  * 2023-07-31 created
  * @since 1.3
  */
@@ -246,7 +245,7 @@ public final class LongHashMap<V> implements Iterable<LongEntry<V>> {
 		
 		// Checks that the other map is a subset of this map.
 		for (LongEntry<?> entry : other) {
-			V thisValue = this.get(entry.getKey());
+			V thisValue = this.get((long) entry.getKey());
 			if (thisValue == null) {
 				return false; // This does not contain the current entry
 			}
@@ -271,11 +270,13 @@ public final class LongHashMap<V> implements Iterable<LongEntry<V>> {
 	}
 	
 	
-	private final static int indexOf(long key, int mask) {
+	
+	
+	private static final int indexOf(long key, int mask) {
 		return Long.hashCode(key) & mask;
 	}
 	
-	private final static <V> Node<V> findNode(long key, Node<V>[] table, int mask) {
+	private static final <V> Node<V> findNode(long key, Node<V>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -352,7 +353,7 @@ public final class LongHashMap<V> implements Iterable<LongEntry<V>> {
 		return this.table = newTable;
 	}
 	
-	private final static <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
+	private static final <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
 		int index = indexOf(node.key, mask);
 		node.next = table[index];
 		table[index] = node;

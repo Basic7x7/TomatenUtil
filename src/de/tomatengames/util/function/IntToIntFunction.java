@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts an {@code int} and returns an {@code int}.
+ * A function that accepts an {@code int}
+ * and returns an {@code int}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface IntToIntFunction {
 	
@@ -20,7 +21,6 @@ public interface IntToIntFunction {
 	 */
 	public int apply(int e);
 	
-	
 	/**
 	 * Returns the {@code int} identity function.
 	 * The identity function always returns the input argument.
@@ -29,4 +29,5 @@ public interface IntToIntFunction {
 	public static IntToIntFunction identity() {
 		return e -> e;
 	}
+	
 }

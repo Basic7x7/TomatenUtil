@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code boolean} and returns a {@code boolean}.
+ * A function that accepts a {@code boolean}
+ * and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface BooleanToBooleanFunction {
 	
@@ -20,7 +21,6 @@ public interface BooleanToBooleanFunction {
 	 */
 	public boolean apply(boolean e);
 	
-	
 	/**
 	 * Returns the {@code boolean} identity function.
 	 * The identity function always returns the input argument.
@@ -29,7 +29,6 @@ public interface BooleanToBooleanFunction {
 	public static BooleanToBooleanFunction identity() {
 		return e -> e;
 	}
-	
 	
 	/**
 	 * Returns a BooleanToBooleanFunction that represents {@code !this.apply(e)}.
@@ -48,4 +47,5 @@ public interface BooleanToBooleanFunction {
 	public static BooleanToBooleanFunction not(BooleanToBooleanFunction func) {
 		return func.negate();
 	}
+	
 }

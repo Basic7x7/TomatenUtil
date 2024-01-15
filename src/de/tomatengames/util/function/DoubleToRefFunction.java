@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code double} and returns an {@code Object}.
+ * A function that accepts a {@code double}
+ * and returns an {@code Object}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface DoubleToRefFunction<O> {
 	
@@ -19,4 +20,5 @@ public interface DoubleToRefFunction<O> {
 	 * @return The result.
 	 */
 	public O apply(double e);
+	
 }

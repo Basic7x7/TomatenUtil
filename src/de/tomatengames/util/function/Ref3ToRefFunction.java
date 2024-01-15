@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts 3 generic input parameters and returns an {@code Object}.
+ * A function that accepts 3 generic input parameters and returns
+ * an {@code Object}.
  * 
  * @param <T> The return type.
  * 
@@ -12,6 +12,7 @@ package de.tomatengames.util.function;
  * 2023-02-19 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface Ref3ToRefFunction<T, A, B, C> {
 	

@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts an {@code Object} and returns an {@code int}.
+ * A function that accepts an {@code Object}
+ * and returns an {@code int}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface RefToIntFunction<I> {
 	
@@ -19,4 +20,5 @@ public interface RefToIntFunction<I> {
 	 * @return The result.
 	 */
 	public int apply(I e);
+	
 }

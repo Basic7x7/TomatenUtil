@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code float} and returns a {@code float}.
+ * A function that accepts a {@code float}
+ * and returns a {@code float}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface FloatToFloatFunction {
 	
@@ -20,7 +21,6 @@ public interface FloatToFloatFunction {
 	 */
 	public float apply(float e);
 	
-	
 	/**
 	 * Returns the {@code float} identity function.
 	 * The identity function always returns the input argument.
@@ -29,4 +29,5 @@ public interface FloatToFloatFunction {
 	public static FloatToFloatFunction identity() {
 		return e -> e;
 	}
+	
 }

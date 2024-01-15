@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts 9 generic input parameters and returns a {@code short}.
+ * A function that accepts 9 generic input parameters and returns
+ * a {@code short}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2023-02-19 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface Ref9ToShortFunction<A, B, C, D, E, F, G, H, I> {
 	

@@ -1,16 +1,16 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.linked;
 
 /**
  * Represents an {@code Object} value that can be modified.
  * The value may be {@code null}.
- * 
- * @param T The type of the value.
+ *
+ * @param <T> The type of the value.
  * 
  * @author Basic7x7
  * @version 2023-04-13
  * @since 1.2
  */
+// !!! TextScript generated !!!
 public final class Linked<T> {
 	private T value;
 	

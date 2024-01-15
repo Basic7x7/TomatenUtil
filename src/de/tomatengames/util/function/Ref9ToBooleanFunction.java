@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts 9 generic input parameters and returns a {@code boolean}.
+ * A function that accepts 9 generic input parameters and returns
+ * a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2023-02-19 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> {
 	
@@ -27,6 +28,7 @@ public interface Ref9ToBooleanFunction<A, B, C, D, E, F, G, H, I> {
 	 * @return The result.
 	 */
 	public boolean apply(A a, B b, C c, D d, E e, F f, G g, H h, I i);
+	
 	
 	
 	/**

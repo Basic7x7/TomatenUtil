@@ -1,13 +1,14 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.linked;
 
 /**
  * Represents an {@code int} value that can be modified.
+ *
  * 
  * @author Basic7x7
  * @version 2023-04-13
  * @since 1.2
  */
+// !!! TextScript generated !!!
 public final class LinkedInt {
 	private int value;
 	
