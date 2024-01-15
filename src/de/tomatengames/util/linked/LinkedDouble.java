@@ -1,13 +1,14 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.linked;
 
 /**
  * Represents a {@code double} value that can be modified.
+ *
  * 
  * @author Basic7x7
  * @version 2023-04-13
  * @since 1.2
  */
+// !!! TextScript generated !!!
 public final class LinkedDouble {
 	private double value;
 	

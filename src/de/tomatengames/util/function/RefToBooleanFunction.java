@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts an {@code Object} and returns a {@code boolean}.
+ * A function that accepts an {@code Object}
+ * and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface RefToBooleanFunction<I> {
 	
@@ -19,7 +20,6 @@ public interface RefToBooleanFunction<I> {
 	 * @return The result.
 	 */
 	public boolean apply(I e);
-	
 	
 	/**
 	 * Returns an RefToBooleanFunction that represents {@code !this.apply(e)}.
@@ -38,4 +38,5 @@ public interface RefToBooleanFunction<I> {
 	public static <I> RefToBooleanFunction<I> not(RefToBooleanFunction<I> func) {
 		return func.negate();
 	}
+	
 }

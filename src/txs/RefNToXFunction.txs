@@ -5,36 +5,36 @@ include <src/txs/include.txs>
 extern n
 extern outName
 final out = typeData[outName]
-		
-final args = []
+
+var args = []
 for (i := 0; i < n; i++) {
 	final type = std.char(std.int(`A`)+i)
-	args += { type: type, name: type.lowercase}
+	args += { type: type, name: type.lowercase()}
 }
 
 
-final genericTypes = []
+var genericTypes = []
 if (out.generic) {
 	genericTypes += out.generic
 }
 genericTypes += args.map(a => a.type)
-final Gen = "<" * join(", ", genericTypes) * ">"
+final Gen = "<" * genericTypes.join(", ") * ">"
 
-final Function = "Ref"::n::"To"::out.name::"Function";
+final Function = "Ref%n;To%out.name;Function";
 ##
 
 /**
  * A function that accepts %n; generic input parameter%n!=1&&'s'; and returns
  * %out.java == "void" ? "nothing" : "%out.a; {@code %out.docName;}";.
  * 
- ##
- if (out.generic) {
- 	##
- 	* @param <T> The return type.
- 	* 
- 	##
- }
- ##
+##
+if (out.generic) {
+	##
+	 * @param <T> The return type.
+	 * 
+	##
+}
+##
  * @author Basic7x7
  * @version
  * 2023-04-11 last modified<br>
@@ -47,20 +47,20 @@ public interface %Function;%Gen; {
 	
 	/**
 	 * Applies the function.
-	 ##
-	 for (arg in args) {
-	 	##
-	 	* @param %arg.name; An argument.
-	 	##
-	 }
-	 if (out.java != "void") {
-	 	##
-	 	* @return The result.
-	 	##
-	 }
-	 ##
+	##
+	for (arg in args) {
+		##
+		 * @param %arg.name; An argument.
+		##
+	}
+	if (out.java != "void") {
+		##
+		 * @return The result.
+		##
+	}
+	##
 	 */
-	public §out.java; apply(%args.map(a => "%a.type; %a.name;").join(", "););
+	public %out.java; apply(%args.map(a => "%a.type; %a.name;").join(", "););
 	
 	##
 	if (out.java == "boolean") {

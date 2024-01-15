@@ -11,7 +11,7 @@ final inpJava = inp.generic ? "I" : inp.java;
 final outJava = out.generic ? "O" : out.java;
 
 final Gen = "<" * [inp.generic && "I", out.generic && "O"].join(", ") * ">";
-final Function = inp.name::"To"::out.name::"Function";
+final Function = "%inp.name;To%out.name;Function";
 ##
 
 /**
@@ -30,30 +30,30 @@ public interface %Function;%Gen; {
 	
 	/**
 	 * Applies the function.
-	 ##
-	 if (inpJava != "void") {
-	 	##
-	 	* @param e The argument.
-	 	##
-	 }
-	 if (outJava != "void") {
-	 	##
-	 	* @return The result.
-	 	##
-	 }
-	 ##
+	##
+	if (inpJava != "void") {
+		##
+		 * @param e The argument.
+		##
+	}
+	if (outJava != "void") {
+		##
+		 * @return The result.
+		##
+	}
+	##
 	 */
-	public %outJava; apply(%inpJava != "void" && "%inpuJava; e";);
+	public %outJava; apply(%inpJava != "void" && "%inpJava; e";);
 	
 	##
 	if (inp.name == out.name && inpJava != "void") {
 		##
 		/**
-		 * Returns the {@code $inp.docName;} identity function.
+		 * Returns the {@code %inp.docName;} identity function.
 		 * The identity function always returns the input argument.
 		 * @return The identity function.
 		 */
-		public static %!inp.generic && "<T>"; %Function;%!inp.generic && "<T, T>"; identity() {
+		public static %inp.generic && "<T>"; %Function;%inp.generic && "<T, T>"; identity() {
 			return e -> e;
 		}
 		
@@ -70,7 +70,7 @@ public interface %Function;%Gen; {
 		 * @return The logical negation of this function.
 		 */
 		public default %Function;%Gen; negate() {
-			return ($arg;) -> !this.apply($arg;);
+			return (%arg;) -> !this.apply(%arg;);
 		}
 		
 		/**

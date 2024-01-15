@@ -1,33 +1,37 @@
 package de.tomatengames.util.linked;
 ##
+include <src/txs/include.txs>
+
 extern typeName;
 final type = typeData[typeName]
 
 final Gen = "<" * type.generic * ">"
-final Linked = "Linked" :: (type.name != "Ref" && type.name);
+final Linked = "Linked" + (type.name != "Ref" && type.name);
 ##
 
 /**
  * Represents %type.a; {@code %type.docName;} value that can be modified.
- ##
- if (!type.prim) {
- 	##
- 	* The value may be {@code null}.
- 	##
- ##
+##
+if (!type.prim) {
+	##
+	 * The value may be {@code null}.
+	##
+}
+##
  *
- ##
- if (type.generic) {
- 	##
- 	* @param %generic; The type of the value.
- 	##
- ##
+##
+if (type.generic) {
+	##
+	 * @param %Gen; The type of the value.
+	##
+}
+##
  * 
  * @author Basic7x7
  * @version 2023-04-13
  * @since 1.2
  */
-// cli.txsinfo();
+// %cli.txsinfo();
 public final class %Linked;%Gen; {
 	private %type.java; value;
 	

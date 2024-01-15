@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code float} and returns a {@code double}.
+ * A function that accepts a {@code float}
+ * and returns a {@code double}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface FloatToDoubleFunction {
 	
@@ -19,4 +20,5 @@ public interface FloatToDoubleFunction {
 	 * @return The result.
 	 */
 	public double apply(float e);
+	
 }

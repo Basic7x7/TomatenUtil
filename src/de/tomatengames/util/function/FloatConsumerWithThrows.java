@@ -1,4 +1,3 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
@@ -10,6 +9,7 @@ package de.tomatengames.util.function;
  * @version 2023-04-11
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface FloatConsumerWithThrows<T extends Throwable> {
 	
@@ -18,4 +18,5 @@ public interface FloatConsumerWithThrows<T extends Throwable> {
 	 * @param e The argument.
 	 */
 	public void accept(float e) throws T;
+	
 }

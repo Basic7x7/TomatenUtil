@@ -10,27 +10,27 @@ import java.util.ConcurrentModificationException;
  * 
  * @author Basic7x7
  * @version
- * 2023-07-31
+ * 2023-07-31 created
  * @since 1.3
  */
 // !!! TextScript generated !!!
 public interface Int3Entry<V> {
 	
 	/**
-	 * Returns part 1 of the key of this mapping.
-	 * @return The key part.
+	 * Returns the key of this mapping.
+	 * @return The key component of this mapping.
 	 */
 	public int getKey1();
 	
 	/**
-	 * Returns part 2 of the key of this mapping.
-	 * @return The key part.
+	 * Returns the key of this mapping.
+	 * @return The key component of this mapping.
 	 */
 	public int getKey2();
 	
 	/**
-	 * Returns part 3 of the key of this mapping.
-	 * @return The key part.
+	 * Returns the key of this mapping.
+	 * @return The key component of this mapping.
 	 */
 	public int getKey3();
 	

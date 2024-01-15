@@ -36,10 +36,10 @@ public interface %Entry; {
 	for (key in map.keys) {
 		##
 		/**
-		 * Returns the %keyTypes.length > 1 ? "key" : "component '%key.name;' of the key"; of this mapping.
-		 * @return The key %keyTypes.length > 1 && "component";.
+		 * Returns the %map.keys.length > 1 ? "key" : "component '%key.name;' of the key"; of this mapping.
+		 * @return The key %map.keys.length > 1 && "component"; of this mapping.
 		 */
-		public %key.type; get%firstUpper(key.name);();
+		public %key.type; get%key.name.uppercase(0);();
 		
 		##
 	}

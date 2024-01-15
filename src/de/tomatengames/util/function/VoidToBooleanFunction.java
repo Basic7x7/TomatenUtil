@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts no parameters and returns a {@code boolean}.
+ * A function that accepts no parameters
+ * and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface VoidToBooleanFunction {
 	
@@ -18,7 +19,6 @@ public interface VoidToBooleanFunction {
 	 * @return The result.
 	 */
 	public boolean apply();
-	
 	
 	/**
 	 * Returns a VoidToBooleanFunction that represents {@code !this.apply(e)}.
@@ -37,4 +37,5 @@ public interface VoidToBooleanFunction {
 	public static VoidToBooleanFunction not(VoidToBooleanFunction func) {
 		return func.negate();
 	}
+	
 }

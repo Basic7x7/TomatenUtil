@@ -34,7 +34,7 @@ for (type in types) {
 	##
 	
 	if (type != "Void") {
-		string name = type != "Ref" && type;
+		final name = type != "Ref" && type;
 		##
 		run -i "@txs;/Linked.txs" -o "@src;/linked/Linked@name;.java"
 			-v typeName=@tson(type);

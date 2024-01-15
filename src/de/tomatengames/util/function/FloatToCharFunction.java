@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code float} and returns a {@code char}.
+ * A function that accepts a {@code float}
+ * and returns a {@code char}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface FloatToCharFunction {
 	
@@ -19,4 +20,5 @@ public interface FloatToCharFunction {
 	 * @return The result.
 	 */
 	public char apply(float e);
+	
 }

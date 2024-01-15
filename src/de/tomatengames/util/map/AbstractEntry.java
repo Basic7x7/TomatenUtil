@@ -10,15 +10,15 @@ import java.util.ConcurrentModificationException;
  * 
  * @author Basic7x7
  * @version
- * 2024-01-06
+ * 2024-01-06 created
  * @since 1.5
  */
 // !!! TextScript generated !!!
 public interface AbstractEntry<K, V> {
 	
 	/**
-	 * Returns the key of this mapping.
-	 * @return The key.
+	 * Returns the component 'key' of the key of this mapping.
+	 * @return The key of this mapping.
 	 */
 	public K getKey();
 	

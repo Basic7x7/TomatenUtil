@@ -1,4 +1,6 @@
 ##
+:inline=%
+
 const types = ["Boolean", "Byte", "Short", "Int", "Long", "Float", "Double", "Char", "Void", "Ref"]
 const typeData = {
 	"Boolean": { name: "Boolean", java: "boolean", prim: true, docName: "boolean", a: "a" }
@@ -14,13 +16,6 @@ const typeData = {
 		name: "Ref", java: "T", docName: "Object", a: "an", prim: false
 		generic: "T"
 	}
-}
-
-function firstUpper(str) {
-	if (str.length <= 0) {
-		return str
-	}
-	return str[0].uppercase + str.slice(1)
 }
 
 const mapLastMod = "2023-11-26"
@@ -49,7 +44,7 @@ const mapData = {
 		createDate: "2023-07-31"
 	}
 	"Long": {
-		namePrefix: "Int"
+		namePrefix: "Long"
 		keys: [{name: "key", type: "long"}]
 		hash: "Long.hashCode(key)"
 		since: "1.3"
@@ -93,9 +88,9 @@ const mapData = {
 			
 			##
 		}
-		hash: (key) => "keyHash(@key;)"
-		equals: (node1, node2) => "keyEquals(@node1.key;, @node2.key;)"
-		equalsDoc: "Equality of keys is checked by using the abstract {@code keyEquals(key1, key2);} method."
+		hash: "keyHash(key)"
+		equals: (node1, node2) => "keyEquals(%node1.key;, %node2.key;)"
+		equalsDoc: "Equality of keys is checked by using the abstract {@code keyEquals(key1, key2)} method."
 		since: "1.5"
 		createDate: "2024-01-06"
 	}

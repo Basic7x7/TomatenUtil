@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts 2 generic input parameters and returns an {@code int}.
+ * A function that accepts 2 generic input parameters and returns
+ * an {@code int}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2023-02-19 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface Ref2ToIntFunction<A, B> {
 	

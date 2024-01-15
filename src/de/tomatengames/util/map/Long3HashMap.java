@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 /**
  * A {@link HashMap}-like data structure that maps {@code (long, long, long)} keys to object values.
- 	* Equality of keys is checked by using the {@code ==} operator.
+ * Equality of keys is checked by using the {@code ==} operator
  * <p>
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
@@ -19,7 +19,6 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- * 2023-11-26 last modified<br>
  * 2023-07-31 created
  * @since 1.3
  */
@@ -74,9 +73,9 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	/**
 	 * Associates the specified key with the specified value.
 	 * If the key is already present in this map, the previous value is replaced.
-	 * @param key1 Part 1 of the key of the new mapping.
-	 * @param key2 Part 2 of the key of the new mapping.
-	 * @param key3 Part 3 of the key of the new mapping.
+	 * @param key1 A component of the key of the new mapping.
+	 * @param key2 A component of the key of the new mapping.
+	 * @param key3 A component of the key of the new mapping.
 	 * @param value The value of the new mapping. Must not {@code null}.
 	 * @return The value that was previously mapped to the key.
 	 * If the key was not present in this map, {@code null} is returned. 
@@ -94,9 +93,9 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	/**
 	 * Associates the specified key with the specified value.
 	 * If the key is already present in this map, nothing happens.
-	 * @param key1 Part 1 of the key of the new mapping.
-	 * @param key2 Part 2 of the key of the new mapping.
-	 * @param key3 Part 3 of the key of the new mapping.
+	 * @param key1 A component of the key of the new mapping.
+	 * @param key2 A component of the key of the new mapping.
+	 * @param key3 A component of the key of the new mapping.
 	 * @param value The value of the new mapping. Must not {@code null}.
 	 * @return The value that was previously mapped to the key.
 	 * If {@code null}, the new value has been put into the map.
@@ -121,9 +120,9 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	/**
 	 * Returns the value that is mapped to the specified key.
 	 * @param key The key whose value should be returned.
-	 * @param key1 Part 1 of the key that should be checked.
-	 * @param key2 Part 2 of the key that should be checked.
-	 * @param key3 Part 3 of the key that should be checked.
+	 * @param key1 A component of the key that should be checked.
+	 * @param key2 A component of the key that should be checked.
+	 * @param key3 A component of the key that should be checked.
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
@@ -136,9 +135,9 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	 * Returns if the specified key is present in this map.
 	 * This method is semantically equivalent to
 	 * <pre>get(key) != null</pre>
-	 * @param key1 Part 1 of the key that should be checked.
-	 * @param key2 Part 2 of the key that should be checked.
-	 * @param key3 Part 3 of the key that should be checked.
+	 * @param key1 A component of the key that should be checked.
+	 * @param key2 A component of the key that should be checked.
+	 * @param key3 A component of the key that should be checked.
 	 * @return If the specified key is present in this map.
 	 */
 	public boolean containsKey(long key1, long key2, long key3) {
@@ -148,7 +147,9 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	/**
 	 * Removes the entry with the specified key from this map.
 	 * If the map does not contain the key, nothing happens.
-	 * @param key The key of the entry that should be removed.
+	 * @param key1 A component of the key of the entry that should be removed.
+	 * @param key2 A component of the key of the entry that should be removed.
+	 * @param key3 A component of the key of the entry that should be removed.
 	 * @return The value of the entry that was removed.
 	 * If no entry was removed, {@code null} is returned.
 	 */
@@ -254,7 +255,7 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 		
 		// Checks that the other map is a subset of this map.
 		for (Long3Entry<?> entry : other) {
-			V thisValue = this.get(entry.getKey1(), entry.getKey2(), entry.getKey3());
+			V thisValue = this.get((long) entry.getKey1(), (long) entry.getKey2(), (long) entry.getKey3());
 			if (thisValue == null) {
 				return false; // This does not contain the current entry
 			}
@@ -279,11 +280,13 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 	}
 	
 	
-	private final static int indexOf(long key1, long key2, long key3, int mask) {
+	
+	
+	private static final int indexOf(long key1, long key2, long key3, int mask) {
 		return (((Long.hashCode(key3)*31) + Long.hashCode(key2))*31 + Long.hashCode(key1)) & mask;
 	}
 	
-	private final static <V> Node<V> findNode(long key1, long key2, long key3, Node<V>[] table, int mask) {
+	private static final <V> Node<V> findNode(long key1, long key2, long key3, Node<V>[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -360,7 +363,7 @@ public final class Long3HashMap<V> implements Iterable<Long3Entry<V>> {
 		return this.table = newTable;
 	}
 	
-	private final static <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
+	private static final <V> void insertNode(Node<V> node, Node<V>[] table, int mask) {
 		int index = indexOf(node.key1, node.key2, node.key3, mask);
 		node.next = table[index];
 		table[index] = node;

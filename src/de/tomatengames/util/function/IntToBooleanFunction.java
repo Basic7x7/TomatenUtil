@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts an {@code int} and returns a {@code boolean}.
+ * A function that accepts an {@code int}
+ * and returns a {@code boolean}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface IntToBooleanFunction {
 	
@@ -19,7 +20,6 @@ public interface IntToBooleanFunction {
 	 * @return The result.
 	 */
 	public boolean apply(int e);
-	
 	
 	/**
 	 * Returns an IntToBooleanFunction that represents {@code !this.apply(e)}.
@@ -38,4 +38,5 @@ public interface IntToBooleanFunction {
 	public static IntToBooleanFunction not(IntToBooleanFunction func) {
 		return func.negate();
 	}
+	
 }

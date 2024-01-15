@@ -13,13 +13,17 @@ final Entry = "%map.namePrefix;Entry";
 final GenKeys = "<" * map.genKeys?.join(", ") * ">";
 final genArray = map.genKeys + ["V"];
 final Gen = "<" * genArray.join(", ") * ">";
-final Node = "Node%abstr && Gen;";
+final Node = "Node%!abstr && Gen;";
 final wildcardGen = "<" * genArray.map(s => "?").join(", ") * ">";
 
 final key = (node, suffix) => map.keys.map(k => (node && node + ".") + k.name + suffix).join(", ");
 final entryKey = (entry, cast) => map.keys.map(
-		k => (cast && "(%k.type;) ") + "%entry;.get%firstUpper(k.name);();").join(", ");
+		k => (cast && "(%k.type;) ") + "%entry;.get%k.name.uppercase(0);()").join(", ");
 final keyDec = (suffix) => map.keys.map(k => "%k.type; %k.name;%suffix;").join(", ");
+
+final keyTypeTuple = (map.keys.length > 1 ? "(" : "") +
+	map.keys.map(k => k.type).join(", ") +
+	(map.keys.length > 1 ? ")" : "");
 
 
 function equalKey(node1, node2) {
@@ -42,7 +46,7 @@ function equalKey(node1, node2) {
 function keyDoc(doc, keySuffix) {
 	for (key in map.keys) {
 		##
-		* @param %key.name;%keySuffix; %n>1 ? "A component of the key" : "The key";%suffix;
+		* @param %key.name;%keySuffix; %map.keys.length>1 ? "A component of the key" : "The key";%doc;
 		##
 	}
 }
@@ -58,7 +62,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
- * A {@link HashMap}-like data structure that maps {@code %keyTuple;} keys to object values.
+ * A {@link HashMap}-like data structure that maps {@code %keyTypeTuple;} keys to object values.
  * %map.equalsDoc ? map.equalsDoc : "Equality of keys is checked by using the {@code ==} operator";
  * <p>
  * This map does <b>not</b> allow {@code null} values.
@@ -68,15 +72,15 @@ import java.util.function.Consumer;
  * 
  * @author Basic7x7
  * @version
- ##
- if (entryLastMod && entryLastMod > map.createDate) {
- 	##
- 	* %entryLastMod; last modified<br>
- 	##
- }
- ##
+##
+if (entryLastMod && entryLastMod > map.createDate) {
+	##
+	 * %entryLastMod; last modified<br>
+	##
+}
+##
  * %map.createDate; created
- * @since %since;
+ * @since %map.since;
  */
 // %cli.txsinfo();
 public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%Entry;%Gen;> {
@@ -281,7 +285,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 			return;
 		}
 		
-		otherMap.forEach(entry -> this.put(%key("entry");, entry.getValue()));
+		otherMap.forEach(entry -> this.put(%entryKey("entry");, entry.getValue()));
 	}
 	
 	@Override
@@ -338,7 +342,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 	
 	
 	private %!abstr && "static"; final %!abstr && GenKeys; int indexOf(%keyDec();, int mask) {
-		return %map.hash(key()); & mask;
+		return %map.hash; & mask;
 	}
 	
 	private %!abstr && "static"; final %!abstr && Gen; %Node; findNode(%keyDec();, %Node;[] table, int mask) {
@@ -452,7 +456,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 		for (key in map.keys) {
 			##
 			@Override
-			public %key.type; get%firstUpper(key.name);() {
+			public %key.type; get%key.name.uppercase(0);() {
 				return this.%key.name;;
 			}
 			
@@ -493,7 +497,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 		
 		@Override
 		public int hashCode() {
-			return Objects.hashCode(this.value) + %hash;;
+			return Objects.hashCode(this.value) + %map.hash;;
 		}
 	}
 	

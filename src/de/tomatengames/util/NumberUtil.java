@@ -47,7 +47,6 @@ public class NumberUtil {
 	##
 	txs-end limit */
 	// txs-begin-gen limit
-	
 	/**
 	 * Limits the specified value to the range {@code [min, max]}.
 	 * <p>
@@ -116,6 +115,7 @@ public class NumberUtil {
 		}
 		return value;
 	}
+	
 // txs-end-gen limit
 
 }

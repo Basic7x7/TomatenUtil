@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts no parameters and returns an {@code Object}.
+ * A function that accepts no parameters
+ * and returns an {@code Object}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface VoidToRefFunction<O> {
 	
@@ -18,4 +19,5 @@ public interface VoidToRefFunction<O> {
 	 * @return The result.
 	 */
 	public O apply();
+	
 }

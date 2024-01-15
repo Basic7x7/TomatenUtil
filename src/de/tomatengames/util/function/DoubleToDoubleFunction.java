@@ -1,8 +1,8 @@
-// !!! TextScript generated !!!
 package de.tomatengames.util.function;
 
 /**
- * A function that accepts a {@code double} and returns a {@code double}.
+ * A function that accepts a {@code double}
+ * and returns a {@code double}.
  * 
  * @author Basic7x7
  * @version
@@ -10,6 +10,7 @@ package de.tomatengames.util.function;
  * 2021-10-21 created
  * @since 1.2
  */
+// !!! TextScript generated !!!
 @FunctionalInterface
 public interface DoubleToDoubleFunction {
 	
@@ -20,7 +21,6 @@ public interface DoubleToDoubleFunction {
 	 */
 	public double apply(double e);
 	
-	
 	/**
 	 * Returns the {@code double} identity function.
 	 * The identity function always returns the input argument.
@@ -29,4 +29,5 @@ public interface DoubleToDoubleFunction {
 	public static DoubleToDoubleFunction identity() {
 		return e -> e;
 	}
+	
 }
