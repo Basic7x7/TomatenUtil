@@ -1,4 +1,6 @@
-/bin
+bin/
+output/
 .settings/
 .classpath
 .project
+.directory
