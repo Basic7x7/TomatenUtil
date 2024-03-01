@@ -1,9 +1,5 @@
 package de.tomatengames.util;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -309,4 +306,21 @@ public class TestUtil {
 		}
 	}
 	
+	
+	private static void fail(String message) {
+		throw new AssertionError(message);
+	}
+	
+	private static void assertEquals(Object expected, Object actual) {
+		if (!Objects.equals(expected, actual)) {
+			throw new AssertionError("expected: <" + expected + "> but was: <" + actual + ">");
+		}
+	}
+	
+	public static void assertArrayEquals(byte[] expected, byte[] actual) {
+		if (!Arrays.equals(expected, actual)) {
+			throw new AssertionError("expected: " + Arrays.toString(expected) +
+					" but was: " + Arrays.toString(actual));
+		}
+	}
 }
