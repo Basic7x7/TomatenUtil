@@ -105,7 +105,7 @@ public class PathfinderUtil {
 	}
 	
 	/**
-	 * Utility recursively find all PathNodes indirectly connected to the provided node.
+	 * Utility to recursively find all PathNodes indirectly connected to the provided node.
 	 * This may be useful for collecting all PathNodes involved in any path from start to goal when multiple possible paths were recorded.
 	 * @param <N> The specific type of PathNode
 	 * @param node The initial PathNode to start searching from
@@ -176,14 +176,14 @@ public class PathfinderUtil {
 		boolean isGoal(N node);
 		
 		/**
-		 * Chooses between two equally costy nodes representing the same position.
+		 * Chooses between two nodes with equal cost representing the same position.
 		 * When this is implemented, visiting all optimal paths is typically desired
 		 * by setting all=true in {@link PathfinderUtil#find(PathNode, boolean, PositionMap, World)}.
 		 * This can also be used to record all available choices by merging the proposed node into the present node and returning false.
-		 * To simply find any one optimal path, you do not need to implement or care about this.
+		 * To simply find one arbitrary optimal path, you do not need to implement or care about this.
 		 * @param present The present node to be kept when false is returned
 		 * @param proposal The proposed node to replace the present node with when true is returned
-		 * @return false is the present node is to be kept, true if the proposed node should be used instead. Defaults to false.
+		 * @return false if the present node is to be kept, true if the proposed node should be used instead. Defaults to false.
 		 * Note that when choosing to replace the present node (by returning true),
 		 * PathNodes are no longer guaranteed to be created from their preferred origin PathNodes,
 		 * possibly requiring you to retrieve every replaced node from
