@@ -2,8 +2,6 @@ package de.tomatengames.util.test;
 
 import java.io.IOException;
 
-import org.junit.jupiter.api.Test;
-
 import de.tomatengames.util.PathfinderUtil;
 import de.tomatengames.util.PathfinderUtil.PositionMap;
 import de.tomatengames.util.map.Int2HashMap;
@@ -13,8 +11,7 @@ import de.tomatengames.util.test.PathfinderTest.MazeWorld;
 
 class PathfinderUtilVisualize {
 	
-	@Test
-	void testFind() throws IOException {
+	public static void main(String[] args) throws IOException {
 		String dir = "testdata/pathfinderutil/";
 		String infilename = "mini2";
 		String outfilename = infilename + "_solved";
