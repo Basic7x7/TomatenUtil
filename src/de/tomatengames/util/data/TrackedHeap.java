@@ -3,6 +3,20 @@ package de.tomatengames.util.data;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * A heap that allows to efficiently update and remove arbitrary elements.
+ * <p>
+ * The <i>first</i> element is the smallest element according to the {@link Comparator} specified to the constructor.
+ * <p>
+ * <b>This implementation is not synchronized.</b>
+ * 
+ * @param <E> The type of the elements in the heap. Must extend {@link TrackedHeap.Element}.
+ * 
+ * @author Basic7x7
+ * @version 2024-03-21 last modified
+ * @version 2024-03-20 created
+ * @since 1.5
+ */
 public class TrackedHeap<E extends TrackedHeap.Element> {
 	private static final int MAX_SIZE = Integer.MIN_VALUE - 50;
 	
@@ -10,11 +24,16 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	private Element[] array;
 	private int size;
 	
+	/**
+	 * Creates a new and empty {@link TrackedHeap}.
+	 * @param comparator The comparator that will be used to compare elements. Not {@code null}.
+	 * The smallest element is the first element.
+	 */
 	public TrackedHeap(Comparator<E> comparator) {
 		this.comparator = comparator;
-		this.array = new Element[10];
+		this.array = new Element[10]; // initial capacity = 10
 		this.size = 0;
-	}
+	}	
 	
 	private void grow(int requiredIndex) {
 		int n = this.array.length;
@@ -30,6 +49,17 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.array = Arrays.copyOf(this.array, n);
 	}
 	
+	/**
+	 * Assumes that {@code thisElement} is at the specified index and tries to move the element up in the heap
+	 * until the heap condition is met.
+	 * @param index The index of this element in the heap. Must be at least 0 and less than the size of this heap.
+	 * If {@code heap[index] != thisElement}, the heap element may be replaced silently.
+	 * @param thisElement The element that should be moved. Not {@code null}.
+	 * @param forcePlace If {@code true}, {@code thisElement} is always placed into this heap.
+	 * It is guaranteed that {@code heap[index]} will be overwritten.
+	 * This should only be set to {@code false} if {@code heap[index] == thisElement} is guaranteed.
+	 * @return If the element moved.
+	 */
 	@SuppressWarnings("unchecked")
 	private boolean heapifyUp(int index, final Element thisElement, boolean forcePlace) {
 		final int originalIndex = index;
@@ -61,6 +91,17 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		return index != originalIndex;
 	}
 	
+	/**
+	 * Assumes that {@code thisElement} is at the specified index and tries to move the element down in the heap
+	 * until the heap condition is met.
+	 * @param index The index of this element in the heap. Must be at least 0 and less than the size of this heap.
+	 * If {@code heap[index] != thisElement}, the heap element may be replaced silently.
+	 * @param thisElement The element that should be moved. Not {@code null}.
+	 * @param forcePlace If {@code true}, {@code thisElement} is always placed into this heap.
+	 * It is guaranteed that {@code heap[index]} will be overwritten.
+	 * This should only be set to {@code false} if {@code heap[index] == thisElement} is guaranteed.
+	 * @return If the element moved.
+	 */
 	@SuppressWarnings("unchecked")
 	private boolean heapifyDown(int index, final Element thisElement, boolean forcePlace) {
 		final int originalIndex = index;
@@ -99,7 +140,14 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		}
 	}
 	
-	
+	/**
+	 * Inserts the specified element into this heap.
+	 * If the element is already in this heap, nothing happens.
+	 * @param element The element that should be inserted. If {@code null}, nothing happens.
+	 * @return If the element has been inserted successfully. If {@code false}, nothing happened.
+	 * @throws IllegalArgumentException If the element is already in another heap.
+	 * @implNote O(log n)
+	 */
 	public boolean insert(E element) {
 		if (element == null) {
 			return false;
@@ -125,6 +173,13 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		return true;
 	}
 	
+	/**
+	 * Removes the specified element from this heap.
+	 * If the element is not in this heap, nothing happens.
+	 * @param element The element that should be removed. If {@code null}, nothing happens.
+	 * @return If the element has been removed successfully. If {@code false}, nothing happened.
+	 * @implNote O(log n)
+	 */
 	public boolean remove(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -154,6 +209,12 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		return true;
 	}
 	
+	/**
+	 * Returns the <i>first</i> element of this heap.
+	 * The first element is the smallest element according to the {@link Comparator} of the heap.
+	 * @return The first element of this heap. If this heap is empty, {@code null} is returned.
+	 * @implNote O(1)
+	 */
 	public E getFirst() {
 		if (this.size <= 0) {
 			return null;
@@ -163,6 +224,12 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		return e;
 	}
 	
+	/**
+	 * Returns and removes the <i>first</i> element of this heap.
+	 * The first element is the smallest element according to the {@link Comparator} of the heap.
+	 * @return The first element of this heap. If this heap is empty, {@code null} is returned and nothing happens.
+	 * @implNote O(log n)
+	 */
 	public E removeFirst() {
 		if (this.size <= 0) {
 			return null;
@@ -186,6 +253,27 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		return firstE;
 	}
 	
+	/**
+	 * Moves the specified element to its position in the heap.
+	 * This method should be called after the element changed its value considered by the {@link Comparator}
+	 * in order to <i>repair</i> the heap.
+	 * <p>
+	 * If the element is not present in this heap, nothing happens.
+	 * <p>
+	 * This method should be preferred over the following semantically equivalent calls.
+	 * <pre>
+	 * heap.increase(element);
+	 * heap.decrease(element);
+	 * </pre>
+	 * and
+	 * <pre>
+	 * if (heap.remove(element)) {
+	 *     heap.insert(element);
+	 * }
+	 * </pre>
+	 * @param element The element that has been changed and should be moved. If {@code null}, nothing happens.
+	 * @implNote O(log n)
+	 */
 	public void move(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -197,6 +285,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		}
 	}
 	
+	// TODO JavaDoc
 	public void increase(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -205,6 +294,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.heapifyDown(e.index, e, false);
 	}
 	
+	// TODO JavaDoc
 	public void decrease(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -213,6 +303,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.heapifyUp(e.index, e, false);
 	}
 	
+	// TODO JavaDoc
 	public void clear() {
 		for (int i = 0, n = this.size; i < n; i++) {
 			Element e = this.array[i];
@@ -223,14 +314,25 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.size = 0;
 	}
 	
+	// TODO JavaDoc
 	public boolean isEmpty() {
 		return this.size <= 0;
 	}
 	
+	/**
+	 * Returns the number of elements in this heap.
+	 * @return The number of elements in this heap. Not negative.
+	 */
 	public int size() {
 		return this.size;
 	}
 	
+	/**
+	 * Returns if this heap contains the specified element.
+	 * @param element The element that should be checked. If {@code null}, {@code false} is returned.
+	 * @return If this heap contains the specified element.
+	 * @implNote O(1)
+	 */
 	public boolean contains(E element) {
 		if (element == null) {
 			return false;
@@ -243,24 +345,23 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		if (element == null) {
 			return false;
 		}
-		
-		Element e = element;
-		// Check that the element belongs to this heap.
-		if (e.heap != this) {
-			if (e.heap == null) {
-				return false; // If the element is not in the heap.
-			}
-			throw new IllegalArgumentException("Element belongs to another heap");
-		}
-		
-		return true;
+		return element.heap == this;
 	}
 	
 	
-	public static class Element {
+	/**
+	 * An element of a {@link TrackedHeap}.
+	 * This element stores additional information to be located efficiently by the heap.
+	 * <p>
+	 * An element must not be present in multiple {@link TrackedHeap} at the same time.
+	 */
+	public static abstract class Element {
 		private TrackedHeap<?> heap;
 		private int index;
 		
+		/**
+		 * Creates a new {@link TrackedHeap.Element}.
+		 */
 		public Element() {
 			this.heap = null;
 			this.index = -1;
