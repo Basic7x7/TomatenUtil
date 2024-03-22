@@ -13,7 +13,7 @@ import java.util.Comparator;
  * @param <E> The type of the elements in the heap. Must extend {@link TrackedHeap.Element}.
  * 
  * @author Basic7x7
- * @version 2024-03-21 last modified
+ * @version 2024-03-22 last modified
  * @version 2024-03-20 created
  * @since 1.5
  */
@@ -285,7 +285,18 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		}
 	}
 	
-	// TODO JavaDoc
+	/**
+	 * Moves the specified element to its position in the heap if it increased.
+	 * This method should be called after the element increased its value considered by the {@link Comparator}
+	 * in order to <i>repair</i> the heap.
+	 * Use {@link #move(Element)} instead if it is not guaranteed that the value increased.
+	 * <p>
+	 * If the element is not present in this heap, nothing happens.
+	 * If the element decreased instead of increased, nothing happens.
+	 * @param element The element that has been changed and should be moved. If {@code null}, nothing happens.
+	 * @implNote O(log n)
+	 * @see #move(Element)
+	 */
 	public void increase(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -294,7 +305,18 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.heapifyDown(e.index, e, false);
 	}
 	
-	// TODO JavaDoc
+	/**
+	 * Moves the specified element to its position in the heap if it decreased.
+	 * This method should be called after the element decreased its value considered by the {@link Comparator}
+	 * in order to <i>repair</i> the heap.
+	 * Use {@link #move(Element)} instead if it is not guaranteed that the value decreased.
+	 * <p>
+	 * If the element is not present in this heap, nothing happens.
+	 * If the element increased instead of decreased, nothing happens.
+	 * @param element The element that has been changed and should be moved. If {@code null}, nothing happens.
+	 * @implNote O(log n)
+	 * @see #move(Element)
+	 */
 	public void decrease(E element) {
 		Element e = element;
 		if (this.isInvalidElement(e)) {
@@ -303,7 +325,11 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.heapifyUp(e.index, e, false);
 	}
 	
-	// TODO JavaDoc
+	/**
+	 * Removes all elements from this heap.
+	 * The heap will be empty after this operation.
+	 * @implNote O(n)
+	 */
 	public void clear() {
 		for (int i = 0, n = this.size; i < n; i++) {
 			Element e = this.array[i];
@@ -314,7 +340,10 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.size = 0;
 	}
 	
-	// TODO JavaDoc
+	/**
+	 * Returns if this heap is empty.
+	 * @return If this heap is empty.
+	 */
 	public boolean isEmpty() {
 		return this.size <= 0;
 	}
