@@ -169,7 +169,8 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		}
 		
 		// Insert the element.
-		this.heapifyUp(index, element, true);
+		e.heap = this;
+		this.heapifyUp(index, e, true);
 		return true;
 	}
 	
@@ -201,8 +202,8 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		// If n == 0, the heap is empty now.
 		if (n > 0 && index < n) {
 			Element last = this.array[n];
-			if (!this.heapifyUp(index, last, true)) {
-				this.heapifyDown(index, last, true);
+			if (!this.heapifyDown(index, last, true)) {
+				this.heapifyUp(index, last, true);
 			}
 		}
 		this.array[n] = null;
@@ -372,9 +373,9 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	
 	private boolean isInvalidElement(Element element) {
 		if (element == null) {
-			return false;
+			return true;
 		}
-		return element.heap == this;
+		return element.heap != this;
 	}
 	
 	
