@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -402,29 +403,49 @@ public class IOUtil {
 	 * If the path represents a directory, the directory is deleted recursively.
 	 * <p>
 	 * Symbolic links are not followed, but the symbolic links themselves are deleted.
+	 * <p>
+	 * If the path represents a directory, all inner files and directories
+	 * must be on the same {@link FileStore} as the specified directory.
+	 * That means that this method should not be used to delete mount points.
 	 * @param path The path that should be deleted. If {@code null}, nothing happens.
-	 * @throws IOException If an error occurs.
+	 * @throws IOException If an error occurs. For example, if the path does not exist or cannot be accessed.
 	 */
 	public static void delete(Path path) throws IOException {
+		deleteRec(path, null);
+	}
+	
+	private static void deleteRec(Path path, FileStore baseFileStore) throws IOException {
 		if (path == null) {
 			return;
 		}
 		
-		// Deletes regular files.
+		// Check that this store matches the store of the base path.
+		FileStore store = Files.getFileStore(path); // throws IOException if the path does not exist.
+		if (baseFileStore != null) {
+			if (!baseFileStore.equals(store)) {
+				throw new IOException("Cannot delete files in other file store: " + path);
+			}
+		}
+		else {
+			// This is the base directory.
+			baseFileStore = store;
+		}
+		
+		// Delete regular files.
 		// Symbolic links are directly removed (and never interpreted as a directory).
 		if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) || Files.isSymbolicLink(path)) {
 			Files.delete(path);
 			return;
 		}
 		
-		// Deletes directories recursively.
+		// Delete directories recursively.
 		if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
 			Path[] children;
 			try (Stream<Path> stream = Files.list(path)) {
 				children = stream.toArray(Path[]::new);
 			}
 			for (Path child : children) {
-				delete(child);
+				deleteRec(child, baseFileStore);
 			}
 			Files.delete(path);
 			return;
@@ -439,7 +460,10 @@ public class IOUtil {
 	 * This only applies for the direct file list of the directory.
 	 * The predicate is <b>not</b> checked recursively.
 	 * <p>
-	 * Symbolic links are not followed.
+	 * Symbolic links are not followed, but they may be deleted themselves.
+	 * <p>
+	 * All inner files and directories must be on the same {@link FileStore} as the specified directory.
+	 * That means that this method should not be used to delete mount points.
 	 * @param dir The directory. If {@code null}, a symbolic link or not a directory, nothing happens.
 	 * @param filter A predicate to filter the entries in the file list to delete.
 	 * If {@code null}, all files are deleted.
@@ -451,15 +475,16 @@ public class IOUtil {
 			return;
 		}
 		
-		// Deletes all files from the directory recursively.
+		// Delete all files from the directory recursively.
 		if (Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
+			FileStore baseStore = Files.getFileStore(dir);
 			Path[] children;
 			try (Stream<Path> stream = Files.list(dir)) {
 				children = stream.toArray(Path[]::new);
 			}
 			for (Path child : children) {
 				if (filter == null || filter.test(child)) {
-					delete(child);
+					deleteRec(child, baseStore);
 				}
 			}
 			return;
