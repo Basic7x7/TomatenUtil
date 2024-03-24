@@ -270,6 +270,16 @@ class TrackedHeapTest {
 		assertEquals(90, heap.getFirst().value);
 		heap.move(a[4]);
 		assertEquals(1, heap.getFirst().value);
+		
+		a[4].value = -10;
+		assertEquals(1, heap.getFirst().value);
+		heap.insert(a[4]); // reinsert
+		assertEquals(-10, heap.getFirst().value);
+		
+		a[4].value = 70;
+		assertEquals(70, heap.getFirst().value);
+		heap.insert(a[4]); // reinsert
+		assertEquals(1, heap.getFirst().value);
 	}
 	
 	@Test
@@ -329,11 +339,17 @@ class TrackedHeapTest {
 					A a = elements[index];
 					int change = ThreadLocalRandom.current().nextInt(30);
 					int subop = ThreadLocalRandom.current().nextInt(100);
-					if (subop < 50) { // 50% move
+					if (subop < 35) { // 35% move
 						change = ThreadLocalRandom.current().nextBoolean() ? change : -change;
 						a.value += change;
 						opScript.append("\nmove " + index + " = " + a.value);
 						heap.move(a);
+					}
+					else if (subop < 50) { // 15% reinsert
+						change = ThreadLocalRandom.current().nextBoolean() ? change : -change;
+						a.value += change;
+						opScript.append("\nreinsert " + index + " = " + a.value);
+						assertEquals(controlSet.add(a), heap.insert(a), () -> opScript.toString());
 					}
 					else if (subop < 75) { // 25% increase
 						a.value += change;

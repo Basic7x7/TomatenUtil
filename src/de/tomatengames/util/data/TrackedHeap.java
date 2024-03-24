@@ -142,9 +142,9 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	
 	/**
 	 * Inserts the specified element into this heap.
-	 * If the element is already in this heap, nothing happens.
+	 * If the element is already in this heap, its position in the heap updated using {@link #move(Element)}.
 	 * @param element The element that should be inserted. If {@code null}, nothing happens.
-	 * @return If the element has been inserted successfully. If {@code false}, nothing happened.
+	 * @return If the element has been inserted. If {@code false}, it was already in the heap and may have been moved.
 	 * @throws IllegalArgumentException If the element is already in another heap.
 	 * @implNote O(log n)
 	 */
@@ -156,8 +156,9 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		Element e = element;
 		// Check that the element is not inside any heap.
 		if (e.heap != null) {
-			if (e.heap == this) {
-				return false; // If this heap already contains the element.
+			if (e.heap == this) { // If this heap already contains the element.
+				this.move(element); // "reinsert"
+				return false;
 			}
 			throw new IllegalArgumentException("Element belongs to another heap");
 		}
