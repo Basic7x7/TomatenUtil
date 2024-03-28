@@ -5,6 +5,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import de.tomatengames.util.exception.ReflectionException;
+
 /**
  * Provides convenient methods to utilize the Reflection API.
  * 
@@ -21,13 +23,14 @@ public class ReflectionUtil {
 	/**
 	 * Get a class by its name, wraps {@link Class#forName(String)}.
 	 * @param name the name of the class
-	 * @return the class reference or null if the class is not found
+	 * @return the class reference
+	 * @throws ReflectionException if the class is not found
 	 */
 	public static Class<?> Class(String name) {
 		try {
 			return Class.forName(name);
 		} catch (ClassNotFoundException e) {
-			return null;
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -35,7 +38,8 @@ public class ReflectionUtil {
 	 * Get a class field by its name, wraps {@link Class#getDeclaredField(String)}.
 	 * @param c the class
 	 * @param name the name of the field
-	 * @return the field reference or null if no such field is found
+	 * @return the field reference
+	 * @throws ReflectionException if no such field is found
 	 */
 	public static Field field(Class<?> c, String name) {
 		try {
@@ -43,7 +47,7 @@ public class ReflectionUtil {
 			f.setAccessible(true);
 			return f;
 		} catch (NoSuchFieldException e) {
-			return null;
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -52,7 +56,8 @@ public class ReflectionUtil {
 	 * @param <T> the class type, made available to the output constructor reference without casting, may be <code>?</code>
 	 * @param c the class
 	 * @param paramTypes the parameter types
-	 * @return the constructor reference or null if no such constructor is found
+	 * @return the constructor reference
+	 * @throws ReflectionException if no such constructor is found
 	 */
 	public static <T> Constructor<T> constructor(Class<T> c, Class<?>... paramTypes) {
 		try {
@@ -60,7 +65,7 @@ public class ReflectionUtil {
 			constr.setAccessible(true);
 			return constr;
 		} catch (NoSuchMethodException e) {
-			return null;
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -69,7 +74,8 @@ public class ReflectionUtil {
 	 * @param c the class
 	 * @param name the name of the method
 	 * @param paramTypes the parameter types
-	 * @return the method reference or null if no such method is found
+	 * @return the method reference
+	 * @throws ReflectionException if no such method is found
 	 */
 	public static Method method(Class<?> c, String name, Class<?>... paramTypes) {
 		try {
@@ -77,7 +83,7 @@ public class ReflectionUtil {
 			m.setAccessible(true);
 			return m;
 		} catch (NoSuchMethodException e) {
-			return null;
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -101,6 +107,20 @@ public class ReflectionUtil {
 			c = c.getSuperclass();
 		}
 		return null;
+	}
+	
+	/**
+	 * {@link #searchField(Class, String)} but throws an exception when no field is found.
+	 * @param c the most specific class searched
+	 * @param name the name of the field
+	 * @return the first found field reference
+	 * @throws ReflectionException if no such field is found
+	 */
+	public static Field findField(Class<?> c, String name) {
+		Field f = searchField(c, name);
+		if (f == null)
+			throw new ReflectionException("No field '" + name + "' found in class hierarchy of " + c);
+		return f;
 	}
 	
 	private static Class<?> normalizePrimitive(Class<?> c) {
@@ -175,6 +195,21 @@ public class ReflectionUtil {
 	}
 	
 	/**
+	 * {@link #searchConstructor(Class, Class...)} but throws an exception if no constructor is found.
+	 * @param <T> the class type
+	 * @param c the class
+	 * @param compatibleParamTypes the passable parameter types
+	 * @return a constructor reference matching the given parameter types
+	 * @throws ReflectionException if no such constructor is found
+	 */
+	public static <T> Constructor<T> findConstructor(Class<T> c, Class<?>... compatibleParamTypes) {
+		Constructor<T> constr = searchConstructor(c, compatibleParamTypes);
+		if (constr == null)
+			throw new ReflectionException("No such constructor found in " + c);
+		return constr;
+	}
+	
+	/**
 	 * Searches the given class hierarchy for a method of the given name that the given parameter types can be passed to.
 	 * @param c the most specific class
 	 * @param name the name of the method
@@ -202,6 +237,21 @@ public class ReflectionUtil {
 		return null;
 	}
 	
+	/**
+	 * {@link #searchMethod(Class, String, Class...)} but throws an exception if no method is found.
+	 * @param c the most specific class
+	 * @param name the name of the method
+	 * @param compatibleParamTypes the passable parameter types
+	 * @return the first found method reference matching the given name and parameter types
+	 * @throws ReflectionException if no such method is found
+	 */
+	public static Method findMethod(Class<?> c, String name, Class<?>... compatibleParamTypes) {
+		Method m = searchMethod(c, name, compatibleParamTypes);
+		if (m == null)
+			throw new ReflectionException("No such method '" + name + "' found in " + c);
+		return m;
+	}
+	
 	// Standard get/set:
 	
 	/**
@@ -209,12 +259,13 @@ public class ReflectionUtil {
 	 * @param o the object
 	 * @param f the field
 	 * @return the value
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
 	 */
 	public static Object get(Object o, Field f) {
 		try {
 			return f.get(o);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -223,12 +274,13 @@ public class ReflectionUtil {
 	 * @param o the object
 	 * @param f the field
 	 * @param value the value
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
 	 */
 	public static void set(Object o, Field f, Object value) {
 		try {
 			f.set(o, value);
 		} catch (IllegalAccessException e) {
-			throw new Error(e);
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -236,6 +288,7 @@ public class ReflectionUtil {
 	 * Get the current value of the given static field.
 	 * @param f the field
 	 * @return the value
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
 	 */
 	public static Object getStatic(Field f) {
 		return get(null, f);
@@ -245,6 +298,7 @@ public class ReflectionUtil {
 	 * Set the current value of the given static field.
 	 * @param f the field
 	 * @param value the value
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
 	 */
 	public static void setStatic(Field f, Object value) {
 		set(null, f, value);
@@ -252,7 +306,7 @@ public class ReflectionUtil {
 	
 	// TODO Primitive get/set methods
 	
-	// Standard Construct/run:
+	// Standard construct/run:
 	
 	/**
 	 * Constructs a new object using the given constructor and constructor parameters, wraps {@link Constructor#newInstance(Object...)}.
@@ -260,12 +314,14 @@ public class ReflectionUtil {
 	 * @param constr the constructor reference
 	 * @param param the constructor parameters
 	 * @return the new object
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs,
+	 * which may be an {@link IllegalAccessException}, an {@link InstantiationException} or an {@link InvocationTargetException}.
 	 */
 	public static <T> T construct(Constructor<T> constr, Object... param) {
 		try {
 			return constr.newInstance(param);
-		} catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-			throw new Error(e);
+		} catch (ReflectiveOperationException e) {
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -274,6 +330,8 @@ public class ReflectionUtil {
 	 * @param <T> the type of the returned object
 	 * @param constr the constructor reference
 	 * @return the new object
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs
+	 * @see #construct(Constructor, Object...)
 	 */
 	public static <T> T construct(Constructor<T> constr) {
 		return construct(constr, EMPTY_ARRAY);
@@ -285,12 +343,14 @@ public class ReflectionUtil {
 	 * @param m the method reference
 	 * @param param the method parameters
 	 * @return the return value
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs,
+	 * which may be an {@link IllegalAccessException} or an {@link InvocationTargetException}.
 	 */
 	public static Object run(Object o, Method m, Object... param) {
 		try {
 			return m.invoke(o, param);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			throw new Error(e);
+		} catch (ReflectiveOperationException e) {
+			throw new ReflectionException(e);
 		}
 	}
 	
@@ -299,6 +359,8 @@ public class ReflectionUtil {
 	 * @param o the target object
 	 * @param m the method reference
 	 * @return the return value
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static Object run(Object o, Method m) {
 		return run(o, m, EMPTY_ARRAY);
@@ -309,6 +371,8 @@ public class ReflectionUtil {
 	 * @param m the method reference
 	 * @param param the parameters
 	 * @return the return value
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static Object runStatic(Method m, Object... param) {
 		return run(null, m, param);
@@ -318,6 +382,8 @@ public class ReflectionUtil {
 	 * Runs the given static method using no parameters.
 	 * @param m the method reference
 	 * @return the return value
+	 * @throws ReflectionException if a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static Object runStatic(Method m) {
 		return run(null, m);
@@ -333,11 +399,11 @@ public class ReflectionUtil {
 	 * @param fieldClass the field class
 	 * @param fieldName the field name
 	 * @return the value of the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Object o, Class<?> fieldClass, String fieldName) {
-		Field f = searchField(fieldClass, fieldName);
-		return (T)get(o, f);
+		return (T)get(o, findField(fieldClass, fieldName));
 	}
 	
 	/**
@@ -347,10 +413,10 @@ public class ReflectionUtil {
 	 * @param fieldClass the field class
 	 * @param fieldName the field name
 	 * @param value the value for the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static void set(Object o, Class<?> fieldClass, String fieldName, Object value) {
-		Field f = searchField(fieldClass, fieldName);
-		set(o, f, value);
+		set(o, findField(fieldClass, fieldName), value);
 	}
 	
 	/**
@@ -360,6 +426,7 @@ public class ReflectionUtil {
 	 * @param o the target object
 	 * @param fieldName the name of the field
 	 * @return the value of the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static <T> T get(Object o, String fieldName) {
 		return get(o, o.getClass(), fieldName);
@@ -371,6 +438,7 @@ public class ReflectionUtil {
 	 * @param o the target object
 	 * @param fieldName the name of the field
 	 * @param value the value for the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static void set(Object o, String fieldName, Object value) {
 		set(o, o.getClass(), fieldName, value);
@@ -383,6 +451,7 @@ public class ReflectionUtil {
 	 * @param c the field class
 	 * @param fieldName the field name
 	 * @return the value of the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getStatic(Class<?> c, String fieldName) {
@@ -395,6 +464,7 @@ public class ReflectionUtil {
 	 * @param c the field class
 	 * @param fieldName the field name
 	 * @param value the value for the found field
+	 * @throws ReflectionException if no such field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static void setStatic(Class<?> c, String fieldName, Object value) {
 		set(null, c, fieldName, value);
@@ -407,6 +477,7 @@ public class ReflectionUtil {
 	 * @param className the field class name
 	 * @param fieldName the field name
 	 * @return the value of the found field
+	 * @throws ReflectionException if no such class or field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static <T> T getStatic(String className, String fieldName) {
 		return getStatic(Class(className), fieldName);
@@ -418,6 +489,7 @@ public class ReflectionUtil {
 	 * @param className the field class name
 	 * @param fieldName the field name
 	 * @param value the value for the found field
+	 * @throws ReflectionException if no such class or field is found or an {@link IllegalAccessException} occurs
 	 */
 	public static void setStatic(String className, String fieldName, Object value) {
 		setStatic(Class(className), fieldName, value);
@@ -430,11 +502,12 @@ public class ReflectionUtil {
 	 * @param c the class to be instantiated
 	 * @param param the constructor parameters
 	 * @return the new object
+	 * @throws ReflectionException if no matching constructor is found or a {@link ReflectiveOperationException} occurs
+	 * @see #construct(Constructor, Object...)
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T construct(Class<?> c, Object... param) {
-		Constructor<?> constr = searchConstructor(c, getClasses(param));
-		return (T)construct(constr, param);
+		return (T)construct(findConstructor(c, getClasses(param)), param);
 	}
 	
 	/**
@@ -444,6 +517,9 @@ public class ReflectionUtil {
 	 * @param className the name of the class to be instantiated
 	 * @param param the constructor parameters
 	 * @return the new object
+	 * @throws ReflectionException if no such class or no matching constructor is found or
+	 * an {@link ReflectiveOperationException} occurs
+	 * @see #construct(Constructor, Object...)
 	 */
 	public static <T> T construct(String className, Object... param) {
 		return construct(Class(className), param);
@@ -452,8 +528,7 @@ public class ReflectionUtil {
 	// private because this would only give the false impression one could run superclass definitions of methods with this
 	@SuppressWarnings("unchecked")
 	private static <T> T run(Object o, Class<?> methodClass, String methodName, Object... param) {
-		Method m = searchMethod(methodClass, methodName, getClasses(param));
-		return (T)run(o, m, param);
+		return (T)run(o, findMethod(methodClass, methodName, getClasses(param)), param);
 	}
 	
 	/**
@@ -464,6 +539,8 @@ public class ReflectionUtil {
 	 * @param methodName the name of the method
 	 * @param param the method parameters
 	 * @return the return value
+	 * @throws ReflectionException if no matching method is found or a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static <T> T run(Object o, String methodName, Object... param) {
 		return run(o, o.getClass(), methodName, param);
@@ -477,6 +554,8 @@ public class ReflectionUtil {
 	 * @param methodName the method name
 	 * @param param the method parameters
 	 * @return the return value
+	 * @throws ReflectionException if no matching method is found or a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static <T> T runStatic(Class<?> c, String methodName, Object... param) {
 		return run(null, c, methodName, param);
@@ -490,6 +569,8 @@ public class ReflectionUtil {
 	 * @param methodName the method name
 	 * @param param the method parameters
 	 * @return the return value
+	 * @throws ReflectionException if no such class or matching method is found or a {@link ReflectiveOperationException} occurs
+	 * @see #run(Object, Method, Object...)
 	 */
 	public static <T> T runStatic(String className, String methodName, Object... param) {
 		return run(null, Class(className), methodName, param);
