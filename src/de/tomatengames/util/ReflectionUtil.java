@@ -53,7 +53,7 @@ public class ReflectionUtil {
 	
 	/**
 	 * Get a constructor by its parameter types, wraps {@link Class#getDeclaredConstructor(Class...)}.
-	 * @param <T> the class type, made available to the output constructor reference without casting, may be <code>?</code>
+	 * @param <T> the class type, made available to the output constructor reference without casting
 	 * @param c the class
 	 * @param paramTypes the parameter types
 	 * @return the constructor reference
@@ -96,15 +96,14 @@ public class ReflectionUtil {
 	 * @return the first found field reference or null if no such field is found in the class or any superclass
 	 */
 	public static Field searchField(Class<?> c, String name) {
-		try {
-			return c.getField(name);
-		} catch (NoSuchFieldException e) {
-		}
 		while (c != null) {
-			Field f = field(c, name);
-			if (f != null)
+			try {
+				Field f = c.getDeclaredField(name);
+				f.setAccessible(true);
 				return f;
-			c = c.getSuperclass();
+			} catch (NoSuchFieldException e) {
+				c = c.getSuperclass();
+			}
 		}
 		return null;
 	}
@@ -172,15 +171,16 @@ public class ReflectionUtil {
 	
 	/**
 	 * Searches the given class for a constructor that the given parameter types can be passed to.
-	 * @param <T> the class type, made available to the output constructor reference without casting, may be <code>?</code>
+	 * @param <T> the class type, made available to the output constructor reference without casting
 	 * @param c the class
 	 * @param compatibleParamTypes the passable parameter types
 	 * @return a constructor reference matching the given parameter types or null if no such constructor is found
 	 */
-	@SuppressWarnings("unchecked")
 	public static <T> Constructor<T> searchConstructor(Class<T> c, Class<?>... compatibleParamTypes) {
 		int paramLen = compatibleParamTypes.length;
-		constrloop: for (Constructor<?> constr : c.getDeclaredConstructors()) {
+		constrloop: for (Constructor<?> constrUnknown : c.getDeclaredConstructors()) {
+			@SuppressWarnings("unchecked")
+			Constructor<T> constr = (Constructor<T>) constrUnknown;
 			Class<?>[] paramTypes = constr.getParameterTypes();
 			if (paramTypes.length != paramLen)
 				continue;
@@ -189,7 +189,7 @@ public class ReflectionUtil {
 					continue constrloop;
 			}
 			constr.setAccessible(true);
-			return (Constructor<T>)constr;
+			return constr;
 		}
 		return null;
 	}
@@ -403,7 +403,7 @@ public class ReflectionUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Object o, Class<?> fieldClass, String fieldName) {
-		return (T)get(o, findField(fieldClass, fieldName));
+		return (T) get(o, findField(fieldClass, fieldName));
 	}
 	
 	/**
@@ -455,7 +455,7 @@ public class ReflectionUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T getStatic(Class<?> c, String fieldName) {
-		return (T)get(null, c, fieldName);
+		return (T) get(null, c, fieldName);
 	}
 	
 	/**
@@ -507,7 +507,7 @@ public class ReflectionUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T construct(Class<?> c, Object... param) {
-		return (T)construct(findConstructor(c, getClasses(param)), param);
+		return (T) construct(findConstructor(c, getClasses(param)), param);
 	}
 	
 	/**
@@ -528,7 +528,7 @@ public class ReflectionUtil {
 	// private because this would only give the false impression one could run superclass definitions of methods with this
 	@SuppressWarnings("unchecked")
 	private static <T> T run(Object o, Class<?> methodClass, String methodName, Object... param) {
-		return (T)run(o, findMethod(methodClass, methodName, getClasses(param)), param);
+		return (T) run(o, findMethod(methodClass, methodName, getClasses(param)), param);
 	}
 	
 	/**
