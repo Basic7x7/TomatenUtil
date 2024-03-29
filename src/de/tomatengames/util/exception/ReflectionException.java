@@ -1,5 +1,13 @@
 package de.tomatengames.util.exception;
 
+/**
+ * A {@link RuntimeException} that indicates a problem related to reflection.
+ * It is typically used to wrap {@link ReflectiveOperationException}s.
+ * 
+ * @author LukasE7x7
+ * @version 2024-03-28
+ * @since 1.5
+ */
 public class ReflectionException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 	
