@@ -18,7 +18,7 @@ import java.util.Comparator;
  * @since 1.5
  */
 public class TrackedHeap<E extends TrackedHeap.Element> {
-	private static final int MAX_SIZE = Integer.MIN_VALUE - 50;
+	private static final int MAX_SIZE = Integer.MAX_VALUE - 50;
 	
 	private final Comparator<E> comparator;
 	private Element[] array;
@@ -33,12 +33,12 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		this.comparator = comparator;
 		this.array = new Element[10]; // initial capacity = 10
 		this.size = 0;
-	}	
+	}
 	
 	private void grow(int requiredIndex) {
 		int n = this.array.length;
 		while (n <= requiredIndex) {
-			n <<= 2;
+			n *= 2;
 			if (n > MAX_SIZE || n < 0) {
 				n = MAX_SIZE;
 				if (n <= requiredIndex) {
@@ -112,7 +112,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 			int rightIndex = 2*index + 2;
 			int minIndex = index;
 			Element minElement = thisElement;
-			Element temp = null;
+			Element temp;
 			if (leftIndex < size && this.comparator.compare((E) (temp = this.array[leftIndex]), (E) thisElement) < 0) {
 				minIndex = leftIndex;
 				minElement = temp;
@@ -142,7 +142,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	
 	/**
 	 * Inserts the specified element into this heap.
-	 * If the element is already in this heap, its position in the heap updated using {@link #move(Element)}.
+	 * If the element is already in this heap, its position in the heap is updated using {@link #move(Element)}.
 	 * @param element The element that should be inserted. If {@code null}, nothing happens.
 	 * @return If the element has been inserted. If {@code false}, it was already in the heap and may have been moved.
 	 * @throws IllegalArgumentException If the element is already in another heap.
@@ -201,6 +201,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 		// Place the last element to the index of the removed element
 		// and move it to a valid position.
 		// If n == 0, the heap is empty now.
+		// If index == n, the element to remove is already the last element.
 		if (n > 0 && index < n) {
 			Element last = this.array[n];
 			if (!this.heapifyDown(index, last, true)) {
@@ -291,7 +292,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	 * Moves the specified element to its position in the heap if it increased.
 	 * This method should be called after the element increased its value considered by the {@link Comparator}
 	 * in order to <i>repair</i> the heap.
-	 * Use {@link #move(Element)} instead if it is not guaranteed that the value increased.
+	 * Use {@link #move(Element)} instead if the value may have decreased.
 	 * <p>
 	 * If the element is not present in this heap, nothing happens.
 	 * If the element decreased instead of increased, nothing happens.
@@ -311,7 +312,7 @@ public class TrackedHeap<E extends TrackedHeap.Element> {
 	 * Moves the specified element to its position in the heap if it decreased.
 	 * This method should be called after the element decreased its value considered by the {@link Comparator}
 	 * in order to <i>repair</i> the heap.
-	 * Use {@link #move(Element)} instead if it is not guaranteed that the value decreased.
+	 * Use {@link #move(Element)} instead if the value may have increased.
 	 * <p>
 	 * If the element is not present in this heap, nothing happens.
 	 * If the element increased instead of decreased, nothing happens.
