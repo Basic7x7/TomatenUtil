@@ -254,57 +254,94 @@ public class ReflectionUtil {
 	
 	// Standard get/set:
 	
-	/**
-	 * Get the current value of the given field in the given object, wraps {@link Field#get(Object)}.
-	 * @param o the object
-	 * @param f the field
-	 * @return the value
-	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
-	 */
-	public static Object get(Object o, Field f) {
-		try {
-			return f.get(o);
-		} catch (IllegalAccessException e) {
-			throw new ReflectionException(e);
+	/* txs-begin fieldGetSet
+	##
+	function typeGetSet(type, method) {
+		final an = type in ["Object", "int"] ? "an" : "a";
+		final asType = "as " + an + " " + type;
+		final toType = "to " + an + " " + type;
+		##
+		/**
+		 * Get the current value of the given field in the given object %asType;, wraps {@link Field%#get%method;(Object)}.
+		 * @param object the object
+		 * @param field the field
+		 * @return the value %asType;
+		 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type; get%method;(Object object, Field field) {
+			try {
+				return field.get%method;(object);
+			} catch (IllegalAccessException e) {
+				throw new ReflectionException(e);
+			}
 		}
-	}
-	
-	/**
-	 * Set the current value of the given field in the given object, wraps {@link Field#set(Object, Object)}.
-	 * @param o the object
-	 * @param f the field
-	 * @param value the value
-	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
-	 */
-	public static void set(Object o, Field f, Object value) {
-		try {
-			f.set(o, value);
-		} catch (IllegalAccessException e) {
-			throw new ReflectionException(e);
+		
+		/**
+		 * Set the current value of the given field in the given object %toType;, wraps {@link Field%#set%method;(Object, Object)}.
+		 * @param object the object
+		 * @param field the field
+		 * @param value the value %asType;
+		 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+		 *%'/';
+		// %cli.txsinfo();
+		public static void set%method;(Object object, Field field, %type; value) {
+			try {
+				field.set%method;(object, value);
+			} catch (IllegalAccessException e) {
+				throw new ReflectionException(e);
+			}
 		}
+		
+		/**
+		 * Get the current value of the given static field %asType;.
+		 * @param field the field
+		 * @return the value %asType;
+		 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+		 *%'/';
+		// %cli.txsinfo();
+		public static %type; getStatic%method;(Field field) {
+			try {
+				return field.get%method;(null);
+			} catch (IllegalAccessException e) {
+				throw new ReflectionException(e);
+			} catch (NullPointerException e) {
+				throw new ReflectionException(field + " is not static", e);
+			}
+		}
+		
+		/**
+		 * Set the current value of the given static field %toType;.
+		 * @param field the field
+		 * @param value the value %asType;
+		 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+		 *%'/';
+		// %cli.txsinfo();
+		public static void setStatic%method;(Field field, %type; value) {
+			try {
+				field.set%method;(null, value);
+			} catch (IllegalAccessException e) {
+				throw new ReflectionException(e);
+			} catch (NullPointerException e) {
+				throw new ReflectionException(field + " is not static", e);
+			}
+		}
+		
+		##
 	}
+	##
+	%typeGetSet("Object", "");
+	%typeGetSet("boolean", "Boolean");
+	%typeGetSet("char", "Char");
+	%typeGetSet("byte", "Byte");
+	%typeGetSet("short", "Short");
+	%typeGetSet("int", "Int");
+	%typeGetSet("long", "Long");
+	%typeGetSet("float", "Float");
+	%typeGetSet("double", "Double");
+	txs-end fieldGetSet */
 	
-	/**
-	 * Get the current value of the given static field.
-	 * @param f the field
-	 * @return the value
-	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
-	 */
-	public static Object getStatic(Field f) {
-		return get(null, f);
-	}
-	
-	/**
-	 * Set the current value of the given static field.
-	 * @param f the field
-	 * @param value the value
-	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
-	 */
-	public static void setStatic(Field f, Object value) {
-		set(null, f, value);
-	}
-	
-	// TODO Primitive get/set methods
+	// generated at end of file
 	
 	// Standard construct/run:
 	
@@ -575,5 +612,604 @@ public class ReflectionUtil {
 	public static <T> T runStatic(String className, String methodName, Object... param) {
 		return run(null, Class(className), methodName, param);
 	}
+	
+	// TextScript generated methods:
+	
+	// txs-begin-gen fieldGetSet
+	/**
+	 * Get the current value of the given field in the given object as an Object, wraps {@link Field#get(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as an Object
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static Object get(Object object, Field field) {
+		try {
+			return field.get(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to an Object, wraps {@link Field#set(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as an Object
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void set(Object object, Field field, Object value) {
+		try {
+			field.set(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as an Object.
+	 * @param field the field
+	 * @return the value as an Object
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static Object getStatic(Field field) {
+		try {
+			return field.get(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to an Object.
+	 * @param field the field
+	 * @param value the value as an Object
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStatic(Field field, Object value) {
+		try {
+			field.set(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a boolean, wraps {@link Field#getBoolean(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a boolean
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static boolean getBoolean(Object object, Field field) {
+		try {
+			return field.getBoolean(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a boolean, wraps {@link Field#setBoolean(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a boolean
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setBoolean(Object object, Field field, boolean value) {
+		try {
+			field.setBoolean(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a boolean.
+	 * @param field the field
+	 * @return the value as a boolean
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static boolean getStaticBoolean(Field field) {
+		try {
+			return field.getBoolean(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a boolean.
+	 * @param field the field
+	 * @param value the value as a boolean
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticBoolean(Field field, boolean value) {
+		try {
+			field.setBoolean(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a char, wraps {@link Field#getChar(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a char
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static char getChar(Object object, Field field) {
+		try {
+			return field.getChar(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a char, wraps {@link Field#setChar(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a char
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setChar(Object object, Field field, char value) {
+		try {
+			field.setChar(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a char.
+	 * @param field the field
+	 * @return the value as a char
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static char getStaticChar(Field field) {
+		try {
+			return field.getChar(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a char.
+	 * @param field the field
+	 * @param value the value as a char
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticChar(Field field, char value) {
+		try {
+			field.setChar(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a byte, wraps {@link Field#getByte(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a byte
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static byte getByte(Object object, Field field) {
+		try {
+			return field.getByte(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a byte, wraps {@link Field#setByte(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a byte
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setByte(Object object, Field field, byte value) {
+		try {
+			field.setByte(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a byte.
+	 * @param field the field
+	 * @return the value as a byte
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static byte getStaticByte(Field field) {
+		try {
+			return field.getByte(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a byte.
+	 * @param field the field
+	 * @param value the value as a byte
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticByte(Field field, byte value) {
+		try {
+			field.setByte(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a short, wraps {@link Field#getShort(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a short
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static short getShort(Object object, Field field) {
+		try {
+			return field.getShort(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a short, wraps {@link Field#setShort(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a short
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setShort(Object object, Field field, short value) {
+		try {
+			field.setShort(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a short.
+	 * @param field the field
+	 * @return the value as a short
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static short getStaticShort(Field field) {
+		try {
+			return field.getShort(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a short.
+	 * @param field the field
+	 * @param value the value as a short
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticShort(Field field, short value) {
+		try {
+			field.setShort(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as an int, wraps {@link Field#getInt(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as an int
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static int getInt(Object object, Field field) {
+		try {
+			return field.getInt(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to an int, wraps {@link Field#setInt(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as an int
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setInt(Object object, Field field, int value) {
+		try {
+			field.setInt(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as an int.
+	 * @param field the field
+	 * @return the value as an int
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static int getStaticInt(Field field) {
+		try {
+			return field.getInt(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to an int.
+	 * @param field the field
+	 * @param value the value as an int
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticInt(Field field, int value) {
+		try {
+			field.setInt(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a long, wraps {@link Field#getLong(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a long
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static long getLong(Object object, Field field) {
+		try {
+			return field.getLong(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a long, wraps {@link Field#setLong(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a long
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setLong(Object object, Field field, long value) {
+		try {
+			field.setLong(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a long.
+	 * @param field the field
+	 * @return the value as a long
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static long getStaticLong(Field field) {
+		try {
+			return field.getLong(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a long.
+	 * @param field the field
+	 * @param value the value as a long
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticLong(Field field, long value) {
+		try {
+			field.setLong(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a float, wraps {@link Field#getFloat(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a float
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static float getFloat(Object object, Field field) {
+		try {
+			return field.getFloat(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a float, wraps {@link Field#setFloat(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a float
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setFloat(Object object, Field field, float value) {
+		try {
+			field.setFloat(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a float.
+	 * @param field the field
+	 * @return the value as a float
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static float getStaticFloat(Field field) {
+		try {
+			return field.getFloat(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a float.
+	 * @param field the field
+	 * @param value the value as a float
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticFloat(Field field, float value) {
+		try {
+			field.setFloat(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given field in the given object as a double, wraps {@link Field#getDouble(Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @return the value as a double
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static double getDouble(Object object, Field field) {
+		try {
+			return field.getDouble(object);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given field in the given object to a double, wraps {@link Field#setDouble(Object, Object)}.
+	 * @param object the object
+	 * @param field the field
+	 * @param value the value as a double
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs
+	 */
+	// !!! TextScript generated !!!
+	public static void setDouble(Object object, Field field, double value) {
+		try {
+			field.setDouble(object, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		}
+	}
+	
+	/**
+	 * Get the current value of the given static field as a double.
+	 * @param field the field
+	 * @return the value as a double
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static double getStaticDouble(Field field) {
+		try {
+			return field.getDouble(null);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	/**
+	 * Set the current value of the given static field to a double.
+	 * @param field the field
+	 * @param value the value as a double
+	 * @throws ReflectionException if an {@link IllegalAccessException} occurs or the given field is not static
+	 */
+	// !!! TextScript generated !!!
+	public static void setStaticDouble(Field field, double value) {
+		try {
+			field.setDouble(null, value);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException(e);
+		} catch (NullPointerException e) {
+			throw new ReflectionException(field + " is not static", e);
+		}
+	}
+	
+	// txs-end-gen fieldGetSet
 	
 }

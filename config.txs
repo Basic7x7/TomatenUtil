@@ -11,6 +11,7 @@ config :inline "%"
 
 run-inplace -io "@src;/ArrayUtil.java"
 run-inplace -io "@src;/NumberUtil.java"
+run-inplace -io "@src;/ReflectionUtil.java"
 
 ##
 for (type in types) {
