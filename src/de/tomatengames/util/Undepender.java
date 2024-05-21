@@ -47,7 +47,7 @@ public class Undepender {
 	 * @param value The value. If {@code null}, no value will be associated to the key.
 	 */
 	public static void set(String key, Object value) {
-		requireNotNull("The key ...", key);
+		requireNotNull(key, "The key ...");
 		synchronized (lock) {
 			if (value != null) {
 				map.put(key, value);
@@ -74,4 +74,5 @@ public class Undepender {
 			return (T) map.get(key);
 		}
 	}
+	
 }
