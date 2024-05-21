@@ -1,5 +1,6 @@
 package de.tomatengames.util.test;
 
+import static de.tomatengames.util.HexUtil.byteToHex;
 import static de.tomatengames.util.HexUtil.bytesToHex;
 import static de.tomatengames.util.HexUtil.hexToBytes;
 import static de.tomatengames.util.HexUtil.hexToInt;
@@ -7,6 +8,7 @@ import static de.tomatengames.util.HexUtil.hexToLong;
 import static de.tomatengames.util.HexUtil.intToHex;
 import static de.tomatengames.util.HexUtil.longToHex;
 import static de.tomatengames.util.HexUtil.parseHexChar;
+import static de.tomatengames.util.HexUtil.shortToHex;
 import static de.tomatengames.util.HexUtil.toHexChar;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -106,6 +108,18 @@ class HexUtilTest {
 	
 	@Test
 	void testIntToHex() {
+		assertEquals("00", byteToHex(0));
+		assertEquals("31", byteToHex(49));
+		assertEquals("ff", byteToHex(-1));
+		assertEquals("c4", byteToHex(0xc4));
+		assertEquals("e1", byteToHex(0x8fe1));
+		
+		assertEquals("0000", shortToHex(0));
+		assertEquals("0031", shortToHex(49));
+		assertEquals("ffff", shortToHex(-1));
+		assertEquals("e1c4", shortToHex(0xe1c4));
+		assertEquals("6400", shortToHex(0xD7BB6400));
+		
 		assertEquals("00000000", intToHex(0));
 		assertEquals("00000031", intToHex(49));
 		assertEquals("ffffffff", intToHex(-1));
