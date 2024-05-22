@@ -5,8 +5,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.tomatengames.util.IOUtil;
-
 /**
  * An AbsolutePath represents an absolute and direct {@link Path}.
  * See {@link AbsoluteFile} for usage with {@link File}s.
@@ -59,7 +57,7 @@ public class AbsolutePath {
 	}
 	
 	/**
-	 * {@link #contains(AbsolutePath, boolean)} with allowSame={@value IOUtil#DEFAULT_INSIDE_ALLOWSAME}.
+	 * {@link #contains(AbsolutePath, boolean)} with allowSame=false.
 	 * @param path the path
 	 * @return whether the specified path is inside this path
 	 */

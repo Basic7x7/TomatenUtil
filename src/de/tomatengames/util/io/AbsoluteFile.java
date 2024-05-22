@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import de.tomatengames.util.IOUtil;
-
 /**
  * An AbsoluteFile represents an absolute and direct path to a file.
  * It is meant to be used with {@link File}s. See {@link AbsolutePath} for usage with {@link Path}s.
@@ -70,7 +68,7 @@ public class AbsoluteFile {
 	}
 	
 	/**
-	 * {@link #contains(AbsoluteFile, boolean)} with allowSame={@value IOUtil#DEFAULT_INSIDE_ALLOWSAME}
+	 * {@link #contains(AbsoluteFile, boolean)} with allowSame=false.
 	 * @param file the file
 	 * @return whether the specified file is inside this file
 	 */
