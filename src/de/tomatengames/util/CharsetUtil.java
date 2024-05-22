@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import de.tomatengames.util.exception.CharacterDecodeException;
 import de.tomatengames.util.exception.LimitException;
 
 /**
@@ -243,9 +244,10 @@ public class CharsetUtil {
 	 * @param in The InputStream from which the code point should be read. Not {@code null}.
 	 * 1 to 4 bytes will be read depending on the code point.
 	 * @return The decoded code point in the range {@code 0} to {@code 10FFFF}.
-	 * @throws IOException If an I/O error occurs or the UTF-8 code point cannot be decoded.
+	 * @throws CharacterDecodeException If the UTF-8 code point cannot be decoded.
+	 * @throws IOException If an I/O error occurs.
 	 */
-	public static int decodeUTF8(InputStream in) throws IOException {
+	public static int decodeUTF8(InputStream in) throws IOException, CharacterDecodeException {
 		int b0 = in.read();
 		if ((b0 & 0b1000_0000) == 0) {
 			return b0 & 0b0111_1111;
@@ -254,7 +256,7 @@ public class CharsetUtil {
 			int b1 = checkSubsequentUTF8Byte(in.read());
 			int result = ((b0 & 0b0001_1111) << 6) | (b1 & 0b0011_1111);
 			if (result <= 0x007F) {
-				throw new IOException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1));
+				throw new CharacterDecodeException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1));
 			}
 			return result;
 		}
@@ -263,7 +265,7 @@ public class CharsetUtil {
 			int b2 = checkSubsequentUTF8Byte(in.read());
 			int result = ((b0 & 0b0000_1111) << 12) | ((b1 & 0b0011_1111) << 6) | (b2 & 0b0011_1111);
 			if (result <= 0x07FF) {
-				throw new IOException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
+				throw new CharacterDecodeException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
 			}
 			return result;
 		}
@@ -273,23 +275,23 @@ public class CharsetUtil {
 			int b3 = checkSubsequentUTF8Byte(in.read());
 			int result = ((b0 & 0b0000_0111) << 18) | ((b1 & 0b0011_1111) << 12) | ((b2 & 0b0011_1111) << 6) | (b3 & 0b0011_1111);
 			if (result <= 0xFFFF) {
-				throw new IOException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2) + " " + byteToHex(b3));
+				throw new CharacterDecodeException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2) + " " + byteToHex(b3));
 			}
 			// Only allow 0x10FFFF code points [https://www.rfc-editor.org/rfc/rfc3629#section-3]
 			if (result > 0x10FFFF) {
-				throw new IOException("Invalid UTF-8 code point: " + Integer.toHexString(result));
+				throw new CharacterDecodeException("Invalid UTF-8 code point: " + Integer.toHexString(result));
 			}
 			return result;
 		}
 		else {
-			throw new IOException("Invalid first UTF-8 byte: " + HexUtil.byteToHex(b0));
+			throw new CharacterDecodeException("Invalid first UTF-8 byte: " + HexUtil.byteToHex(b0));
 		}
 	}
 	
-	private static final int checkSubsequentUTF8Byte(int b) throws IOException {
+	private static final int checkSubsequentUTF8Byte(int b) throws CharacterDecodeException {
 		if ((b & 0b1100_0000) == 0b1000_0000) {
 			return b;
 		}
-		throw new IOException("Invalid subsequent UTF-8 byte: " + byteToHex(b));
+		throw new CharacterDecodeException("Invalid subsequent UTF-8 byte: " + byteToHex(b));
 	}
 }

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import de.tomatengames.util.CharsetUtil;
 import de.tomatengames.util.HexUtil;
 import de.tomatengames.util.IOUtil;
+import de.tomatengames.util.exception.CharacterDecodeException;
 import de.tomatengames.util.exception.LimitException;
 
 class CharsetUtilTest {
@@ -185,7 +186,7 @@ class CharsetUtilTest {
 	
 	private static void assertUTF8DecodeError(byte[] input) throws IOException {
 		try (ByteArrayInputStream in = new ByteArrayInputStream(input)) {
-			assertThrows(IOException.class, () -> CharsetUtil.decodeUTF8(in));
+			assertThrows(CharacterDecodeException.class, () -> CharsetUtil.decodeUTF8(in));
 		}
 	}
 }

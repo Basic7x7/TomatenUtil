@@ -4,64 +4,82 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tomatengames.util.CharsetUtil;
 import de.tomatengames.util.HexUtil;
+import de.tomatengames.util.exception.CharacterDecodeException;
 
 class UTF8DecodeTestExhaustive {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		ArrayList<EncodedCodePoint> validCodePoints = new ArrayList<>();
 		for (int cp = 0; cp <= 0x10FFFF; cp++) {
 			validCodePoints.add(new EncodedCodePoint(cp));
 		}
 		
-		long count = 0L;
-		boolean ok = true;
-		for (int b0 = 127; b0 < 256; b0++) {
-			for (int b1 = 0; b1 < 256; b1++) {
-				for (int b2 = 0; b2 < 256; b2++) {
-					for (int b3 = 0; b3 < 256; b3++) {
-						EncodedCodePoint valid = findMatchingValid(b0, b1, b2, b3, validCodePoints);
-						byte[] inputBytes = new byte[] {
-								(byte) b0, (byte) b1, (byte) b2, (byte) b3
-						};
-						InputStream input = new ByteArrayInputStream(inputBytes);
-						
-						if ((count & 0xFFFFL) == 0L) {
-							System.out.println(HexUtil.bytesToHex(inputBytes));
-						}
-						count++;
-						
-						if (valid != null) {
-							try {
-								int decodedCp = CharsetUtil.decodeUTF8(input);
-								if (decodedCp != valid.codePoint) {
-									System.err.println("CodePoint decode mismatch for input '" + HexUtil.bytesToHex(inputBytes) +
-											"': Expected code point = " + valid.codePoint + "; Decoded code point = " + decodedCp);
-									ok = false;
+		
+		AtomicBoolean ok = new AtomicBoolean(true);
+		ArrayList<Thread> threads = new ArrayList<>();
+		for (int i = 0; i < 256; i++) {
+			final int b0 = i;
+			Thread thread = new Thread(() -> {
+				try {
+					long count = 0L;
+					for (int b1 = 0; b1 < 256; b1++) {
+						for (int b2 = 0; b2 < 256; b2++) {
+							for (int b3 = 0; b3 < 256; b3++) {
+								EncodedCodePoint valid = findMatchingValid(b0, b1, b2, b3, validCodePoints);
+								byte[] inputBytes = new byte[] {
+										(byte) b0, (byte) b1, (byte) b2, (byte) b3
+								};
+								InputStream input = new ByteArrayInputStream(inputBytes);
+								
+								if ((count & 0xFFFFL) == 0L) {
+									System.out.println(HexUtil.bytesToHex(inputBytes));
 								}
-							} catch (IOException e) {
-								e.printStackTrace();
-								ok = false;
-							}
-						}
-						else {
-							// Expect failure
-							try {
-								CharsetUtil.decodeUTF8(input);
-								System.err.println("Decode did not fail for invalid input '" + HexUtil.bytesToHex(inputBytes) + "'");
-								ok = false;
-							} catch (IOException e) {
-								// This is the expected behavior.
+								count++;
+								
+								if (valid != null) {
+									try {
+										int decodedCp = CharsetUtil.decodeUTF8(input);
+										if (decodedCp != valid.codePoint) {
+											System.err.println("CodePoint decode mismatch for input '" + HexUtil.bytesToHex(inputBytes) +
+													"': Expected code point = " + valid.codePoint + "; Decoded code point = " + decodedCp);
+											ok.set(false);
+										}
+									} catch (CharacterDecodeException e) {
+										e.printStackTrace();
+										ok.set(false);
+									}
+								}
+								else {
+									// Expect failure
+									try {
+										CharsetUtil.decodeUTF8(input);
+										System.err.println("Decode did not fail for invalid input '" + HexUtil.bytesToHex(inputBytes) + "'");
+										ok.set(false);
+									} catch (CharacterDecodeException e) {
+										// This is the expected behavior.
+									}
+								}
 							}
 						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
+					ok.set(false);
 				}
-			}
+			});
+			threads.add(thread);
+			thread.start();
 		}
 		
-		if (ok) {
+		for (Thread thread : threads) {
+			thread.join();
+		}
+		
+		if (ok.get()) {
 			System.out.println("All tests OK");
 		}
 	}
