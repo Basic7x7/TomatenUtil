@@ -83,10 +83,7 @@ public class AbsoluteFile {
 	 * @return whether the specified file is inside this file.
 	 */
 	public boolean contains(AbsoluteFile file, boolean allowSame) {
-		if (allowSame)
-			return isInsideOrSameDirectory(this.abspath, file.abspath);
-		else
-			return isInsideDirectory(this.abspath, file.abspath);
+		return isInside(this.abspath, file.abspath, allowSame);
 	}
 	
 	/**
@@ -118,34 +115,20 @@ public class AbsoluteFile {
 	/**
 	 * Determines whether the file represented by the specified absolute/canonical file path
 	 * is inside the directory represented by the specified absolute/canonical directory path.
-	 * The file may also equal the directory. To disallow this case, use {@link #isInsideDirectory(String, String)}.
 	 * This is basically {@link String#startsWith(String)} but with some refinements.
 	 * @param canonicalDir the directory path as received from {@link File#getCanonicalPath()}
 	 * @param canonicalFile the file path as received from {@link File#getCanonicalPath()}
-	 * @return whether the file is inside the directory or it is the directory itself
+	 * @param allowSame whether to return true if the file equals the directory
+	 * @return whether the file is inside the directory
 	 */
-	private static boolean isInsideOrSameDirectory(String canonicalDir, String canonicalFile) {
+	private static boolean isInside(String canonicalDir, String canonicalFile, boolean allowSame) {
 		canonicalDir = noTrailingSeparator(canonicalDir);
+		canonicalFile = noTrailingSeparator(canonicalFile);
 		if (!canonicalFile.startsWith(canonicalDir))
 			return false;
 		if (canonicalDir.length() == canonicalFile.length())
-			return true;
+			return allowSame;
 		return canonicalFile.charAt(canonicalDir.length()) == File.separatorChar;
-	}
-	
-	/**
-	 * Determines whether the file represented by the specified absolute/canonical file path
-	 * is inside the directory represented by the specified absolute/canonical directory path.
-	 * The file may not equal the directory. To allow this case, use {@link #isInsideOrSameDirectory(String, String)}.
-	 * This is basically {@link String#startsWith(String)} but with some refinements.
-	 * @param canonicalDir the directory path as received from {@link File#getCanonicalPath()}
-	 * @param canonicalFile the file path as received from {@link File#getCanonicalPath()}
-	 * @return whether the file is inside the directory
-	 */
-	private static boolean isInsideDirectory(String canonicalDir, String canonicalFile) {
-		canonicalDir = noTrailingSeparator(canonicalDir);
-		canonicalFile = noTrailingSeparator(canonicalFile);
-		return canonicalFile.length() > canonicalDir.length() && canonicalFile.startsWith(canonicalDir);
 	}
 	
 	/**

@@ -25,10 +25,12 @@ class AbsoluteFilePathTest {
 	File testdataFile = new File("testdata");
 	File testdatatxtFile = new File(testdataFile, "test.txt");
 	File testdatasusFile = new File(testdataFile, "../test.txt");
+	File testdata2File = new File("testdata2");
 	
 	Path testdataPath = Paths.get("testdata");
 	Path testdatatxtPath = testdataPath.resolve("test.txt");
 	Path testdatasusPath = testdataPath.resolve("../test.txt");
+	Path testdata2Path = Paths.get("testdata2");
 	
 	@Test
 	void testSetup() {
@@ -49,21 +51,29 @@ class AbsoluteFilePathTest {
 		assertFalse(testdataFile.getPath().startsWith(testdatatxtFile.getPath()));
 		assertTrue(testdatasusFile.getPath().startsWith(testdataFile.getPath())); // critical
 		assertFalse(testdataFile.getPath().startsWith(testdatasusFile.getPath()));
+		assertTrue(testdata2File.getPath().startsWith(testdataFile.getPath())); // detail
+		assertFalse(testdataFile.getPath().startsWith(testdata2File.getPath()));
 		
 		assertTrue(IOUtil.isFileInside(testdataFile, testdatatxtFile));
 		assertFalse(IOUtil.isFileInside(testdatatxtFile, testdataFile));
 		assertFalse(IOUtil.isFileInside(testdataFile, testdatasusFile)); // critical
 		assertFalse(IOUtil.isFileInside(testdatasusFile, testdataFile));
+		assertFalse(IOUtil.isFileInside(testdataFile, testdata2File)); // detail
+		assertFalse(IOUtil.isFileInside(testdata2File, testdataFile));
 		
 		assertTrue(testdatatxtPath.startsWith(testdataPath));
 		assertFalse(testdataPath.startsWith(testdatatxtPath));
 		assertTrue(testdatasusPath.startsWith(testdataPath)); // critical
 		assertFalse(testdataPath.startsWith(testdatasusPath));
+		assertFalse(testdata2Path.startsWith(testdataPath)); // detail (already covered by Path.startsWith)
+		assertFalse(testdataPath.startsWith(testdata2Path));
 		
 		assertTrue(IOUtil.isPathInside(testdataPath, testdatatxtPath));
 		assertFalse(IOUtil.isPathInside(testdatatxtPath, testdataPath));
 		assertFalse(IOUtil.isPathInside(testdataPath, testdatasusPath)); // critical
 		assertFalse(IOUtil.isPathInside(testdatasusPath, testdataPath));
+		assertFalse(IOUtil.isPathInside(testdataPath, testdata2Path)); // detail
+		assertFalse(IOUtil.isPathInside(testdata2Path, testdataPath));
 		
 	}
 	
@@ -89,6 +99,8 @@ class AbsoluteFilePathTest {
 		assertFalse(IOUtil.isFileInside(testdatatxtFile, testdataFile, true));
 		assertFalse(IOUtil.isFileInside(testdataFile, testdatasusFile, true)); // critical
 		assertFalse(IOUtil.isFileInside(testdatasusFile, testdataFile, true));
+		assertFalse(IOUtil.isFileInside(testdataFile, testdata2File, true)); // detail
+		assertFalse(IOUtil.isFileInside(testdata2File, testdataFile, true));
 		
 		assertFalse(IOUtil.isPathInside(testdataPath, testdataPath, false));
 		assertTrue(IOUtil.isPathInside(testdataPath, testdataPath, true));
@@ -96,6 +108,8 @@ class AbsoluteFilePathTest {
 		assertFalse(IOUtil.isPathInside(testdatatxtPath, testdataPath, true));
 		assertFalse(IOUtil.isPathInside(testdataPath, testdatasusPath, true)); // critical
 		assertFalse(IOUtil.isPathInside(testdatasusPath, testdataPath, true));
+		assertFalse(IOUtil.isPathInside(testdataPath, testdata2Path, true)); // detail
+		assertFalse(IOUtil.isPathInside(testdata2Path, testdataPath, true));
 	}
 	
 }
