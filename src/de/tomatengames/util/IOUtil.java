@@ -618,6 +618,7 @@ public class IOUtil {
 	 * @param child the child file
 	 * @return whether the specified child file is inside the specified parent file
 	 * @throws IOException if an {@link IOException} occurs from constructing the related {@link AbsoluteFile}s
+	 * @since 1.6
 	 */
 	public static boolean isFileInside(File parent, File child) throws IOException {
 		return isFileInside(parent, child, false);
@@ -630,6 +631,7 @@ public class IOUtil {
 	 * @param allowSame whether to return true if the specified parent and child files are equal
 	 * @return whether the specified child file is inside the specified parent file
 	 * @throws IOException if an {@link IOException} occurs from constructing the related {@link AbsoluteFile}s
+	 * @since 1.6
 	 */
 	public static boolean isFileInside(File parent, File child, boolean allowSame) throws IOException {
 		return AbsoluteFile.get(parent).contains(AbsoluteFile.get(child), allowSame);
@@ -642,6 +644,7 @@ public class IOUtil {
 	 * @return the resolved file
 	 * @throws IOException if an {@link IOException} occurs from constructing the related {@link AbsoluteFile}s
 	 * @throws FileNotFoundException if the resolved file is not inside the specified parent file
+	 * @since 1.6
 	 */
 	public static File resolveInside(File parent, String subpath) throws IOException {
 		return resolveInside(parent, subpath, false);
@@ -655,6 +658,7 @@ public class IOUtil {
 	 * @return the resolved file
 	 * @throws IOException if an {@link IOException} occurs from constructing the related {@link AbsoluteFile}s
 	 * @throws FileNotFoundException if the resolved file is not inside the specified parent file
+	 * @since 1.6
 	 */
 	public static File resolveInside(File parent, String subpath, boolean allowSame) throws IOException {
 		return AbsoluteFile.get(parent).resolveInside(subpath, allowSame).getFile();
@@ -665,6 +669,7 @@ public class IOUtil {
 	 * @param parent the parent path
 	 * @param child the child path
 	 * @return whether this specified child path is inside the specified parent path
+	 * @since 1.6
 	 */
 	public static boolean isPathInside(Path parent, Path child) {
 		return isPathInside(parent, child, false);
@@ -676,6 +681,7 @@ public class IOUtil {
 	 * @param child the child path
 	 * @param allowSame whether to return true if the specified parent and child files are equal
 	 * @return whether this specified child path is inside the specified parent path
+	 * @since 1.6
 	 */
 	public static boolean isPathInside(Path parent, Path child, boolean allowSame) {
 		return AbsolutePath.get(parent).contains(AbsolutePath.get(child), allowSame);
@@ -687,6 +693,7 @@ public class IOUtil {
 	 * @param subpath the subpath to resolve
 	 * @return the resolved path
 	 * @throws InvalidPathException if the resolved path is not inside the specified parent path
+	 * @since 1.6
 	 */
 	public static Path resolveInside(Path parent, String subpath) {
 		return resolveInside(parent, subpath, false);
@@ -699,6 +706,7 @@ public class IOUtil {
 	 * @param allowSame whether to accept the resolved path if it equals the specified parent path
 	 * @return the resolved path
 	 * @throws InvalidPathException if the resolved path is not inside the specified parent path
+	 * @since 1.6
 	 */
 	public static Path resolveInside(Path parent, String subpath, boolean allowSame) {
 		return AbsolutePath.get(parent).resolveInside(subpath, allowSame).getPath();
