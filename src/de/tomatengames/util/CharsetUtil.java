@@ -248,6 +248,7 @@ public class CharsetUtil {
 	 * @throws IOException If an I/O error occurs.
 	 */
 	public static int decodeUTF8(InputStream in) throws IOException, CharacterDecodeException {
+		// --- Run UTF8DecodeTestExhaustive after making changes to this method ---
 		int b0 = in.read();
 		if ((b0 & 0b1000_0000) == 0) {
 			return b0 & 0b0111_1111;

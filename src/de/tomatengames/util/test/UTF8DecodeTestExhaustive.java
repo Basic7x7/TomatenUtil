@@ -13,9 +13,10 @@ import de.tomatengames.util.exception.CharacterDecodeException;
 class UTF8DecodeTestExhaustive {
 	
 	public static void main(String[] args) throws InterruptedException {
-		ArrayList<EncodedCodePoint> validCodePoints = new ArrayList<>();
+		Trie validCodePoints = new Trie();
 		for (int cp = 0; cp <= 0x10FFFF; cp++) {
-			validCodePoints.add(new EncodedCodePoint(cp));
+			EncodedCodePoint codePoint = new EncodedCodePoint(cp);
+			validCodePoints.put(codePoint.utf8, 0, codePoint.len, codePoint);
 		}
 		
 		
@@ -29,11 +30,12 @@ class UTF8DecodeTestExhaustive {
 					for (int b1 = 0; b1 < 256; b1++) {
 						for (int b2 = 0; b2 < 256; b2++) {
 							for (int b3 = 0; b3 < 256; b3++) {
-								EncodedCodePoint valid = findMatchingValid(b0, b1, b2, b3, validCodePoints);
 								byte[] inputBytes = new byte[] {
 										(byte) b0, (byte) b1, (byte) b2, (byte) b3
 								};
 								InputStream input = new ByteArrayInputStream(inputBytes);
+								
+								EncodedCodePoint valid = validCodePoints.get(inputBytes, 0);
 								
 								if ((count & 0xFFFFL) == 0L) {
 									System.out.println(HexUtil.bytesToHex(inputBytes));
@@ -84,15 +86,6 @@ class UTF8DecodeTestExhaustive {
 		}
 	}
 	
-	private static EncodedCodePoint findMatchingValid(int b0, int b1, int b2, int b3, ArrayList<EncodedCodePoint> valid) {
-		for (EncodedCodePoint cp : valid) {
-			if (cp.matches(b0, b1, b2, b3)) {
-				return cp;
-			}
-		}
-		return null;
-	}
-	
 	private static class EncodedCodePoint {
 		private final int codePoint;
 		private final byte[] utf8;
@@ -103,24 +96,43 @@ class UTF8DecodeTestExhaustive {
 			this.utf8 = new byte[4];
 			this.len = CharsetUtil.encodeUTF8(codePoint, utf8, 0);
 		}
+	}
+	
+	private static class Trie {
+		private EncodedCodePoint value;
+		private final Trie[] next;
 		
-		public boolean matches(int b0, int b1, int b2, int b3) {
-			if (len <= 0 || len >= 5) {
-				return false;
+		public Trie() {
+			this.value = null;
+			this.next = new Trie[256];
+		}
+		
+		public void put(byte[] key, int offset, int len, EncodedCodePoint value) {
+			if (len <= offset) {
+				this.value = value;
+				return;
 			}
-			if (len >= 1 && (b0 & 0xFF) != (utf8[0] & 0xFF)) {
-				return false;
+			int index = key[offset] & 0xFF;
+			Trie nextTrie = this.next[index];
+			if (nextTrie == null) {
+				nextTrie = this.next[index] = new Trie();
 			}
-			if (len >= 2 && (b1 & 0xFF) != (utf8[1] & 0xFF)) {
-				return false;
+			nextTrie.put(key, offset+1, len, value);
+		}
+		
+		public EncodedCodePoint get(byte[] key, int offset) {
+			if (this.value != null) {
+				return this.value;
 			}
-			if (len >= 3 && (b2 & 0xFF) != (utf8[2] & 0xFF)) {
-				return false;
+			if (key.length <= offset) {
+				return this.value;
 			}
-			if (len >= 4 && (b3 & 0xFF) != (utf8[3] & 0xFF)) {
-				return false;
+			int index = key[offset] & 0xFF;
+			Trie nextTrie = this.next[index];
+			if (nextTrie == null) {
+				return null;
 			}
-			return true;
+			return nextTrie.get(key, offset+1);
 		}
 	}
 }
