@@ -1,3 +1,11 @@
+Version 1.6 (2024-05-24)
++ Undepender
++ HexUtil.byteToHex() and shortToHex()
++ CharsetUtil.decodeUTF8()
++ AbsoluteFile, AbsolutePath and IOUtil.resolveInside()
+* Bugfix (high): IOUtil.delete() failed when deleting symbolic links that point to another FileStore
+
+
 Version 1.5 (2024-04-06)
 + TrackedHeap
 + ReflectionUtil
