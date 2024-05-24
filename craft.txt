@@ -3,3 +3,5 @@ java-version 8
 + src
 - txs/
 - de/tomatengames/util/test/
+
+license LICENSE
