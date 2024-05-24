@@ -425,6 +425,13 @@ public class IOUtil {
 			return;
 		}
 		
+		// Symbolic links are directly removed (and never interpreted as a directory).
+		// Do not check the store of the symbolic link, because getFileStore() might follow the link.
+		if (Files.isSymbolicLink(path)) {
+			Files.delete(path);
+			return;
+		}
+		
 		// Check that this store matches the store of the base path.
 		FileStore store = Files.getFileStore(path); // throws IOException if the path does not exist.
 		if (baseFileStore != null) {
@@ -438,8 +445,7 @@ public class IOUtil {
 		}
 		
 		// Delete regular files.
-		// Symbolic links are directly removed (and never interpreted as a directory).
-		if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) || Files.isSymbolicLink(path)) {
+		if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
 			Files.delete(path);
 			return;
 		}
