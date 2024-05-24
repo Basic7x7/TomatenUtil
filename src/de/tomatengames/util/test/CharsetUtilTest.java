@@ -7,13 +7,17 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
+import de.tomatengames.util.CharsetUtil;
 import de.tomatengames.util.HexUtil;
+import de.tomatengames.util.IOUtil;
+import de.tomatengames.util.exception.CharacterDecodeException;
 import de.tomatengames.util.exception.LimitException;
 
 class CharsetUtilTest {
@@ -144,5 +148,45 @@ class CharsetUtilTest {
 		byte[] out = new byte[4*str.length()];
 		assertEquals(expected.length, encodeUTF8(str, out, 0));
 		assertArrayEquals(Arrays.copyOf(expected, 4*str.length()), out);
+	}
+	
+	
+	@Test
+	void testDecodeUTF8ToInt() throws IOException {
+		assertUTF8Decode(0x41, null, new byte[] {'A'});
+		assertUTF8Decode(0x42, new byte[] {'C', 'D'}, new byte[] {'B', 'C', 'D'});
+		assertUTF8Decode(0xF6, null, new byte[] {(byte) 0xC3, (byte) 0xB6}); // 'ö'
+		assertUTF8DecodeError(new byte[] { (byte) 0xff });
+		
+		// Examples from https://www.rfc-editor.org/rfc/rfc3629
+		assertUTF8DecodeError(new byte[] { (byte) 0xC0, (byte) 0x80 }); // <=> U+0000
+		assertUTF8DecodeError(new byte[] { (byte) 0xC0, (byte) 0xAE }); // <=> '.'
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertUTF8Decode(0x24, null, new byte[] {'$'});
+		assertUTF8Decode(0x00A3, null, new byte[] {(byte) 0xC2, (byte) 0xA3}); // '£'
+		assertUTF8Decode(0x0418, null, new byte[] {(byte) 0xD0, (byte) 0x98}); // 'И'
+		assertUTF8Decode(0x0939, null, new byte[] {(byte) 0xE0, (byte) 0xA4, (byte) 0xB9}); // 'ह'
+		assertUTF8Decode(0x20AC, null, new byte[] {(byte) 0xE2, (byte) 0x82, (byte) 0xAC}); // '€'
+		assertUTF8Decode(0xD55C, null, new byte[] {(byte) 0xED, (byte) 0x95, (byte) 0x9C}); // '한'
+		assertUTF8Decode(0x10348, null, new byte[] {(byte) 0xF0, (byte) 0x90, (byte) 0x8D, (byte) 0x88});
+	}
+	
+	private static void assertUTF8Decode(int expectedCodePoint, byte[] expectedRest, byte[] input) throws IOException {
+		try (ByteArrayInputStream in = new ByteArrayInputStream(input)) {
+			assertEquals(expectedCodePoint, CharsetUtil.decodeUTF8(in));
+			if (expectedRest != null) {
+				byte[] rest = new byte[expectedRest.length];
+				IOUtil.readFully(in, rest);
+				assertArrayEquals(expectedRest, rest);
+			}
+			assertEquals(-1, in.read());
+		}
+	}
+	
+	private static void assertUTF8DecodeError(byte[] input) throws IOException {
+		try (ByteArrayInputStream in = new ByteArrayInputStream(input)) {
+			assertThrows(CharacterDecodeException.class, () -> CharsetUtil.decodeUTF8(in));
+		}
 	}
 }

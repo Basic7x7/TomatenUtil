@@ -10,7 +10,8 @@ import java.nio.file.Path;
  * Provides methods to work with hexadecimal strings.
  * 
  * @author Basic7x7
- * @version 2023-01-24
+ * @version 2024-05-21 last modified
+ * @version 2023-01-24 created
  * @since 1.0
  */
 public class HexUtil {
@@ -79,6 +80,36 @@ public class HexUtil {
 			chars[i] = hexChars[(value >>> (4*((Integer.BYTES*2-1)-i))) & 0xF];
 		}
 		return new String(chars);
+	}
+	
+	/**
+	 * Converts the 8 least significant bits of the specified {@code int} into a hexadecimal string.
+	 * The other bits are ignored.
+	 * The first character of the result represents the most significant bits.
+	 * @param value The {@code int} value.
+	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 2}.
+	 * Alphabetic characters are in lower case.
+	 * @since 1.6
+	 */
+	public static String byteToHex(int value) {
+		return new String(new char[] { hexChars[(value >>> 4) & 0xF], hexChars[value & 0xF] });
+	}
+	
+	/**
+	 * Converts the 16 least significant bits of the specified {@code int} into a hexadecimal string.
+	 * The other bits are ignored.
+	 * The first character of the result represents the most significant bits.
+	 * @param value The {@code int} value.
+	 * @return The hexadecimal string. Not {@code null}. The length is always {@code 4}.
+	 * Alphabetic characters are in lower case.
+	 * @since 1.6
+	 */
+	public static String shortToHex(int value) {
+		return new String(new char[] {
+				hexChars[(value >>> 12) & 0xF],
+				hexChars[(value >>> 8) & 0xF],
+				hexChars[(value >>> 4) & 0xF],
+				hexChars[value & 0xF] });
 	}
 	
 	/**
