@@ -279,4 +279,102 @@ public class StringUtil {
 		}
 		return result == 0;
 	}
+	
+	/**
+	 * Tests if the specified input string matches the specified simple pattern.
+	 * The pattern may contain '*' to match any substring at its place.
+	 * @param input the input to test whether it matches the pattern
+	 * @param pattern the pattern
+	 * @return whether the input matches the pattern
+	 */
+	public static boolean matchesSimplePattern(String input, String pattern) {
+		int inputLen = input.length();
+		int patternLen = pattern.length();
+		
+		// The parts of the pattern may be separated into 3 categories that are checked separately.
+		// Characters before the first '*' are the prefix, the input needs to start with it.
+		// Characters between two '*'s are inner parts, the input needs to contain inner parts in their order.
+		// Characters after the last '*' are the suffix, the input needs to end with it.
+		
+		// check prefix
+		int inputIndex = 0;
+		while (true) {
+			if (inputIndex == patternLen)
+				return patternLen == inputLen; // pattern contains no placeholder
+			if (inputIndex == inputLen) {
+				// input end reached
+				// pattern may only contain '*' from here
+				while (inputIndex < patternLen) {
+					if (pattern.charAt(inputIndex) != '*')
+						return false; // input too short
+					inputIndex++;
+				}
+				return true; // input=pattern+{'*'}
+			}
+			char patternChar = pattern.charAt(inputIndex);
+			if (patternChar == '*')
+				break; // first '*' found, continue with inner parts check
+			if (patternChar != input.charAt(inputIndex))
+				return false;
+			inputIndex++;
+		}
+		
+		// check inner parts
+		int placeholderIndex = inputIndex;
+		int nextPlaceholderIndex;
+		placeholder_loop: while (true) {
+			
+			// find next placeholder
+			nextPlaceholderIndex = placeholderIndex + 1;
+			while (true) {
+				// if last placeholder, skip to suffix check
+				if (nextPlaceholderIndex >= patternLen)
+					break placeholder_loop;
+				// if not last placeholder, continue with inner part check
+				if (pattern.charAt(nextPlaceholderIndex) == '*')
+					break;
+				nextPlaceholderIndex++;
+			}
+			
+			int partLen = nextPlaceholderIndex - placeholderIndex - 1;
+			
+			// search for part
+			while (true) {
+				if (inputIndex + partLen > inputLen)
+					return false;
+				
+				// test for part at current inputIndex
+				int searchOffset = 0;
+				while (true) {
+					if (searchOffset >= partLen) {
+						// part found
+						inputIndex += partLen;
+						placeholderIndex = nextPlaceholderIndex;
+						continue placeholder_loop;
+					}
+					if (input.charAt(inputIndex + searchOffset) !=
+							pattern.charAt(placeholderIndex + 1 + searchOffset)) {
+						// part not on this index, try next
+						break;
+					}
+					searchOffset++;
+				}
+				
+				// try next input index
+				inputIndex++;
+			}
+		}
+		
+		// check suffix
+		int patternSuffixLen = patternLen - placeholderIndex - 1;
+		if (inputLen - inputIndex < patternSuffixLen)
+			return false; // remaining input too short
+		inputIndex = inputLen - patternSuffixLen; // jump to suffix
+		for (int off = 0; off < patternSuffixLen; off++) {
+			if (input.charAt(inputIndex + off) != pattern.charAt(placeholderIndex + 1 + off))
+				return false;
+		}
+		return true;
+	}
+	
 }
