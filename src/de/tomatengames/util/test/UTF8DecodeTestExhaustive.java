@@ -15,8 +15,12 @@ class UTF8DecodeTestExhaustive {
 	public static void main(String[] args) throws InterruptedException {
 		Trie validCodePoints = new Trie();
 		for (int cp = 0; cp <= 0x10FFFF; cp++) {
-			EncodedCodePoint codePoint = new EncodedCodePoint(cp);
-			validCodePoints.put(codePoint.utf8, 0, codePoint.len, codePoint);
+			try {
+				EncodedCodePoint codePoint = new EncodedCodePoint(cp);
+				validCodePoints.put(codePoint.utf8, 0, codePoint.len, codePoint);
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
 		}
 		
 		
@@ -37,7 +41,7 @@ class UTF8DecodeTestExhaustive {
 								
 								EncodedCodePoint valid = validCodePoints.get(inputBytes, 0);
 								
-								if ((count & 0xFFFFL) == 0L) {
+								if ((count & 0xFFFFFL) == 0L) {
 									System.out.println(HexUtil.bytesToHex(inputBytes));
 								}
 								count++;
@@ -83,6 +87,9 @@ class UTF8DecodeTestExhaustive {
 		
 		if (ok.get()) {
 			System.out.println("All tests OK");
+		}
+		else {
+			System.err.println("Found errors");
 		}
 	}
 	
