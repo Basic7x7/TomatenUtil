@@ -13,7 +13,7 @@ import de.tomatengames.util.exception.LimitException;
  * Provides utilities to work with character encodings.
  * 
  * @author Basic7x7
- * @version 2024-05-21 last modified
+ * @version 2024-11-10 last modified
  * @version 2023-04-11 created
  * @since 1.2
  */
@@ -37,7 +37,7 @@ public class CharsetUtil {
 	 */
 	public static int encodeUTF8(int codePoint) {
 		if (codePoint < 0) {
-			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint));
 		}
 		if (codePoint <= 0x7F) {
 			return codePoint;
@@ -50,6 +50,9 @@ public class CharsetUtil {
 					| ((codePoint << 2) & 0b000_11111__00_000000);
 		}
 		if (codePoint <= 0xFFFF) {
+			if (0xD800 <= codePoint && codePoint <= 0xDFFF) {
+				throw new IllegalArgumentException("Invalid surrogate code point " + Integer.toHexString(codePoint));
+			}
 			return 0b1110_0000__10_000000__10_000000
 					// Bits 0-6 -> 0-6
 					| (codePoint & 0b0000_0000__00_000000__00_111111)
@@ -70,7 +73,7 @@ public class CharsetUtil {
 					// Bits 18-21 -> 24-27
 					| ((codePoint << 6) & 0b00000_111__00_000000__00_000000__00_000000);
 		}
-		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint));
 	}
 	
 	
@@ -87,7 +90,7 @@ public class CharsetUtil {
 	 */
 	public static long encodeUTF8(int codePoint, OutputStream out) throws IOException {
 		if (codePoint < 0) {
-			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint));
 		}
 		if (codePoint <= 0x7F) {
 			out.write(codePoint);
@@ -99,6 +102,9 @@ public class CharsetUtil {
 			return 2L;
 		}
 		if (codePoint <= 0xFFFF) {
+			if (0xD800 <= codePoint && codePoint <= 0xDFFF) {
+				throw new IllegalArgumentException("Invalid surrogate code point " + Integer.toHexString(codePoint));
+			}
 			out.write(0b1110_0000 | ((codePoint >>> 12) & 0b1111)); // Bits 12-16
 			out.write(0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
 			out.write(0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
@@ -184,7 +190,7 @@ public class CharsetUtil {
 	 */
 	public static int encodeUTF8(int codePoint, byte[] out, int offset) {
 		if (codePoint < 0) {
-			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+			throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint));
 		}
 		if (codePoint <= 0x7F) {
 			out[offset] = (byte) codePoint;
@@ -196,6 +202,9 @@ public class CharsetUtil {
 			return 2;
 		}
 		if (codePoint <= 0xFFFF) {
+			if (0xD800 <= codePoint && codePoint <= 0xDFFF) {
+				throw new IllegalArgumentException("Invalid surrogate code point " + Integer.toHexString(codePoint));
+			}
 			out[offset] = (byte) (0b1110_0000 | ((codePoint >>> 12) & 0b1111)); // Bits 12-16
 			out[offset+1] = (byte) (0b10_000000 | ((codePoint >>> 6) & 0b111111)); // Bits 6-12
 			out[offset+2] = (byte) (0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
@@ -209,7 +218,7 @@ public class CharsetUtil {
 			out[offset+3] = (byte) (0b10_000000 | (codePoint & 0b111111)); // Bits 0-6
 			return 4;
 		}
-		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint) + "!");
+		throw new IllegalArgumentException("Invalid code point " + Integer.toHexString(codePoint));
 	}
 	
 	/**
@@ -243,9 +252,10 @@ public class CharsetUtil {
 	 * Decodes one UTF-8 code point from the {@link InputStream}.
 	 * @param in The InputStream from which the code point should be read. Not {@code null}.
 	 * 1 to 4 bytes will be read depending on the code point.
-	 * @return The decoded code point in the range {@code 0} to {@code 10FFFF}.
+	 * @return The decoded code point in the range from {@code 0} to {@code 10FFFF}.
 	 * @throws CharacterDecodeException If the UTF-8 code point cannot be decoded.
 	 * @throws IOException If an I/O error occurs.
+	 * @since 1.6
 	 */
 	public static int decodeUTF8(InputStream in) throws IOException, CharacterDecodeException {
 		// --- Run UTF8DecodeTestExhaustive after making changes to this method ---
@@ -267,6 +277,9 @@ public class CharsetUtil {
 			int result = ((b0 & 0b0000_1111) << 12) | ((b1 & 0b0011_1111) << 6) | (b2 & 0b0011_1111);
 			if (result <= 0x07FF) {
 				throw new CharacterDecodeException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
+			}
+			if (0xD800 <= result && result <= 0xDFFF) {
+				throw new CharacterDecodeException("Invalid surrogate sequence in UTF-8: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
 			}
 			return result;
 		}
