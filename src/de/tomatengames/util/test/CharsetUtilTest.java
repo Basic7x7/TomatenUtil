@@ -169,7 +169,9 @@ class CharsetUtilTest {
 	void testDecodeUTF8ToInt() throws IOException {
 		assertUTF8Decode(0x41, null, new byte[] {'A'});
 		assertUTF8Decode(0x42, new byte[] {'C', 'D'}, new byte[] {'B', 'C', 'D'});
+		assertUTF8Decode(-1, null, new byte[] {});
 		assertUTF8Decode(0xF6, null, new byte[] {(byte) 0xC3, (byte) 0xB6}); // 'ö'
+		assertUTF8DecodeError(new byte[] {(byte) 0xC3}); // only one byte of 'ö'
 		assertUTF8DecodeError(new byte[] { (byte) 0xff });
 		assertUTF8Decode(0x1D11E, null, new byte[] {(byte) 0xF0, (byte) 0x9D, (byte) 0x84, (byte) 0x9E});
 		assertUTF8DecodeError(new byte[] { (byte) 0xED, (byte) 0xA0, (byte) 0xB4 }); // Encoded high surrogate

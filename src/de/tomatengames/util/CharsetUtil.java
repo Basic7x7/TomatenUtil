@@ -252,7 +252,8 @@ public class CharsetUtil {
 	 * Decodes one UTF-8 code point from the {@link InputStream}.
 	 * @param in The InputStream from which the code point should be read. Not {@code null}.
 	 * 1 to 4 bytes will be read depending on the code point.
-	 * @return The decoded code point in the range from {@code 0} to {@code 10FFFF}.
+	 * @return The decoded code point in the range from {@code 0} to {@code 10FFFF},
+	 * or -1 if the end of the stream is reached.
 	 * @throws CharacterDecodeException If the UTF-8 code point cannot be decoded.
 	 * @throws IOException If an I/O error occurs.
 	 * @since 1.6
@@ -260,8 +261,11 @@ public class CharsetUtil {
 	public static int decodeUTF8(InputStream in) throws IOException, CharacterDecodeException {
 		// --- Run UTF8DecodeTestExhaustive after making changes to this method ---
 		int b0 = in.read();
-		if ((b0 & 0b1000_0000) == 0) {
-			return b0 & 0b0111_1111;
+		if ((b0 & 0b1000_0000) == 0) { // in particular, b0 != -1
+			return b0;
+		}
+		else if (b0 < 0) { // read byte == -1 ==> end of the input
+			return -1;
 		}
 		else if ((b0 & 0b1110_0000) == 0b1100_0000) {
 			int b1 = checkSubsequentUTF8Byte(in.read());
@@ -303,8 +307,11 @@ public class CharsetUtil {
 	}
 	
 	private static final int checkSubsequentUTF8Byte(int b) throws CharacterDecodeException {
-		if ((b & 0b1100_0000) == 0b1000_0000) {
+		if ((b & 0b1100_0000) == 0b1000_0000) { // in particular, b != -1
 			return b;
+		}
+		if (b < 0) {
+			throw new CharacterDecodeException("Invalid UTF-8 sequence: Reached the end of the input");
 		}
 		throw new CharacterDecodeException("Invalid subsequent UTF-8 byte: " + byteToHex(b));
 	}
