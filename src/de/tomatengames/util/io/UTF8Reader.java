@@ -12,10 +12,12 @@ import de.tomatengames.util.exception.CharacterDecodeException;
 public class UTF8Reader extends Reader {
 	private final InputStream in;
 	private int buffer;
+	private int markedBuffer;
 	
 	public UTF8Reader(InputStream in) {
 		this.in = in;
 		this.buffer = -1;
+		this.markedBuffer = -1;
 	}
 	
 	@Override
@@ -102,6 +104,25 @@ public class UTF8Reader extends Reader {
 		}
 		return len;
 	}
+	
+	
+	@Override
+	public boolean markSupported() {
+		return this.in.markSupported();
+	}
+	
+	@Override
+	public void mark(int readAheadLimit) throws IOException {
+		this.in.mark(readAheadLimit);
+		this.markedBuffer = this.buffer;
+	}
+	
+	@Override
+	public void reset() throws IOException {
+		this.in.reset();
+		this.buffer = this.markedBuffer;
+	}
+	
 	
 	@Override
 	public void close() throws IOException {
