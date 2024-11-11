@@ -9,11 +9,27 @@ import java.io.Reader;
 import de.tomatengames.util.HexUtil;
 import de.tomatengames.util.exception.CharacterDecodeException;
 
+/**
+ * A {@link Reader} that reads bytes from an {@link InputStream} and decodes them to characters using UTF-8.
+ * <p>
+ * This reader is unbuffered, except for surrogate characters.
+ * Each {@code read} operation may cause bytes to be read from the underlying InputStream.
+ * <p>
+ * This implementation supports {@link #mark(int)} if and only if the underlying InputStream supports {@link InputStream#mark(int)}.
+ * 
+ * @author Basic7x7
+ * @version 2024-11-11
+ * @since 1.7
+ */
 public class UTF8Reader extends Reader {
 	private final InputStream in;
 	private int buffer;
 	private int markedBuffer;
 	
+	/**
+	 * Creates a new {@link UTF8Reader}.
+	 * @param in The {@link InputStream} that backs this reader. Not {@code null}.
+	 */
 	public UTF8Reader(InputStream in) {
 		this.in = in;
 		this.buffer = -1;
@@ -127,5 +143,7 @@ public class UTF8Reader extends Reader {
 	@Override
 	public void close() throws IOException {
 		this.in.close();
+		this.buffer = -1; // Prevents read() from returning a next character
+		this.markedBuffer = -1;
 	}
 }
