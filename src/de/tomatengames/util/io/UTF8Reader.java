@@ -38,9 +38,12 @@ public class UTF8Reader extends Reader {
 	
 	@Override
 	public int read() throws IOException {
+		// --- Run UTF8DecodeTestExhaustive after making changes to this method ---
+		
 		if (this.buffer >= 0) {
+			int buf = this.buffer;
 			this.buffer = -1;
-			return this.buffer;
+			return buf;
 		}
 		
 		int b0 = this.in.read();
