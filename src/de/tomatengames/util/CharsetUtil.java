@@ -121,7 +121,8 @@ public class CharsetUtil {
 	 * @param str The string that should be encoded. Not {@code null}.
 	 * @param out The output stream. Not {@code null}.
 	 * @return The amount of bytes written.
-	 * @throws IOException If an I/O error occurs or a code point is out of range.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws IllegalArgumentException e.g. if a code point is out of range.
 	 */
 	public static long encodeUTF8(String str, OutputStream out) throws IOException {
 		long written = 0L;
@@ -138,12 +139,13 @@ public class CharsetUtil {
 	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
 	 * <p>
 	 * Up to {@code maxOutput+3} bytes may be written to the output.
-	 * If more than {@code maxOutput} bytes are written to the output, an {@link LimitException} is thrown.
+	 * If more than {@code maxOutput} bytes should be written to the output, a {@link LimitException} is thrown.
 	 * @param str The string that should be encoded. Not {@code null}.
 	 * @param out The output stream. Not {@code null}.
 	 * @param maxOutput The maximum output byte length. Must not be negative.
 	 * @return The amount of bytes written.
-	 * @throws IOException If an I/O error occurs or a code point is out of range.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws IllegalArgumentException e.g. if a code point is out of range.
 	 * @throws LimitException If the maximum output length is exceeded.
 	 * @since 1.4
 	 */
@@ -161,6 +163,62 @@ public class CharsetUtil {
 		// Check if the last character exceeded the maxOutput limit.
 		if (written > maxOutput) {
 			throw new LimitException();
+		}
+		return written;
+	}
+	
+	/**
+	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
+	 * The buffer is used to reduce the write operations to the OutputStream.
+	 * @param str The string that should be encoded. Not {@code null}.
+	 * @param out The output stream. Not {@code null}.
+	 * @param buf The buffer. Not {@code null}. The length of the buffer must be at least {@code 4}.
+	 * Any positions of the buffer could be written by this method.
+	 * @return The amount of bytes written.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws IllegalArgumentException e.g. if a code point is out of range.
+	 * @since 1.7
+	 */
+	public static long encodeUTF8(String str, OutputStream out, byte[] buf) throws IOException {
+		// Only written > maxOutput is checked
+		// ==> maxOutput = Long.MAX_VALUE will never throw a LimitException
+		return encodeUTF8(str, out, Long.MAX_VALUE, buf);
+	}
+	
+	/**
+	 * Encodes the specified {@link String} using UTF-8 and writes the result into the {@link OutputStream}.
+	 * The buffer is used to reduce the write operations to the OutputStream.
+	 * <p>
+	 * Up to {@code maxOutput} bytes may be written to the output.
+	 * If more than {@code maxOutput} bytes should be written to the output, a {@link LimitException} is thrown.
+	 * @param str The string that should be encoded. Not {@code null}.
+	 * @param out The output stream. Not {@code null}.
+	 * @param maxOutput The maximum output byte length. Must not be negative.
+	 * @param buf The buffer. Not {@code null}. The length of the buffer must be at least {@code 4}.
+	 * Any positions of the buffer could be written by this method.
+	 * @return The amount of bytes written.
+	 * @throws IOException If an I/O error occurs.
+	 * @throws IllegalArgumentException e.g. if a code point is out of range.
+	 * @throws LimitException If the maximum output length is exceeded.
+	 * @since 1.7
+	 */
+	public static long encodeUTF8(String str, OutputStream out, long maxOutput, byte[] buf) throws IOException {
+		long written = 0L;
+		int bufMax = buf.length-4;
+		int n = str.length();
+		for (int i = 0; i < n;) {
+			// Fill the buffer and write it to the output.
+			int bufCursor = 0;
+			while (i < n && bufCursor <= bufMax) {
+				int codePoint = str.codePointAt(i);
+				bufCursor += CharsetUtil.encodeUTF8(codePoint, buf, bufCursor);
+				i += Character.charCount(codePoint);
+			}
+			written += bufCursor;
+			if (written > maxOutput) {
+				throw new LimitException();
+			}
+			out.write(buf, 0, bufCursor);
 		}
 		return written;
 	}
