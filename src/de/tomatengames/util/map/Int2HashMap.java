@@ -5,6 +5,7 @@ import static de.tomatengames.util.RequirementUtil.requireNotNull;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -18,8 +19,8 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version
- * 2023-07-31 created
+ * @version 2024-11-17 last modified
+ * @version 2023-07-31 created
  * @since 1.3
  */
 // !!! TextScript generated !!!
@@ -117,9 +118,8 @@ public final class Int2HashMap<V> implements Iterable<Int2Entry<V>> {
 	
 	/**
 	 * Returns the value that is mapped to the specified key.
-	 * @param key The key whose value should be returned.
-	 * @param key1 A component of the key that should be checked.
-	 * @param key2 A component of the key that should be checked.
+	 * @param key1 A component of the key whose value should be returned.
+	 * @param key2 A component of the key whose value should be returned.
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
@@ -444,6 +444,9 @@ public final class Int2HashMap<V> implements Iterable<Int2Entry<V>> {
 		@Override
 		public Int2Entry<V> next() {
 			Node<V> next = this.nextNode;
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
 			this.nextNode = findNextNode(next);
@@ -452,6 +455,9 @@ public final class Int2HashMap<V> implements Iterable<Int2Entry<V>> {
 		
 		@Override
 		public void remove() {
+			if (this.initModCount != modcount) {
+				throw new ConcurrentModificationException();
+			}
 			Node<V> current = this.currentNode;
 			if (current == null) {
 				throw new IllegalStateException("No element to remove!");
@@ -469,6 +475,7 @@ public final class Int2HashMap<V> implements Iterable<Int2Entry<V>> {
 				table[currentIndex] = current.next;
 			}
 			size--;
+			this.initModCount = ++modcount;
 			
 			// Mark the current node as removed.
 			this.currentNode = null;

@@ -5,6 +5,7 @@ import static de.tomatengames.util.RequirementUtil.requireNotNull;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -18,8 +19,8 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version
- * 2024-01-06 created
+ * @version 2024-11-17 last modified
+ * @version 2024-01-06 created
  * @since 1.5
  */
 // !!! TextScript generated !!!
@@ -116,7 +117,6 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 	/**
 	 * Returns the value that is mapped to the specified key.
 	 * @param key The key whose value should be returned.
-	 * @param key The key that should be checked.
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
@@ -450,6 +450,9 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 		@Override
 		public AbstractEntry<K, V> next() {
 			Node next = this.nextNode;
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
 			this.nextNode = findNextNode(next);
@@ -458,6 +461,9 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 		
 		@Override
 		public void remove() {
+			if (this.initModCount != modcount) {
+				throw new ConcurrentModificationException();
+			}
 			Node current = this.currentNode;
 			if (current == null) {
 				throw new IllegalStateException("No element to remove!");
@@ -475,6 +481,7 @@ public abstract class AbstractHashMap<K, V> implements Iterable<AbstractEntry<K,
 				table[currentIndex] = current.next;
 			}
 			size--;
+			this.initModCount = ++modcount;
 			
 			// Mark the current node as removed.
 			this.currentNode = null;
