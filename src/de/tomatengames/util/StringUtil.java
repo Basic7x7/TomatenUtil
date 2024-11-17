@@ -6,9 +6,8 @@ import java.util.function.IntPredicate;
  * Provides methods to handle {@link String}s.
  * 
  * @author Basic7x7
- * @version
- * 2023-11-10 last modified<br>
- * 2023-02-12 created
+ * @version 2024-11-17 last modified
+ * @version 2023-02-12 created
  * @since 1.0
  */
 public class StringUtil {
@@ -286,6 +285,8 @@ public class StringUtil {
 	 * @param input the input to test whether it matches the pattern
 	 * @param pattern the pattern
 	 * @return whether the input matches the pattern
+	 * @author LukasE7x7
+	 * @since 1.7
 	 */
 	public static boolean matchesSimplePattern(String input, String pattern) {
 		int inputLen = input.length();
