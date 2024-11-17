@@ -91,6 +91,10 @@ class CharsetUtilTest {
 		
 		assertOutputStream("", out -> encodeUTF8("", out, 0));
 		
+		// High surrogate without low surrogate
+		assertOutputStream("", assertOutputStreamThrows(IllegalArgumentException.class,
+				out -> encodeUTF8(String.valueOf((char) 0xD834), out, 15)));
+		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
 				out -> encodeUTF8("Mình nói tiếng Việt", out, 100));
@@ -150,6 +154,59 @@ class CharsetUtilTest {
 		assertEncToArr("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74", "Mình nói tiếng Việt");
 		assertEncToArr("F0A8899F E59190 E39782 E8B68A", "𨉟呐㗂越");
 	}
+	
+	@Test
+	void testEncodeUTF8WithBuffer() throws IOException {
+		byte[] buf = new byte[6];
+		assertOutputStream("41", out -> encodeUTF8("A", out, buf));
+		assertOutputStream("C3B6", out -> encodeUTF8("ö", out, buf));
+		assertOutputStream("C3B641C3B642", out -> encodeUTF8("öAöB", out, buf));
+		assertOutputStream("5468697320697320c3a420746578742e20546869732074657874207368c3b6c3bc6c6420626520" +
+				"6cc3b66e6720656e6f7567682074c3b62066696c6c2074686520627566666572206d756c7469706c652074696d65732e",
+				out -> encodeUTF8("This is ä text. " +
+				"This text shöüld be löng enough tö fill the buffer multiple times.", out, new byte[11]));
+		
+		// High surrogate without low surrogate
+		assertOutputStream("", assertOutputStreamThrows(IllegalArgumentException.class,
+				out -> encodeUTF8(String.valueOf((char) 0xD834), out, buf)));
+		
+		assertOutputStream("C3A441C3B6f09d849e42", out -> encodeUTF8("äAö𝄞B", out, new byte[4]));
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
+				out -> encodeUTF8("Mình nói tiếng Việt", out, buf));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
+				out -> encodeUTF8("𨉟呐㗂越", out, buf));
+	}
+	
+	@Test
+	void testEncodeUTF8WithBufferWithLimit() throws IOException {
+		byte[] buf = new byte[6];
+		assertOutputStream("41", out -> encodeUTF8("A", out, 1, buf));
+		assertOutputStream("42", out -> encodeUTF8("B", out, 10, buf));
+		assertOutputStream("", assertOutputStreamThrows(LimitException.class, out -> encodeUTF8("C", out, 0, buf)));
+		assertOutputStream("C3B6", out -> encodeUTF8("ö", out, 2, buf));
+		assertOutputStream("C3B641C3B642C3B643", out -> encodeUTF8("öAöBöC", out, 10, buf));
+		assertOutputStream("C3B641C3B642", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("öAöBöC", out, 8, buf))); // 3+3 bytes written
+		
+		assertOutputStream("54686973206973c3a4 20746578742e2054 6869732074657874", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("This isä text. " +
+				"This text shöüld be löng enough tö fill the buffer multiple times.", out, 30, new byte[11]))); // 9+8+8 bytes written
+		
+		// High surrogate without low surrogate
+		assertOutputStream("", assertOutputStreamThrows(IllegalArgumentException.class,
+				out -> encodeUTF8(String.valueOf((char) 0xD834), out, 15, buf)));
+		
+		assertOutputStream("C3A441C3B6f09d849e42", out -> encodeUTF8("äAö𝄞B", out, new byte[4]));
+		
+		// Examples from https://en.wikipedia.org/wiki/UTF-8
+		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
+				out -> encodeUTF8("Mình nói tiếng Việt", out, 30, buf));
+		assertOutputStream("F0A8899F E59190 E39782 E8B68A",
+				out -> encodeUTF8("𨉟呐㗂越", out, 100, buf));
+	}
+	
 	
 	private void assertEncToArr(String expectedHex, int codePoint) {
 		byte[] expected = HexUtil.hexToBytes(expectedHex);
