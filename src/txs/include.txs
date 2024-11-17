@@ -18,7 +18,7 @@ const typeData = {
 	}
 }
 
-const mapLastMod = "2023-11-26"
+const mapLastMod = "2024-11-17"
 const entryLastMod = "2023-07-31"
 const maps = ["Int", "Int2", "Int3", "Long", "Long2", "Long3", "Abstract"]
 const mapData = {

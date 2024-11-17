@@ -1,6 +1,7 @@
 package de.tomatengames.util.test;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -9,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
@@ -238,6 +240,19 @@ class HashMapTest {
 				map.put(24, entry.getValue());
 			}
 		});
+	}
+	
+	@Test
+	void testIteratorTooManyElements() {
+		IntHashMap<String> map = new IntHashMap<>(); assertEquals(0, map.size());
+		assertEquals(null, map.put(2, "abc")); assertEquals(1, map.size());
+		assertEquals(null, map.put(4, "test")); assertEquals(2, map.size());
+		
+		Iterator<IntEntry<String>> it = map.iterator();
+		assertEquals(true, it.hasNext()); assertNotNull(it.next());
+		assertEquals(true, it.hasNext()); assertNotNull(it.next());
+		assertEquals(false, it.hasNext());
+		assertThrows(NoSuchElementException.class, () -> it.next());
 	}
 	
 	@Test

@@ -18,15 +18,14 @@ import java.util.ConcurrentModificationException;
  * @param <V> The type of the value.
  * 
  * @author Basic7x7
- * @version
- ##
- if (entryLastMod && entryLastMod > map.createDate) {
- 	##
- 	* %entryLastMod; last modified<br>
- 	##
- }
- ##
- * %map.createDate; created
+##
+if (entryLastMod && entryLastMod > map.createDate) {
+	##
+	 * @version %entryLastMod; last modified
+	##
+}
+##
+ * @version %map.createDate; created
  * @since %map.since;
  */
 // %cli.txsinfo();

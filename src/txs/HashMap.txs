@@ -58,6 +58,7 @@ import static de.tomatengames.util.RequirementUtil.requireNotNull;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -71,15 +72,14 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
- * @version
 ##
-if (entryLastMod && entryLastMod > map.createDate) {
+if (mapLastMod && mapLastMod > map.createDate) {
 	##
-	 * %entryLastMod; last modified<br>
+	 * @version %mapLastMod; last modified
 	##
-}
+ }
 ##
- * %map.createDate; created
+ * @version %map.createDate; created
  * @since %map.since;
  */
 // %cli.txsinfo();
@@ -175,8 +175,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 	
 	/**
 	 * Returns the value that is mapped to the specified key.
-	 * @param key The key whose value should be returned.
-	 %keyDoc(" that should be checked.");
+	 %keyDoc(" whose value should be returned.");
 	 * @return The value that the specified key is mapped to.
 	 * If this map does not contain the key, {@code null} is returned.
 	 */
@@ -526,6 +525,9 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 		@Override
 		public %Entry;%Gen; next() {
 			%Node; next = this.nextNode;
+			if (next == null) {
+				throw new NoSuchElementException();
+			}
 			this.prevNode = this.currentNode;
 			this.currentNode = next;
 			this.nextNode = findNextNode(next);
@@ -534,6 +536,9 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 		
 		@Override
 		public void remove() {
+			if (this.initModCount != modcount) {
+				throw new ConcurrentModificationException();
+			}
 			%Node; current = this.currentNode;
 			if (current == null) {
 				throw new IllegalStateException("No element to remove!");
@@ -551,6 +556,7 @@ public %abstr ? "abstract" : "final"; class %HashMap;%Gen; implements Iterable<%
 				table[currentIndex] = current.next;
 			}
 			size--;
+			this.initModCount = ++modcount;
 			
 			// Mark the current node as removed.
 			this.currentNode = null;
