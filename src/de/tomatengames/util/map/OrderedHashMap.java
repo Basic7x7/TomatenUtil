@@ -346,7 +346,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		
 		Node[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node[] newTable = (Node[]) new OrderedHashMap.Node[newTableSize];
+		Node[] newTable = new OrderedHashMap.Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
@@ -449,7 +449,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 			if (obj == this) {
 				return true;
 			}
-			if (obj == null || !(obj instanceof Entry)) {
+			if (!(obj instanceof Entry)) {
 				return false;
 			}
 			
@@ -500,7 +500,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 			}
 			Node cursor = this.cursor;
 			if (cursor == null) {
-				throw new IllegalStateException();
+				throw new IllegalStateException("No current element to remove");
 			}
 			
 			this.expectedModcount = ++modcount;
