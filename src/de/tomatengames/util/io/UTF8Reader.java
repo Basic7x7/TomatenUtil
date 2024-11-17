@@ -132,7 +132,7 @@ public class UTF8Reader extends Reader {
 	
 	@Override
 	public void mark(int readAheadLimit) throws IOException {
-		this.in.mark(readAheadLimit);
+		this.in.mark(readAheadLimit*4);
 		this.markedBuffer = this.buffer;
 	}
 	
