@@ -315,6 +315,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		else {
 			newNode.listPrev = prevLast;
 			prevLast.listNext = newNode;
+			this.listLast = newNode;
 		}
 		
 		return newNode;
@@ -400,6 +401,9 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		if (listPrev != null) {
 			listPrev.listNext = listNext;
 		}
+		if (listNext != null) {
+			listNext.listPrev = listPrev;
+		}
 		if (this.listFirst == node) {
 			this.listFirst = listNext;
 		}
@@ -450,7 +454,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 			}
 			
 			Entry<?, ?> other = (Entry<?, ?>) obj;
-			return Objects.equals(this.key, other.getKey()) && Objects.equals(this.value, other.getKey());
+			return Objects.equals(this.key, other.getKey()) && Objects.equals(this.value, other.getValue());
 		}
 		
 		@Override
