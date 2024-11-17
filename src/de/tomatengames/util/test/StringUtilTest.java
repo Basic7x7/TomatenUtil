@@ -1,12 +1,7 @@
 package de.tomatengames.util.test;
 
-import static de.tomatengames.util.StringUtil.containsIgnoreCase;
-import static de.tomatengames.util.StringUtil.count;
-import static de.tomatengames.util.StringUtil.countFront;
-import static de.tomatengames.util.StringUtil.endsWithIgnoreCase;
-import static de.tomatengames.util.StringUtil.isEqualCT;
-import static de.tomatengames.util.StringUtil.startsWithIgnoreCase;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static de.tomatengames.util.StringUtil.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -159,5 +154,38 @@ class StringUtilTest {
 		assertEquals(true, isEqualCT("𨉟呐㗂越", "𨉟呐㗂越"));
 		assertEquals(false, isEqualCT("𨉟呐a越", "𨉟呐㗂越"));
 		assertEquals(false, isEqualCT("𨉟呐㗂越", "𨉟呐b越"));
+	}
+	
+	private static void assertMatchesAll(String input, String[] validpatterns, String[] invalidpatterns) {
+		for (String pattern : validpatterns)
+			assertTrue(matchesSimplePattern(input, pattern));
+		for (String pattern : invalidpatterns)
+			assertFalse(matchesSimplePattern(input, pattern));
+	}
+	
+	@Test
+	void testSimplePattern() {
+		assertTrue(matchesSimplePattern("test", "test"));
+		assertFalse(matchesSimplePattern("test", "Test"));
+		assertFalse(matchesSimplePattern("test", "tes"));
+		assertTrue(matchesSimplePattern("test", "te*"));
+		assertTrue(matchesSimplePattern("test", "*st"));
+		assertFalse(matchesSimplePattern("test", "st*"));
+		assertFalse(matchesSimplePattern("test", "*te"));
+		assertTrue(matchesSimplePattern("test", "t*es*t"));
+		assertTrue(matchesSimplePattern("test", "*t*e*s*t*"));
+		assertFalse(matchesSimplePattern("test", "*t*s*e*t*"));
+		assertTrue(matchesSimplePattern("test", "*test"));
+		assertTrue(matchesSimplePattern("test", "test*"));
+		assertTrue(matchesSimplePattern("test", "**test"));
+		assertTrue(matchesSimplePattern("test", "test**"));
+		assertFalse(matchesSimplePattern("test", "test*t"));
+		assertFalse(matchesSimplePattern("test", "*testt"));
+		assertMatchesAll("de.tomatengames.util.StringUtil",
+				new String[] {"*", "**", "*StringUtil", "de.*.StringUtil",
+						"de*tomatengames*.StringUtil", "***StringUtil***",
+						"***.***StringUtil", "*tomatengames*", "de.tomatengames*"},
+				new String[] {"*HexUtil", "de.*.tomatengames.*.StringUtil",
+						"*tomatengames", "tomatengames*"});
 	}
 }
