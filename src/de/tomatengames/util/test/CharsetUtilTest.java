@@ -28,6 +28,9 @@ class CharsetUtilTest {
 		assertEquals(0xC3B6, encodeUTF8('ö'));
 		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(-1));
 		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xFFFFFF));
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xD834)); // High surrogate
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xDD1E)); // Low surrogate
+		assertEquals(0xF09D849E, encodeUTF8(0x1D11E));
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertEquals(0x24, encodeUTF8('$'));
@@ -45,6 +48,9 @@ class CharsetUtilTest {
 		assertOutputStream("C3B6", out -> encodeUTF8('ö', out));
 		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(-1, new ByteArrayOutputStream()));
 		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xFFFFFF, new ByteArrayOutputStream()));
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xD834, new ByteArrayOutputStream())); // High surrogate
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xDD1E, new ByteArrayOutputStream())); // Low surrogate
+		assertOutputStream("F09D849E", out -> encodeUTF8(0x1D11E, out));
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertOutputStream("24", out -> encodeUTF8('$', out));
@@ -61,6 +67,7 @@ class CharsetUtilTest {
 		assertOutputStream("41", out -> encodeUTF8("A", out));
 		assertOutputStream("C3B6", out -> encodeUTF8("ö", out));
 		assertOutputStream("C3B641C3B6", out -> encodeUTF8("öAö", out));
+		assertOutputStream("C3B641F09D849E42", out -> encodeUTF8("öA𝄞B", out));
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertOutputStream("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74",
@@ -78,6 +85,9 @@ class CharsetUtilTest {
 				out -> encodeUTF8("ABCD", out, 3)));
 		assertOutputStream("41", assertOutputStreamThrows(LimitException.class,
 				out -> encodeUTF8("ABCD", out, 1)));
+		assertOutputStream("41F09D849E42", out -> encodeUTF8("A𝄞B", out, 6));
+		assertOutputStream("41F09D849E", assertOutputStreamThrows(LimitException.class,
+				out -> encodeUTF8("A𝄞B", out, 5)));
 		
 		assertOutputStream("", out -> encodeUTF8("", out, 0));
 		
@@ -115,6 +125,8 @@ class CharsetUtilTest {
 		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xFFFFFF, out, 0));
 		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8('A', out, 5));
 		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8('ö', out, 4)); // 2 bytes
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xD834, out, 0)); // High surrogate
+		assertThrows(IllegalArgumentException.class, () -> encodeUTF8(0xDD1E, out, 0)); // Low surrogate
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertEncToArr("24", '$');
@@ -125,12 +137,14 @@ class CharsetUtilTest {
 		assertEncToArr("ED959C", '한'); // U+D55C
 		assertEncToArr("F0908D88", 0x10348);
 		
-		
 		assertEncToArr("41", "A");
 		assertEncToArr("42 44 C3 B6", "BDö");
 		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test", out, -1));
 		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test12", out, 0));
 		assertThrows(IndexOutOfBoundsException.class, () -> encodeUTF8("test", out, 2));
+		
+		assertEncToArr("F09D849E", 0x1D11E);
+		assertEncToArr("41F09D849E42", "A𝄞B");
 		
 		// Examples from https://en.wikipedia.org/wiki/UTF-8
 		assertEncToArr("4D C3AC 6E 68 20 6E C3B3 69 20 74 69 E1BABF 6E 67 20 56 69 E1BB87 74", "Mình nói tiếng Việt");
@@ -155,8 +169,14 @@ class CharsetUtilTest {
 	void testDecodeUTF8ToInt() throws IOException {
 		assertUTF8Decode(0x41, null, new byte[] {'A'});
 		assertUTF8Decode(0x42, new byte[] {'C', 'D'}, new byte[] {'B', 'C', 'D'});
+		assertUTF8Decode(-1, null, new byte[] {});
 		assertUTF8Decode(0xF6, null, new byte[] {(byte) 0xC3, (byte) 0xB6}); // 'ö'
+		assertUTF8DecodeError(new byte[] {(byte) 0xC3}); // only one byte of 'ö'
 		assertUTF8DecodeError(new byte[] { (byte) 0xff });
+		assertUTF8Decode(0x1D11E, null, new byte[] {(byte) 0xF0, (byte) 0x9D, (byte) 0x84, (byte) 0x9E});
+		assertUTF8DecodeError(new byte[] { (byte) 0xED, (byte) 0xA0, (byte) 0xB4 }); // Encoded high surrogate
+		assertUTF8DecodeError(new byte[] { (byte) 0xED, (byte) 0xB4, (byte) 0x9E }); // Encoded low surrogate
+		
 		
 		// Examples from https://www.rfc-editor.org/rfc/rfc3629
 		assertUTF8DecodeError(new byte[] { (byte) 0xC0, (byte) 0x80 }); // <=> U+0000

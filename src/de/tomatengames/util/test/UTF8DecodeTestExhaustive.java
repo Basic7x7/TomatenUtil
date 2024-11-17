@@ -4,19 +4,25 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tomatengames.util.CharsetUtil;
 import de.tomatengames.util.HexUtil;
 import de.tomatengames.util.exception.CharacterDecodeException;
+import de.tomatengames.util.io.UTF8Reader;
 
 class UTF8DecodeTestExhaustive {
 	
 	public static void main(String[] args) throws InterruptedException {
 		Trie validCodePoints = new Trie();
 		for (int cp = 0; cp <= 0x10FFFF; cp++) {
-			EncodedCodePoint codePoint = new EncodedCodePoint(cp);
-			validCodePoints.put(codePoint.utf8, 0, codePoint.len, codePoint);
+			try {
+				EncodedCodePoint codePoint = new EncodedCodePoint(cp);
+				validCodePoints.put(codePoint.utf8, 0, codePoint.len, codePoint);
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
 		}
 		
 		
@@ -27,17 +33,23 @@ class UTF8DecodeTestExhaustive {
 			Thread thread = new Thread(() -> {
 				try {
 					long count = 0L;
+					byte[] inputBytes = new byte[4];
+					inputBytes[0] = (byte) b0;
+					char[] cbuf = new char[2];
+					char[] cbufControl = new char[2];
 					for (int b1 = 0; b1 < 256; b1++) {
+						inputBytes[1] = (byte) b1;
 						for (int b2 = 0; b2 < 256; b2++) {
+							inputBytes[2] = (byte) b2;
 							for (int b3 = 0; b3 < 256; b3++) {
-								byte[] inputBytes = new byte[] {
-										(byte) b0, (byte) b1, (byte) b2, (byte) b3
-								};
+								inputBytes[3] = (byte) b3;
+								
 								InputStream input = new ByteArrayInputStream(inputBytes);
+								input.mark(100);
 								
 								EncodedCodePoint valid = validCodePoints.get(inputBytes, 0);
 								
-								if ((count & 0xFFFFL) == 0L) {
+								if ((count & 0xFFFFFL) == 0L) {
 									System.out.println(HexUtil.bytesToHex(inputBytes));
 								}
 								count++;
@@ -54,12 +66,43 @@ class UTF8DecodeTestExhaustive {
 										e.printStackTrace();
 										ok.set(false);
 									}
+									
+									input.reset();
+									try (UTF8Reader reader = new UTF8Reader(input)) {
+										Arrays.fill(cbuf, '\0');
+										Arrays.fill(cbufControl, '\0');
+										int n = Character.toChars(valid.codePoint, cbufControl, 0);
+										int n2 = n;
+										for (int j = 0; j < n; j++) {
+											int ch = reader.read();
+											if (ch < 0) {
+												n2 = j;
+												break;
+											}
+											cbuf[j] = (char) ch;
+										}
+										if (n != n2 || !Arrays.equals(cbuf, cbufControl)) {
+											System.err.println("UTF8Reader decode mismatch for input '" + HexUtil.bytesToHex(inputBytes) +
+													"': Expected characters = " + charsToString(n, cbufControl) + " (" + n + "); " +
+													"Decoded characters = " + charsToString(n2, cbuf) + " (" + n2 + ")");
+											ok.set(false);
+										}
+									}
 								}
 								else {
 									// Expect failure
 									try {
 										CharsetUtil.decodeUTF8(input);
 										System.err.println("Decode did not fail for invalid input '" + HexUtil.bytesToHex(inputBytes) + "'");
+										ok.set(false);
+									} catch (CharacterDecodeException e) {
+										// This is the expected behavior.
+									}
+									
+									input.reset();
+									try (UTF8Reader reader = new UTF8Reader(input)) {
+										reader.read();
+										System.err.println("UTF8Reader decode did not fail for invalid input '" + HexUtil.bytesToHex(inputBytes) + "'");
 										ok.set(false);
 									} catch (CharacterDecodeException e) {
 										// This is the expected behavior.
@@ -84,6 +127,17 @@ class UTF8DecodeTestExhaustive {
 		if (ok.get()) {
 			System.out.println("All tests OK");
 		}
+		else {
+			System.err.println("Found errors");
+		}
+	}
+	
+	private static String charsToString(int n, char... chars) {
+		String str = "";
+		for (int i = 0; i < n; i++) {
+			str += HexUtil.shortToHex(chars[i]);
+		}
+		return str;
 	}
 	
 	private static class EncodedCodePoint {
