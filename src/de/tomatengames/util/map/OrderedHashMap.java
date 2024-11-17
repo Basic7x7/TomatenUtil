@@ -1,4 +1,4 @@
-package de.tomatengames.util.data;
+package de.tomatengames.util.map;
 
 import static de.tomatengames.util.RequirementUtil.requireNotNull;
 
@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * @version 2024-11-17 created
  * @since 1.7
  */
-public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>> {
+public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	private static final double ENLARGE_LOAD_FACTOR = 0.75;
 	private static final int MIN_TABLE_SIZE = 16;
 	private static final int MAX_TABLE_SIZE = 1 << 30;
@@ -43,9 +43,9 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 	private Node listFirst, listLast;
 	
 	/**
-	 * Creates a new and empty {@link OrderPreservingHashMap}.
+	 * Creates a new and empty {@link OrderedHashMap}.
 	 */
-	public OrderPreservingHashMap() {
+	public OrderedHashMap() {
 		this.size = 0L;
 		this.mask = 0;
 		this.enlargeThreshold = 0;
@@ -55,12 +55,12 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 	}
 	
 	/**
-	 * Creates a new {@link OrderPreservingHashMap} that contains all the mappings of the specified map.
+	 * Creates a new {@link OrderedHashMap} that contains all the mappings of the specified map.
 	 * @param map The mappings that should be cloned. May be {@code null}.
 	 */
-	public OrderPreservingHashMap(OrderPreservingHashMap<K, V> map) {
+	public OrderedHashMap(OrderedHashMap<K, V> map) {
 		this();
-		this.insertAll(map);
+		this.putAll(map);
 	}
 	
 	
@@ -91,7 +91,7 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 	 * If the key was not present in this map, {@code null} is returned. 
 	 * @throws IllegalArgumentException If the key or the value is {@code null}.
 	 */
-	public V insert(K key, V value) {
+	public V put(K key, V value) {
 		requireNotNull(key, "The key ...");
 		requireNotNull(value, "The value ...");
 		this.modcount++;
@@ -112,7 +112,7 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 	 * Otherwise, the previous value is still present.
 	 * @throws IllegalArgumentException If the key or the value is {@code null}.
 	 */
-	public V insertIfAbsent(K key, V value) {
+	public V putIfAbsent(K key, V value) {
 		requireNotNull(key, "The key ...");
 		requireNotNull(value, "The value ...");
 		Node node = this.findOrCreate(key);
@@ -134,7 +134,7 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 	 * If the specified map is {@code null} or this map, nothing happens.
 	 * @param otherMap The map whose mappings should be put into this map. May be {@code null}.
 	 */
-	public void insertAll(OrderPreservingHashMap<K, V> otherMap) {
+	public void putAll(OrderedHashMap<K, V> otherMap) {
 		// If the other map is null it is considered empty.
 		// If otherMap == this, all entries are already present.
 		if (otherMap == null || otherMap == this) {
@@ -238,14 +238,14 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 		}
 		
 		// Checks the sizes.
-		OrderPreservingHashMap<?, ?> other = (OrderPreservingHashMap<?, ?>) obj;
+		OrderedHashMap<?, ?> other = (OrderedHashMap<?, ?>) obj;
 		if (this.size != other.size) {
 			return false;
 		}
 		
 		// Iterates over both list structures and checks that all elements match (order is relevant).
 		Node thisNode = this.listFirst;
-		OrderPreservingHashMap<?, ?>.Node otherNode = other.listFirst;
+		OrderedHashMap<?, ?>.Node otherNode = other.listFirst;
 		while (!(thisNode == null && otherNode == null)) {
 			if (!Objects.equals(thisNode, otherNode)) {
 				return false;
@@ -345,7 +345,7 @@ public final class OrderPreservingHashMap<K, V> implements Iterable<Entry<K, V>>
 		
 		Node[] oldTable = this.table;
 		@SuppressWarnings("unchecked")
-		Node[] newTable = (Node[]) new OrderPreservingHashMap.Node[newTableSize];
+		Node[] newTable = (Node[]) new OrderedHashMap.Node[newTableSize];
 		
 		// Moves the nodes from the old table to the new one.
 		if (oldTable != null) {
