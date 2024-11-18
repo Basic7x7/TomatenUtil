@@ -1,3 +1,14 @@
+Version 1.7 (2024-11-18)
++ OrderedHashMap
++ StringUtil.matchesSimplePattern()
++ UTF8Reader
+* CharsetUtil
+    + encodeUTF8 with byte buffer
+    * decodeUTF8 returns -1 if the end of the stream is reached
+* Bugfix (high): The UTF-8 encoder and decoder did not throw errors for surrogate code points
+* Bugfix (low): IntHashMap Iterator did not throw a NoSuchElementException after the last element
+
+
 Version 1.6 (2024-05-24)
 + Undepender
 + HexUtil.byteToHex() and shortToHex()
