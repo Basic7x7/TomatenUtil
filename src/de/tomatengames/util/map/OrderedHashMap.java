@@ -26,6 +26,7 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
+ * @version 2025-02-19 last modified
  * @version 2024-11-17 created
  * @since 1.7
  */
@@ -231,6 +232,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 *
 	 * @return the first entry in this ordered map
 	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
 	 */
 	public Entry<K, V> getFirst() throws NoSuchElementException {
 		Node node = this.listFirst;
@@ -244,6 +246,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 *
 	 * @return the last entry in this ordered map
 	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
 	 */
 	public Entry<K, V> getLast() throws NoSuchElementException {
 		Node node = this.listLast;
@@ -257,6 +260,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 *
 	 * @return the removed entry
 	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
 	 */
 	public Entry<K, V> removeFirst() throws NoSuchElementException {
 		Node node = this.listFirst;
@@ -273,6 +277,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 *
 	 * @return the removed entry
 	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
 	 */
 	public Entry<K, V> removeLast() throws NoSuchElementException {
 		Node node = this.listLast;
