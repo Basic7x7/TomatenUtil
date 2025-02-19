@@ -395,6 +395,7 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting and
 	 * 	separating them with the specified delimiter. Returns an empty string
 	 * 	if the input array is null or has no elements.
+	 *
 	 * @author LukasE7x7
 	 * @since 1.8
 	 */
@@ -419,8 +420,9 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting and
 	 *  separating them with the specified delimiters. Returns an empty
 	 *  string if the input array is null or has no elements.
-	 * @since 1.8
+	 *
 	 * @author LukasE7x7
+	 * @since 1.8
 	 */
 	public static <T> String join(T[] parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
 		if (parts == null || parts.length <= 0)
@@ -450,8 +452,9 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting and
 	 *  separating them with the specified delimiter. Returns an empty string
 	 *  if the iterator is null or has no elements.
-	 * @since 1.8
+	 *
 	 * @author LukasE7x7
+	 * @since 1.8
 	 */
 	public static <T> String join(Iterator<T> parts, Function<T, String> conversion, String delimiter) {
 		return join(parts, conversion, delimiter, delimiter);
@@ -474,8 +477,9 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting and
 	 *  separating them with the specified delimiters. Returns an empty
 	 *  string if the iterator is null or has no elements.
-	 * @since 1.8
+	 *
 	 * @author LukasE7x7
+	 * @since 1.8
 	 */
 	public static <T> String join(Iterator<T> parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
 		if (parts == null || !parts.hasNext())
@@ -510,8 +514,9 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting
 	 *  them and separating with the specified delimiter. Returns an empty
 	 *  string if the iterable is null or has no elements.
-	 * @since 1.8
+	 *
 	 * @author LukasE7x7
+	 * @since 1.8
 	 */
 	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter) {
 		return join(parts, conversion, delimiter, delimiter);
@@ -535,8 +540,9 @@ public class StringUtil {
 	 * @return A single string obtained by joining all elements after converting
 	 *  them and separating with the specified delimiters. Returns an empty
 	 *  string if the iterable is null or has no elements.
-	 * @since 1.8
+	 *
 	 * @author LukasE7x7
+	 * @since 1.8
 	 */
 	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
 		return parts == null ? "" : join(parts.iterator(), conversion, delimiter, lastDelimiter);
