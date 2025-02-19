@@ -1,5 +1,7 @@
 package de.tomatengames.util;
 
+import java.util.Iterator;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 
 /**
@@ -376,6 +378,39 @@ public class StringUtil {
 				return false;
 		}
 		return true;
+	}
+	
+	public static <T> String join(T[] parts, Function<T, String> conversion, String delimiter) {
+		return join(parts, conversion, delimiter, delimiter);
+	}
+	public static <T> String join(T[] parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < parts.length; i++) {
+			if (i > 0)
+				out.append(i == parts.length - 1 ? lastDelimiter : delimiter);
+			out.append(conversion.apply(parts[i]));
+		}
+		return out.toString();
+	}
+	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter) {
+		return join(parts, conversion, delimiter, delimiter);
+	}
+	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		Iterator<T> partsIt = parts.iterator();
+		boolean first = true;
+		if (!partsIt.hasNext())
+			return "";
+		StringBuilder out = new StringBuilder();
+		while (true) {
+			String part = conversion.apply(partsIt.next());
+			boolean hasNext = partsIt.hasNext();
+			if (!first)
+				out.append(hasNext ? delimiter : lastDelimiter);
+			out.append(part);
+			if (!hasNext)
+				return out.toString();
+			first = false;
+		}
 	}
 	
 }
