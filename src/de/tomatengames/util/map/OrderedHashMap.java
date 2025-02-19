@@ -226,18 +226,38 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		return this.new NodeIterator();
 	}
 	
+	/**
+	 * Returns the first entry in this ordered map.
+	 *
+	 * @return the first entry in this ordered map
+	 * @throws NoSuchElementException if this map is empty
+	 */
 	public Entry<K, V> getFirst() throws NoSuchElementException {
 		Node node = this.listFirst;
 		if (node == null)
 			throw new NoSuchElementException();
 		return node;
 	}
+	
+	/**
+	 * Returns the last entry in this ordered map.
+	 *
+	 * @return the last entry in this ordered map
+	 * @throws NoSuchElementException if this map is empty
+	 */
 	public Entry<K, V> getLast() throws NoSuchElementException {
 		Node node = this.listLast;
 		if (node == null)
 			throw new NoSuchElementException();
 		return node;
 	}
+	
+	/**
+	 * Removes and returns the first entry in this ordered map.
+	 *
+	 * @return the removed entry
+	 * @throws NoSuchElementException if this map is empty
+	 */
 	public Entry<K, V> removeFirst() throws NoSuchElementException {
 		Node node = this.listFirst;
 		if (node == null)
@@ -247,6 +267,13 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		this.modcount++;
 		return node;
 	}
+	
+	/**
+	 * Removes and returns the last entry in this ordered map.
+	 *
+	 * @return the removed entry
+	 * @throws NoSuchElementException if this map is empty
+	 */
 	public Entry<K, V> removeLast() throws NoSuchElementException {
 		Node node = this.listLast;
 		if (node == null)

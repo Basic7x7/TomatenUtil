@@ -208,6 +208,53 @@ class OrderedHashMapTest {
 	}
 	
 	@Test
+	void testFirstLastEmpty() {
+		OrderedHashMap<Object, Object> empty = new OrderedHashMap<>();
+		assertThrows(NoSuchElementException.class, () -> empty.getFirst());
+		assertThrows(NoSuchElementException.class, () -> empty.getLast());
+		assertThrows(NoSuchElementException.class, () -> empty.removeFirst());
+		assertThrows(NoSuchElementException.class, () -> empty.removeLast());
+	}
+	
+	private static void assertEntryEquals(Object key, Object value, Entry<?, ?> entry) {
+		assertEquals(key, entry.getKey());
+		assertEquals(value, entry.getValue());
+	}
+	
+	@Test
+	void testGetFirstLast() {
+		OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
+		map.put("one", 1);
+		assertEntryEquals("one", 1, map.getFirst());
+		assertEntryEquals("one", 1, map.getLast());
+		
+		map.put("two", 2);
+		assertEntryEquals("one", 1, map.getFirst());
+		assertEntryEquals("two", 2, map.getLast());
+		
+		map.put("three", 3);
+		assertEntryEquals("one", 1, map.getFirst());
+		assertEntryEquals("three", 3, map.getLast());
+	}
+	
+	@Test
+	void testRemoveFirstLast() {
+		OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
+		map.put("one", 1);
+		map.put("two", 2);
+		assertEntryEquals("one", 1, map.removeFirst());
+		assertEntryEquals("two", 2, map.removeFirst());
+		assertEquals(0, map.size());
+		
+		map = new OrderedHashMap<>();
+		map.put("one", 1);
+		map.put("two", 2);
+		assertEntryEquals("two", 2, map.removeLast());
+		assertEntryEquals("one", 1, map.removeLast());
+		assertEquals(0, map.size());
+	}
+	
+	@Test
 	void testClear() {
 		OrderedHashMap<Integer, String> map = new OrderedHashMap<>(); assertEquals(0, map.size());
 		map.clear(); assertEquals(0, map.size());
