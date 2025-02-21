@@ -1,12 +1,14 @@
 package de.tomatengames.util;
 
+import java.util.Iterator;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 
 /**
  * Provides methods to handle {@link String}s.
  * 
  * @author Basic7x7
- * @version 2024-11-17 last modified
+ * @version 2025-02-19 last modified
  * @version 2023-02-12 created
  * @since 1.0
  */
@@ -376,6 +378,174 @@ public class StringUtil {
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Joins an array of objects into a single string using a specified delimiter
+	 * and conversion function.
+	 * <p>
+	 * The method converts each element in the array to strings using the given conversion function,
+	 * then concatenates these strings with the provided delimiter.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the array.
+	 * @param part The array containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate the converted parts.
+	 * @return A single string obtained by joining all elements after converting and
+	 * 	separating them with the specified delimiter. Returns an empty string
+	 * 	if the input array is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(T[] parts, Function<T, String> conversion, String delimiter) {
+		return join(parts, conversion, delimiter, delimiter);
+	}
+	
+	/**
+	 * Joins an array of objects into a single string using specified delimiters and
+	 * a conversion function.
+	 * <p>
+	 * This method converts each element in the array to strings using the given
+	 * conversion function, then concatenates these strings with the
+	 * provided delimiter. It allows to specify a different delimiter for the last element.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the part array.
+	 * @param parts The array containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate all but the last converted part.
+	 * @param lastDelimiter The string used before the last converted part.
+	 * @return A single string obtained by joining all elements after converting and
+	 *  separating them with the specified delimiters. Returns an empty
+	 *  string if the input array is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(T[] parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		if (parts == null || parts.length <= 0)
+			return "";
+		StringBuilder out = new StringBuilder();
+		for (int i = 0; i < parts.length; i++) {
+			if (i > 0)
+				out.append(i == parts.length - 1 ? lastDelimiter : delimiter);
+			out.append(conversion.apply(parts[i]));
+		}
+		return out.toString();
+	}
+	
+	/**
+	 * Joins the elements from the given iterator into a single string using the
+	 * specified delimiter and conversion function.
+	 * <p>
+	 * The method converts each element from the iterator to strings using the given
+	 * conversion function, then concatenates these strings with the
+	 * provided delimiter.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the part array.
+	 * @param parts The iterator containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate the converted parts.
+	 * @return A single string obtained by joining all elements after converting and
+	 *  separating them with the specified delimiter. Returns an empty string
+	 *  if the iterator is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(Iterator<T> parts, Function<T, String> conversion, String delimiter) {
+		return join(parts, conversion, delimiter, delimiter);
+	}
+	
+	/**
+	 * Joins the elements from the given iterator into a single string using the
+	 * specified delimiters and conversion function.
+	 * <p>
+	 * This method converts each element from the iterator to strings using the given
+	 * conversion function, then concatenates these strings with the
+	 * provided delimiter. It allows to specify a different delimiter for the last element.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the part array.
+	 * @param parts The iterator containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate all but the last converted part.
+	 * @param lastDelimiter A string used before the last converted part.
+	 * @return A single string obtained by joining all elements after converting and
+	 *  separating them with the specified delimiters. Returns an empty
+	 *  string if the iterator is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(Iterator<T> parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		if (parts == null || !parts.hasNext())
+			return "";
+		boolean first = true;
+		StringBuilder out = new StringBuilder();
+		while (true) {
+			String part = conversion.apply(parts.next());
+			boolean hasNext = parts.hasNext();
+			if (!first)
+				out.append(hasNext ? delimiter : lastDelimiter);
+			out.append(part);
+			if (!hasNext)
+				return out.toString();
+			first = false;
+		}
+	}
+	
+	/**
+	 * Joins the objects from the given iterable into a single string using a specified delimiter
+	 * and conversion function.
+	 * <p>
+	 * This method converts each element in the iterable to strings using the given
+	 * conversion function, then concatenates these strings with the specified
+	 * delimiter.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the array.
+	 * @param parts The iterable containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate consecutive converted elements.
+	 * @return A single string obtained by joining all elements after converting
+	 *  them and separating with the specified delimiter. Returns an empty
+	 *  string if the iterable is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter) {
+		return join(parts, conversion, delimiter, delimiter);
+	}
+	
+	/**
+	 * Joins the objects from the given iterable into a single string using specified delimiters
+	 * and conversion function.
+	 * <p>
+	 * This method converts each element in the iterable to strings using the given
+	 * conversion function. It concatenates these strings with the specified
+	 * delimiter for all elements except before the last, where it uses the specified
+	 * last delimiter.
+	 * </p>
+	 *
+	 * @param <T> The type of elements in the iterable.
+	 * @param parts The iterable containing the elements to join.
+	 * @param conversion The function that converts each element to a String.
+	 * @param delimiter The string used to separate consecutive converted elements.
+	 * @param lastDelimiter The string used before the last converted element.
+	 * @return A single string obtained by joining all elements after converting
+	 *  them and separating with the specified delimiters. Returns an empty
+	 *  string if the iterable is null or has no elements.
+	 *
+	 * @author LukasE7x7
+	 * @since 1.8
+	 */
+	public static <T> String join(Iterable<T> parts, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		return parts == null ? "" : join(parts.iterator(), conversion, delimiter, lastDelimiter);
 	}
 	
 }

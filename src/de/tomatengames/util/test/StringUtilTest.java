@@ -3,6 +3,10 @@ package de.tomatengames.util.test;
 import static de.tomatengames.util.StringUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+
 import org.junit.jupiter.api.Test;
 
 import de.tomatengames.util.StringUtil;
@@ -188,4 +192,34 @@ class StringUtilTest {
 				new String[] {"*HexUtil", "de.*.tomatengames.*.StringUtil",
 						"*tomatengames", "tomatengames*"});
 	}
+	
+	private static <T> void assertJoin(String expected,
+			T[] array, Function<T, String> conversion, String delimiter, String lastDelimiter) {
+		List<T> list = array == null ? null : Arrays.asList(array);
+		if (lastDelimiter.equals(delimiter)) {
+			assertEquals(expected, StringUtil.join(array, conversion, delimiter));
+			assertEquals(expected, StringUtil.join(list, conversion, delimiter));
+			assertEquals(expected, StringUtil.join(list == null ? null : list.iterator(), conversion, delimiter));
+		}
+		assertEquals(expected, StringUtil.join(array, conversion, delimiter, lastDelimiter));
+		assertEquals(expected, StringUtil.join(list, conversion, delimiter, lastDelimiter));
+		assertEquals(expected, StringUtil.join(list == null ? null : list.iterator(), conversion, delimiter, lastDelimiter));
+	}
+	
+	@Test
+	void testJoin() {
+		assertJoin("", (String[])null, s -> s, ",", ",");
+		assertJoin("", new String[] {}, s -> s, ",", ",");
+		assertJoin("a", new String[] {"a"}, s -> s, ",", ",");
+		assertJoin("a,b", new String[] {"a", "b"}, s -> s, ",", ",");
+		assertJoin("a and b", new String[] {"a", "b"}, s -> s, ",", " and ");
+		assertJoin("a,b,c,d", new String[] {"a", "b", "c", "d"}, s -> s, ",", ",");
+		assertJoin("a-b-c-d", new String[] {"a", "b", "c", "d"}, s -> s, "-", "-");
+		assertJoin("a, b, c and d", new String[] {"a", "b", "c", "d"}, s -> s, ", ", " and ");
+		
+		assertJoin("1,2,3", new Integer[] { 1, 2, 3 }, String::valueOf, ",", ",");
+		assertJoin("one,two,three", new Integer[] { 1, 2, 3 },
+				i -> new String[] {"zero", "one", "two", "three"}[i], ",", ",");
+	}
+	
 }

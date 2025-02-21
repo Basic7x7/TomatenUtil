@@ -26,6 +26,7 @@ import java.util.function.Consumer;
  * @param <V> The type of the values.
  * 
  * @author Basic7x7
+ * @version 2025-02-19 last modified
  * @version 2024-11-17 created
  * @since 1.7
  */
@@ -154,7 +155,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 * @return The value of the entry that was removed.
 	 * If no entry was removed, {@code null} is returned.
 	 */
-	public V remove(K key) {
+	public V remove(Object key) {
 		if (key == null) {
 			return null;
 		}
@@ -202,7 +203,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 	 * @param key The key that should be checked. May be {@code null}.
 	 * @return If the specified key is present in this map.
 	 */
-	public boolean containsKey(K key) {
+	public boolean containsKey(Object key) {
 		if (key == null) {
 			return false;
 		}
@@ -226,6 +227,67 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		return this.new NodeIterator();
 	}
 	
+	/**
+	 * Returns the first entry in this ordered map.
+	 *
+	 * @return the first entry in this ordered map
+	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
+	 */
+	public Entry<K, V> getFirst() throws NoSuchElementException {
+		Node node = this.listFirst;
+		if (node == null)
+			throw new NoSuchElementException();
+		return node;
+	}
+	
+	/**
+	 * Returns the last entry in this ordered map.
+	 *
+	 * @return the last entry in this ordered map
+	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
+	 */
+	public Entry<K, V> getLast() throws NoSuchElementException {
+		Node node = this.listLast;
+		if (node == null)
+			throw new NoSuchElementException();
+		return node;
+	}
+	
+	/**
+	 * Removes and returns the first entry in this ordered map.
+	 *
+	 * @return the removed entry
+	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
+	 */
+	public Entry<K, V> removeFirst() throws NoSuchElementException {
+		Node node = this.listFirst;
+		if (node == null)
+			throw new NoSuchElementException();
+		removeNodeFromTable(node.key, this.table, this.mask);
+		removeNodeFromList(node);
+		this.modcount++;
+		return node;
+	}
+	
+	/**
+	 * Removes and returns the last entry in this ordered map.
+	 *
+	 * @return the removed entry
+	 * @throws NoSuchElementException if this map is empty
+	 * @since 1.8
+	 */
+	public Entry<K, V> removeLast() throws NoSuchElementException {
+		Node node = this.listLast;
+		if (node == null)
+			throw new NoSuchElementException();
+		removeNodeFromTable(node.key, this.table, this.mask);
+		removeNodeFromList(node);
+		this.modcount++;
+		return node;
+	}
 	
 	
 	@Override
@@ -275,7 +337,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		return key.hashCode() & mask;
 	}
 	
-	private final Node findNode(K key, Node[] table, int mask) {
+	private final Node findNode(Object key, Node[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
@@ -364,7 +426,7 @@ public final class OrderedHashMap<K, V> implements Iterable<Entry<K, V>> {
 		table[index] = node;
 	}
 	
-	private final Node removeNodeFromTable(K key, Node[] table, int mask) {
+	private final Node removeNodeFromTable(Object key, Node[] table, int mask) {
 		if (table == null) {
 			return null;
 		}
