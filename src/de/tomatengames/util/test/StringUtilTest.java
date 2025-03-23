@@ -232,6 +232,8 @@ class StringUtilTest {
 		assertEquals(0, StringUtil.indexOf("abc", 0, 3, "abc", 0, 3));
 		assertEquals(4, StringUtil.indexOf("abcdefg", 0, 7, "test", 1, 1));
 		assertEquals(-1, StringUtil.indexOf("abc", 1, 2, "a", 0, 1));
+		assertEquals(1, StringUtil.indexOf("abc", 1, 2, "", 0, 0));
+		assertEquals(0, StringUtil.indexOf("", 0, 0, "", 0, 0));
 		
 		String input = "this text is a long long input text";
 		String pattern = "this is a long pattern";
@@ -256,6 +258,8 @@ class StringUtilTest {
 		assertEquals(0, StringUtil.lastIndexOf("abc", 0, 3, "abc", 0, 3));
 		assertEquals(4, StringUtil.lastIndexOf("abcdefg", 0, 7, "test", 1, 1));
 		assertEquals(-1, StringUtil.lastIndexOf("abc", 1, 2, "a", 0, 1));
+		assertEquals(3, StringUtil.lastIndexOf("abc", 1, 2, "", 0, 0));
+		assertEquals(0, StringUtil.lastIndexOf("", 0, 0, "", 0, 0));
 		
 		String input = "this text is a long long input text";
 		String pattern = "this is a long pattern";
