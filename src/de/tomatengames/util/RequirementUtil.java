@@ -16,7 +16,7 @@ public class RequirementUtil {
 	 * Ensures that the specified object is not {@code null}.
 	 * @param obj The object that should be checked.
 	 * @param msg The message that should be passed to the exception.
-	 * If the message ends with {@code " ..."}, the string {@code "must not be null"} is appended.
+	 * If the message ends with {@code "..."}, {@code "must not be null"} is appended.
 	 * @throws IllegalArgumentException If the object is {@code null}.
 	 */
 	public static void requireNotNull(Object obj, String msg) throws IllegalArgumentException {
@@ -42,7 +42,7 @@ public class RequirementUtil {
 	 * and does not only contain whitespace characters.
 	 * @param str The string that should be checked.
 	 * @param msg The message that should be passed to the exception.
-	 * If the message ends with {@code " ..."}, the string {@code "must not be null"}
+	 * If the message ends with {@code "..."}, {@code "must not be null"}
 	 * or {@code "must not be blank"} is appended.
 	 * @throws IllegalArgumentException If the string is {@code null} or blank.
 	 */
@@ -70,8 +70,12 @@ public class RequirementUtil {
 	
 	
 	private static String optSuffix(String msg, String optSuffix) {
-		if (msg != null && msg.endsWith(" ...")) {
-			return msg.substring(0, msg.length()-3) + optSuffix;
+		if (msg != null && msg.endsWith("...")) {
+			String prefix = msg.substring(0, msg.length()-3); // Remove the "..."
+			if (!prefix.endsWith(" ")) { // Append a space if none exists in the original message
+				prefix += " ";
+			}
+			return prefix + optSuffix;
 		}
 		return msg;
 	}
