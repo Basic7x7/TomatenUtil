@@ -8,7 +8,7 @@ import java.util.function.IntPredicate;
  * Provides methods to handle {@link String}s.
  * 
  * @author Basic7x7
- * @version 2025-02-19 last modified
+ * @version 2025-03-23 last modified
  * @version 2023-02-12 created
  * @since 1.0
  */
@@ -566,10 +566,37 @@ public class StringUtil {
 	 */
 	public static int indexOf(String input, int offset, int length, String pattern, int patternOffset, int patternLength) {
 		int lastIndex = offset + (length - patternLength);
-		int patternEnd = patternOffset + patternLength;
-		mainLoop: for (int i = offset; i < lastIndex; i++) {
-			for (int j = patternOffset; j < patternEnd; j++) {
-				if (input.charAt(i+j) != pattern.charAt(j)) {
+		mainLoop: for (int i = offset; i <= lastIndex; i++) {
+			for (int j = 0; j < patternLength; j++) {
+				if (input.charAt(i+j) != pattern.charAt(patternOffset+j)) {
+					continue mainLoop;
+				}
+			}
+			return i;
+		}
+		return -1;
+	}
+	
+	
+	/**
+	 * Returns the starting index of the last occurrence of the specified part of the pattern in the specified part of the input string.
+	 * The pattern is limited to the substring starting at {@code patternOffset} with the length {@code patternLength}.
+	 * @param input The input string. Not null.
+	 * @param offset The index where to start searching for the pattern. Not negative.
+	 * @param length The length of the input to search for the pattern. Not negative.
+	 * {@code offset+length} must not be greater than the length of the input string.
+	 * @param pattern The pattern to search for. Not null.
+	 * @param patternOffset The beginning index of the pattern. Not negative.
+	 * @param patternLength The length of the part of the pattern to search for. Not negative.
+	 * {@code patternOffset+patternLength} must not be greater than the length of the pattern string. 
+	 * @return The index of the last occurrence of the part of the pattern in the part of the input string,
+	 * or {@code -1} if no such index is found.
+	 * @since 1.8
+	 */
+	public static int lastIndexOf(String input, int offset, int length, String pattern, int patternOffset, int patternLength) {
+		mainLoop: for (int i = offset + (length - patternLength); i >= offset; i--) {
+			for (int j = 0; j < patternLength; j++) {
+				if (input.charAt(i+j) != pattern.charAt(patternOffset+j)) {
 					continue mainLoop;
 				}
 			}

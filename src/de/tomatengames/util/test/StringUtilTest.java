@@ -222,4 +222,55 @@ class StringUtilTest {
 				i -> new String[] {"zero", "one", "two", "three"}[i], ",", ",");
 	}
 	
+	@Test
+	void testIndexOf() {
+		assertEquals(1, StringUtil.indexOf("test", 0, 4, "e", 0, 1));
+		assertEquals(0, StringUtil.indexOf("test", 0, 4, "te", 0, 2));
+		assertEquals(-1, StringUtil.indexOf("test", 0, 4, "x", 0, 1));
+		assertEquals(2, StringUtil.indexOf("this is a test", 0, 14, "is", 0, 2));
+		assertEquals(5, StringUtil.indexOf("this is a test", 4, 10, "is", 0, 2));
+		assertEquals(0, StringUtil.indexOf("abc", 0, 3, "abc", 0, 3));
+		assertEquals(4, StringUtil.indexOf("abcdefg", 0, 7, "test", 1, 1));
+		assertEquals(-1, StringUtil.indexOf("abc", 1, 2, "a", 0, 1));
+		
+		String input = "this text is a long long input text";
+		String pattern = "this is a long pattern";
+		assertEquals(-1, StringUtil.indexOf(input, 0, input.length(), pattern, 0, pattern.length()));
+		assertEquals(0, StringUtil.indexOf(input, 0, input.length(), pattern, 0, 4)); // "this"
+		assertEquals(2, StringUtil.indexOf(input, 0, input.length(), pattern, 5, 2)); // "is"
+		assertEquals(10, StringUtil.indexOf(input, 0, input.length(), pattern, 5, 4)); // "is a"
+		assertEquals(15, StringUtil.indexOf(input, 0, input.length(), pattern, 10, 4)); // "long"
+		assertEquals(15, StringUtil.indexOf(input, 7, input.length()-7, pattern, 10, 4)); // "long"
+		assertEquals(15, StringUtil.indexOf(input, 15, input.length()-15, pattern, 10, 4)); // "long"
+		assertEquals(20, StringUtil.indexOf(input, 16, input.length()-16, pattern, 10, 4)); // "long"
+	}
+	
+	@Test
+	void testLastIndexOf() {
+		assertEquals(1, StringUtil.lastIndexOf("test", 0, 4, "e", 0, 1));
+		assertEquals(0, StringUtil.lastIndexOf("test", 0, 4, "te", 0, 2));
+		assertEquals(3, StringUtil.lastIndexOf("test", 0, 4, "te", 0, 1));
+		assertEquals(-1, StringUtil.lastIndexOf("test", 0, 4, "x", 0, 1));
+		assertEquals(5, StringUtil.lastIndexOf("this is a test", 0, 14, "is", 0, 2));
+		assertEquals(5, StringUtil.lastIndexOf("this is a test", 4, 10, "is", 0, 2));
+		assertEquals(0, StringUtil.lastIndexOf("abc", 0, 3, "abc", 0, 3));
+		assertEquals(4, StringUtil.lastIndexOf("abcdefg", 0, 7, "test", 1, 1));
+		assertEquals(-1, StringUtil.lastIndexOf("abc", 1, 2, "a", 0, 1));
+		
+		String input = "this text is a long long input text";
+		String pattern = "this is a long pattern";
+		assertEquals(-1, StringUtil.lastIndexOf(input, 0, input.length(), pattern, 0, pattern.length()));
+		assertEquals(0, StringUtil.lastIndexOf(input, 0, input.length(), pattern, 0, 4)); // "this"
+		assertEquals(10, StringUtil.lastIndexOf(input, 0, input.length(), pattern, 5, 2)); // "is"
+		assertEquals(10, StringUtil.lastIndexOf(input, 0, input.length(), pattern, 5, 4)); // "is a"
+		assertEquals(2, StringUtil.lastIndexOf(input, 0, 11, pattern, 5, 2)); // "is"
+		assertEquals(2, StringUtil.lastIndexOf(input, 0, 6, pattern, 5, 2)); // "is"
+		assertEquals(20, StringUtil.lastIndexOf(input, 0, input.length(), pattern, 10, 4)); // "long"
+		assertEquals(20, StringUtil.lastIndexOf(input, 7, input.length()-7, pattern, 10, 4)); // "long"
+		assertEquals(20, StringUtil.lastIndexOf(input, 15, input.length()-15, pattern, 10, 4)); // "long"
+		assertEquals(20, StringUtil.lastIndexOf(input, 5, 19, pattern, 10, 4)); // "long"
+		assertEquals(15, StringUtil.lastIndexOf(input, 5, 18, pattern, 10, 4)); // "long"
+		assertEquals(15, StringUtil.lastIndexOf(input, 5, 15, pattern, 10, 4)); // "long"
+	}
+	
 }
