@@ -6,7 +6,8 @@ package de.tomatengames.util;
  * that parameters are not {@code null}.
  * 
  * @author Basic7x7
- * @version 2023-06-13
+ * @version 2025-03-23 last modified
+ * @version 2023-06-13 created
  * @since 1.3
  */
 public class RequirementUtil {
@@ -15,12 +16,12 @@ public class RequirementUtil {
 	 * Ensures that the specified object is not {@code null}.
 	 * @param obj The object that should be checked.
 	 * @param msg The message that should be passed to the exception.
-	 * If the message ends with {@code " ..."}, the string {@code "must not be null!"} is appended.
+	 * If the message ends with {@code " ..."}, the string {@code "must not be null"} is appended.
 	 * @throws IllegalArgumentException If the object is {@code null}.
 	 */
 	public static void requireNotNull(Object obj, String msg) throws IllegalArgumentException {
 		if (obj == null) {
-			msg = optSuffix(msg, "must not be null!");
+			msg = optSuffix(msg, "must not be null");
 			throw new IllegalArgumentException(msg);
 		}
 	}
@@ -41,17 +42,17 @@ public class RequirementUtil {
 	 * and does not only contain whitespace characters.
 	 * @param str The string that should be checked.
 	 * @param msg The message that should be passed to the exception.
-	 * If the message ends with {@code " ..."}, the string {@code "must not be null!"}
-	 * or {@code "must not be blank!"} is appended.
+	 * If the message ends with {@code " ..."}, the string {@code "must not be null"}
+	 * or {@code "must not be blank"} is appended.
 	 * @throws IllegalArgumentException If the string is {@code null} or blank.
 	 */
 	public static void requireNotBlank(String str, String msg) {
 		if (str == null) {
-			msg = optSuffix(msg, "must not be null!");
+			msg = optSuffix(msg, "must not be null");
 			throw new IllegalArgumentException(msg);
 		}
 		if (str.trim().isEmpty()) {
-			msg = optSuffix(msg, "must not be blank!");
+			msg = optSuffix(msg, "must not be blank");
 			throw new IllegalArgumentException(msg);
 		}
 	}
