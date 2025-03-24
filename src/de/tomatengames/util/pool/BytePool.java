@@ -5,15 +5,21 @@ public class BytePool {
 	private static final int LEFT_OUT_EXPONENTS = 5;
 	private static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
 	
-	private final Pool<byte[]>[] pools;
+	private final LinkedPool<byte[]>[] pools;
 	
 	@SuppressWarnings("unchecked")
 	public BytePool() {
-		this.pools = new Pool[32 - LEFT_OUT_EXPONENTS];
+		this.pools = new LinkedPool[32 - LEFT_OUT_EXPONENTS];
 		for (int i = 0; i < this.pools.length; i++) {
-			int poolArrayLength = Math.min(1 << (i + LEFT_OUT_EXPONENTS), MAX_ARRAY_LENGTH);
+			int exp = i + LEFT_OUT_EXPONENTS;
+			int poolArrayLength = exp >= 31 ? MAX_ARRAY_LENGTH : 1 << exp;
 			this.pools[i] = new LinkedPool<>(() -> new byte[poolArrayLength]);
 		}
+	}
+	
+	public void clean() {
+		for (LinkedPool<byte[]> pool : this.pools)
+			pool.clean();
 	}
 	
 	public Pool<byte[]> ofLength(int minLength) {
