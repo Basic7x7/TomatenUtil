@@ -8,36 +8,57 @@ package de.tomatengames.util;
  * @since 1.0
  */
 public class ExecGetResult {
-	private final CharSequence output;
-	private final CharSequence error;
+	
+	private final byte[] output;
+	private final byte[] error;
 	private final int exitValue;
 	
-	ExecGetResult(CharSequence output, CharSequence error, int exitValue) {
+	ExecGetResult(byte[] output, byte[] error, int exitValue) {
 		this.output = output;
 		this.error = error;
 		this.exitValue = exitValue;
 	}
 	
 	/**
-	 * Returns the standard output of the process.
-	 * <p>
-	 * Note: The returned value might not be a {@link String}.
-	 * Use {@link CharSequence#toString()}.
-	 * @return The standard output.
+	 * Returns the standard output bytes of the process.
+	 * @return The standard output bytes.
 	 */
+	public byte[] getOutputBytes() {
+		return output;
+	}
+	
+	/**
+	 * Returns the standard output of the process as a string using the default charset.
+	 * @return The standard output of the process as a string.
+	 */
+	public String getOutputString() {
+		return new String(this.output);
+	}
+	
+	@Deprecated
 	public CharSequence getOutput() {
-		return this.output;
+		return getOutputString();
 	}
 	
 	/**
 	 * Returns the error output of the process.
-	 * <p>
-	 * Note: The returned value might not be a {@link String}.
-	 * Use {@link CharSequence#toString()}.
 	 * @return The error output.
 	 */
-	public CharSequence getError() {
+	public byte[] getErrorBytes() {
 		return this.error;
+	}
+	
+	/**
+	 * Returns the error output of the process as a string using the default charset.
+	 * @return the error output of the process as a string
+	 */
+	public String getErrorString() {
+		return new String(this.error);
+	}
+	
+	@Deprecated
+	public CharSequence getError() {
+		return getErrorString();
 	}
 	
 	/**
@@ -47,4 +68,5 @@ public class ExecGetResult {
 	public int getExitValue() {
 		return this.exitValue;
 	}
+	
 }
