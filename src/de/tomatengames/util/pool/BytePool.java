@@ -1,5 +1,13 @@
 package de.tomatengames.util.pool;
 
+/**
+ * The {@code BytePool} class provides a pool of byte arrays, allowing efficient
+ * management and reuse of byte arrays with varying lengths. It uses multiple
+ * {@link LinkedPool} instances to manage arrays of different sizes.
+ *
+ * @version 2025-03-26 created
+ * @since 1.8
+ */
 public class BytePool {
 	
 	private static final int LEFT_OUT_EXPONENTS = 5;
@@ -7,6 +15,10 @@ public class BytePool {
 	
 	private final LinkedPool<byte[]>[] pools;
 	
+	/**
+	 * Constructs a new {@code BytePool} instance with pre-configured pools for byte
+	 * arrays of different sizes.
+	 */
 	@SuppressWarnings("unchecked")
 	public BytePool() {
 		this.pools = new LinkedPool[32 - LEFT_OUT_EXPONENTS];
@@ -17,11 +29,25 @@ public class BytePool {
 		}
 	}
 	
+	/**
+	 * Cleans all pools by reducing their sizes to the minimum size recorded since
+	 * the last clean operation.
+	 */
 	public void clean() {
 		for (LinkedPool<byte[]> pool : this.pools)
 			pool.clean();
 	}
 	
+	/**
+	 * Retrieves a pool that provides byte arrays that are at least as long as the
+	 * specified minimum length.
+	 *
+	 * @param minLength The minimum required length of the byte arrays.
+	 * @return A {@link Pool} instance for byte arrays of at least the specified
+	 *         minimum length.
+	 * @throws IllegalArgumentException If the requested array size exceeds the
+	 *                                  maximum supported size.
+	 */
 	public Pool<byte[]> ofLength(int minLength) {
 		if (minLength > MAX_ARRAY_LENGTH)
 			throw new IllegalArgumentException("Unsupported array size " + minLength);
@@ -36,6 +62,14 @@ public class BytePool {
 		}
 		return this.pools[poolIndex];
 	}
+	
+	/**
+	 * Claims a byte array that is at least as long as the specified minimum length.
+	 *
+	 * @param minLength The minimum required length of the byte array.
+	 * @return A {@link Pooled} instance wrapping a byte array of at least the
+	 *         specified minimum length.
+	 */
 	public Pooled<byte[]> claim(int minLength) {
 		return ofLength(minLength).claim();
 	}
