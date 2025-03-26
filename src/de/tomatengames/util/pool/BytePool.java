@@ -19,19 +19,24 @@ public class BytePool {
 	 * Constructs a new {@code BytePool} instance with pre-configured pools for byte
 	 * arrays of different sizes.
 	 */
-	@SuppressWarnings("unchecked")
 	public BytePool() {
-		this.pools = new LinkedPool[32 - LEFT_OUT_EXPONENTS];
-		for (int i = 0; i < this.pools.length; i++) {
+		@SuppressWarnings("unchecked")
+		LinkedPool<byte[]>[] pools = new LinkedPool[32 - LEFT_OUT_EXPONENTS];
+		for (int i = 0; i < pools.length; i++) {
 			int exp = i + LEFT_OUT_EXPONENTS;
 			int poolArrayLength = exp >= 31 ? MAX_ARRAY_LENGTH : 1 << exp;
-			this.pools[i] = new LinkedPool<>(() -> new byte[poolArrayLength]);
+			pools[i] = new LinkedPool<>(() -> new byte[poolArrayLength]);
 		}
+		this.pools = pools;
 	}
 	
 	/**
 	 * Cleans all pools by reducing their sizes to the minimum size recorded since
 	 * the last clean operation.
+	 *
+	 * <p>
+	 * Call this regularly for active cleaning.
+	 * </p>
 	 */
 	public void clean() {
 		for (LinkedPool<byte[]> pool : this.pools)

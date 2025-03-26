@@ -68,6 +68,10 @@ public class LinkedPool<E> implements Pool<E> {
 	/**
 	 * Cleans up the pool by reducing its size to the minimum size recorded since
 	 * the last clean operation.
+	 *
+	 * <p>
+	 * Call this regularly for active cleaning.
+	 * </p>
 	 */
 	public synchronized void clean() {
 		reduce(this.size - this.intervalMinSize);
