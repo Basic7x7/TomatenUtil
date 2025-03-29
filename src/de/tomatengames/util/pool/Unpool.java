@@ -46,7 +46,7 @@ public class Unpool<E> implements Pool<E> {
 		return new Unpooled<>(this.factory.get());
 	}
 	
-	private static class Unpooled<E> implements Pooled<E> {
+	static class Unpooled<E> implements Pooled<E> {
 		private final E element;
 		
 		public Unpooled(E element) {

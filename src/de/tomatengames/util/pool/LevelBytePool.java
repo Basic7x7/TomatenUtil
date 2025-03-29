@@ -1,14 +1,14 @@
 package de.tomatengames.util.pool;
 
 /**
- * The {@code BytePool} class provides a pool of byte arrays, allowing efficient
+ * The {@code LevelBytePool} class provides a pool of byte arrays, allowing efficient
  * management and reuse of byte arrays with varying lengths. It uses multiple
  * {@link LinkedPool} instances to manage arrays of different sizes.
  *
  * @version 2025-03-26 created
  * @since 1.8
  */
-public class BytePool {
+public class LevelBytePool implements BytePool {
 	
 	private static final int LEFT_OUT_EXPONENTS = 5;
 	private static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
@@ -16,10 +16,10 @@ public class BytePool {
 	private final LinkedPool<byte[]>[] pools;
 	
 	/**
-	 * Constructs a new {@code BytePool} instance with pre-configured pools for byte
+	 * Constructs a new {@code LevelBytePool} instance with pre-configured pools for byte
 	 * arrays of different sizes.
 	 */
-	public BytePool() {
+	public LevelBytePool() {
 		@SuppressWarnings("unchecked")
 		LinkedPool<byte[]>[] pools = new LinkedPool[32 - LEFT_OUT_EXPONENTS];
 		for (int i = 0; i < pools.length; i++) {
@@ -68,13 +68,7 @@ public class BytePool {
 		return this.pools[poolIndex];
 	}
 	
-	/**
-	 * Claims a byte array that is at least as long as the specified minimum length.
-	 *
-	 * @param minLength The minimum required length of the byte array.
-	 * @return A {@link Pooled} instance wrapping a byte array of at least the
-	 *         specified minimum length.
-	 */
+	@Override
 	public Pooled<byte[]> claim(int minLength) {
 		return ofLength(minLength).claim();
 	}

@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import de.tomatengames.util.pool.BytePool;
+import de.tomatengames.util.pool.LevelBytePool;
 
-class BytePoolTest {
+class LevelBytePoolTest {
 	
 	@Test
 	void testClaim() {
-		BytePool pool = new BytePool();
+		BytePool pool = new LevelBytePool();
 		assertEquals(32, pool.claim(Integer.MIN_VALUE).get().length);
 		assertEquals(32, pool.claim(-1).get().length);
 		assertEquals(32, pool.claim(0).get().length);
@@ -26,7 +27,7 @@ class BytePoolTest {
 	@Disabled
 	@Test
 	void testClaimLarge() {
-		BytePool pool = new BytePool();
+		BytePool pool = new LevelBytePool();
 		assertEquals(1 << 30, pool.claim(1000000000).get().length);
 		assertEquals(Integer.MAX_VALUE - 8, pool.claim(1500000000).get().length);
 		assertEquals(Integer.MAX_VALUE - 8, pool.claim(Integer.MAX_VALUE - 8).get().length);
@@ -34,7 +35,7 @@ class BytePoolTest {
 	
 	@Test
 	void testClaimTooLarge() {
-		BytePool pool = new BytePool();
+		BytePool pool = new LevelBytePool();
 		assertThrows(IllegalArgumentException.class, () -> pool.claim(Integer.MAX_VALUE - 7));
 		assertThrows(IllegalArgumentException.class, () -> pool.claim(Integer.MAX_VALUE));
 	}

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
@@ -84,14 +85,17 @@ class LinkedPoolTest {
 		assertEquals(0, pool.size());
 	}
 	
-	private static class Element {
-		private final int id;
-		private Element(int id) {
+	static class Element {
+		public final int id;
+		public Element(int id) {
 			this.id = id;
 		}
-		private static LinkedPool<Element> pool() {
+		public static Supplier<Element> factory() {
 			AtomicInteger nextId = new AtomicInteger(1);
-			return new LinkedPool<>(() -> new Element(nextId.getAndIncrement()));
+			return () -> new Element(nextId.getAndIncrement());
+		}
+		public static LinkedPool<Element> pool() {
+			return new LinkedPool<>(factory());
 		}
 	}
 	
