@@ -43,16 +43,7 @@ public class LevelBytePool implements BytePool {
 			pool.clean();
 	}
 	
-	/**
-	 * Retrieves a pool that provides byte arrays that are at least as long as the
-	 * specified minimum length.
-	 *
-	 * @param minLength The minimum required length of the byte arrays.
-	 * @return A {@link Pool} instance for byte arrays of at least the specified
-	 *         minimum length.
-	 * @throws IllegalArgumentException If the requested array size exceeds the
-	 *                                  maximum supported size.
-	 */
+	@Override
 	public Pool<byte[]> ofLength(int minLength) {
 		if (minLength > MAX_ARRAY_LENGTH)
 			throw new IllegalArgumentException("Unsupported array size " + minLength);
