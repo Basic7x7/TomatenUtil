@@ -77,13 +77,14 @@ public class ZeroBytePool implements BytePool {
 		private final Pooled<byte[]> base;
 		
 		public ZeroPooled(Pooled<byte[]> base) {
-	        this.base = base;
-	    }
+			this.base = base;
+		}
 		
 		@Override
 		public byte[] get() {
 			return this.base.get();
 		}
+		
 		@Override
 		public void free() {
 			zero(this.base.get());
