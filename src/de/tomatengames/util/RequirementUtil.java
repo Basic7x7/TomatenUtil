@@ -1,12 +1,14 @@
 package de.tomatengames.util;
 
+import java.util.Collection;
+
 /**
  * Provides convenient methods to check requirements.
  * For example, {@link #requireNotNull(Object, String)} can be used to ensure
  * that parameters are not {@code null}.
  * 
  * @author Basic7x7
- * @version 2025-03-23 last modified
+ * @version 2025-04-07 last modified
  * @version 2023-06-13 created
  * @since 1.3
  */
@@ -289,6 +291,178 @@ public class RequirementUtil {
 	public static void requireInRange(double num, double min, double max, String msg) {
 		if (num < min || num > max) {
 			throw new IllegalArgumentException(optSuffix(msg, "must be between " + min + " and " + max + " (was " + num + ")"));
+		}
+	}
+	
+	
+	/**
+	 * Ensures that the specified {@link Collection} is not null and contains at least 1 element.
+	 * @param collection The collection that should be checked.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, {@code "must not be null"} or {@code "must not be empty"} is appended.
+	 * @throws IllegalArgumentException If the collection is null or empty.
+	 * @since 1.8
+	 */
+	public static void requireNotEmpty(Collection<?> collection, String msg) {
+		if (collection == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		if (collection.isEmpty()) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be empty"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified array is not null and has a length of at least 1.
+	 * @param <T> The type of the array elements.
+	 * @param array The array that should be checked.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, {@code "must not be null"} or {@code "must not be empty"} is appended.
+	 * @throws IllegalArgumentException If the array is null or has a length of 0.
+	 * @since 1.8
+	 */
+	public static <T> void requireNotEmpty(T[] array, String msg) {
+		if (array == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		if (array.length <= 0) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be empty"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified {@link Collection} is not null and has a size of at least the specified minimum size.
+	 * @param collection The collection that should be checked.
+	 * @param minSize The minimum size that the collection should have.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the collection is null or has a size less than the specified minimum size.
+	 * @since 1.8
+	 */
+	public static void requireMinSize(Collection<?> collection, int minSize, String msg) {
+		if (collection == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int size = collection.size();
+		if (size < minSize) {
+			if (size <= 0) {
+				throw new IllegalArgumentException(optSuffix(msg, "must not be empty (requires " + minSize + " elements)"));
+			}
+			throw new IllegalArgumentException(optSuffix(msg, "requires " + minSize + " elements (found " + size + ")"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified array is not null and has a length of at least the specified minimum length.
+	 * @param <T> The type of the array elements.
+	 * @param array The array that should be checked.
+	 * @param minLength The minimum length that the array should have.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the array is null or has a length less than the specified minimum length.
+	 * @since 1.8
+	 */
+	public static <T> void requireMinLength(T[] array, int minLength, String msg) {
+		if (array == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int length = array.length;
+		if (length < minLength) {
+			if (length <= 0) {
+				throw new IllegalArgumentException(optSuffix(msg, "must not be empty (requires length " + minLength + ")"));
+			}
+			throw new IllegalArgumentException(optSuffix(msg, "requires length " + minLength + " (found length " + length + ")"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified collection is not null and has exactly the specified number of elements.
+	 * @param collection The collection that should be checked.
+	 * @param size The exact number of elements that the collection should have.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the collection is null or has a different number of elements than the specified size.
+	 * @since 1.8
+	 */
+	public static void requireExactSize(Collection<?> collection, int size, String msg) {
+		if (collection == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int s = collection.size();
+		if (s != size) {
+			throw new IllegalArgumentException(optSuffix(msg, "requires " + size + " elements (found " + s + ")"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified array is not null and has exactly the specified length.
+	 * @param <T> The type of the array elements.
+	 * @param array The array that should be checked.
+	 * @param length The exact length that the array should have.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the array is null or has a different length than the specified length.
+	 * @since 1.8
+	 */
+	public static <T> void requireExactLength(T[] array, int length, String msg) {
+		if (array == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		if (array.length != length) {
+			throw new IllegalArgumentException(optSuffix(msg, "requires length " + length + " (found length " + array.length + ")"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified collection is not null and has a size within the specified range.
+	 * @param collection The collection that should be checked.
+	 * @param minSize The minimum allowed size of the collection.
+	 * @param maxSize The maximum allowed size of the collection.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the collection is null or has a size outside the specified range.
+	 * @since 1.8
+	 */
+	public static void requireSizeInRange(Collection<?> collection, int minSize, int maxSize, String msg) {
+		if (collection == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int size = collection.size();
+		if (minSize > size || size > maxSize) {
+			if (minSize <= 0) {
+				throw new IllegalArgumentException(optSuffix(msg, "must not contain more than " + maxSize + " elements (found " + size + ")"));
+			}
+			if (maxSize >= Integer.MAX_VALUE) {
+				throw new IllegalArgumentException(optSuffix(msg, "requires at least " + minSize + " elements (found " + size + ")"));
+			}
+			throw new IllegalArgumentException(optSuffix(msg, "requires " + minSize + " to " + maxSize + " elements (found " + size + ")"));
+		}
+	}
+	
+	/**
+	 * Ensures that the specified array is not null and has a length within the specified range.
+	 * @param <T> The type of elements in the array.
+	 * @param array The array that should be checked.
+	 * @param minLength The minimum allowed length of the array.
+	 * @param maxLength The maximum allowed length of the array.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the array is null or has a length outside the specified range.
+	 * @since 1.8
+	 */
+	public static <T> void requireLengthInRange(T[] array, int minLength, int maxLength, String msg) {
+		if (array == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int length = array.length;
+		if (minLength > length || length > maxLength) {
+			if (minLength <= 0) {
+				throw new IllegalArgumentException(optSuffix(msg, "must not exceed length " + maxLength + " (found length " + length + ")"));
+			}
+			if (maxLength >= Integer.MAX_VALUE) {
+				throw new IllegalArgumentException(optSuffix(msg, "requires at least the length " + minLength + " (found length " + length + ")"));
+			}
+			throw new IllegalArgumentException(optSuffix(msg, "requires length " + minLength + " to " + maxLength + " elements (found length " + length + ")"));
 		}
 	}
 	
