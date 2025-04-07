@@ -490,7 +490,7 @@ public class RequirementUtil {
 			if (!predicate.test(element)) {
 				String suffix = elementErrorMsgSuffix != null ? elementErrorMsgSuffix : "contains an invalid element";
 				if (collection instanceof List) {
-					suffix += " (at index " + index + ")";
+					suffix += " (found at index " + index + ")";
 				}
 				throw new IllegalArgumentException(optSuffix(msg, suffix));
 			}
@@ -517,7 +517,7 @@ public class RequirementUtil {
 		for (int i = 0, n = array.length; i < n; i++) {
 			if (!predicate.test(array[i])) {
 				throw new IllegalArgumentException(optSuffix(msg,
-						(elementErrorMsgSuffix != null ? elementErrorMsgSuffix : "contains an invalid element") + " (found at index " + i + ""));
+						(elementErrorMsgSuffix != null ? elementErrorMsgSuffix : "contains an invalid element") + " (found at index " + i + ")"));
 			}
 		}
 	}

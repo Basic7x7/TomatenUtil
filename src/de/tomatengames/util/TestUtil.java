@@ -13,12 +13,14 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import de.tomatengames.util.function.RefConsumerWithThrows;
+import de.tomatengames.util.function.VoidConsumerWithThrows;
 
 /**
  * Provides methods that are helpful for JUnit testing.
  * 
  * @author Basic7x7
- * @version 2023-02-12
+ * @version 2025-04-07 last modified
+ * @version 2023-02-12 created
  * @since 1.0
  */
 public class TestUtil {
@@ -321,6 +323,32 @@ public class TestUtil {
 		if (!Arrays.equals(expected, actual)) {
 			throw new AssertionError("expected: " + Arrays.toString(expected) +
 					" but was: " + Arrays.toString(actual));
+		}
+	}
+	
+	
+	/**
+	 * Asserts that the given executor throws an exception of the expected type with the expected message.
+	 * @param <T> The type of the exception that is expected.
+	 * @param expectedType The type of the exception that is expected. Not null.
+	 * @param expectedMessage The message that is expected for the exception.
+	 * @param executor The executor that is used to execute the code that should throw an exception. Not null.
+	 * @return The exception that was thrown by the executor. Not null.
+	 * @throws AssertionError If the executor does not throw an exception of the expected type with the expected message.
+	 * @since 1.8
+	 */
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, String expectedMessage, VoidConsumerWithThrows<?> executor) {
+		try {
+			executor.accept();
+			throw new AssertionError("Expected a " + expectedType + " to be thrown, but nothing was thrown");
+		} catch (Throwable t) {
+			if (!expectedType.isInstance(t)) {
+				throw new AssertionError("Expected a " + expectedType + " to be thrown, but catched a " + t.getClass(), t);
+			}
+			assertEquals(expectedMessage, t.getMessage());
+			@SuppressWarnings("unchecked")
+			T tCasted = (T) t;
+			return tCasted;
 		}
 	}
 }
