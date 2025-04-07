@@ -1,6 +1,8 @@
 package de.tomatengames.util;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Provides convenient methods to check requirements.
@@ -464,6 +466,86 @@ public class RequirementUtil {
 			}
 			throw new IllegalArgumentException(optSuffix(msg, "requires length " + minLength + " to " + maxLength + " elements (found length " + length + ")"));
 		}
+	}
+	
+	
+	/**
+	 * Ensures that the specified {@link Collection} is not null and all elements satisfy the specified predicate.
+	 * @param <T> The type of elements in the collection.
+	 * @param collection The collection that should be checked.
+	 * @param predicate The predicate that should be checked for each element in the collection. Not null.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @param elementErrorMsgSuffix The suffix to be appended to the error message if the predicate fails for an element.
+	 * If null, a generic error message is used. Example: {@code "must not contain a null value"}.
+	 * @throws IllegalArgumentException If the collection is null or any of its elements do not satisfy the predicate.
+	 * @since 1.8
+	 */
+	public static <T> void requireForAll(Collection<T> collection, Predicate<T> predicate, String msg, String elementErrorMsgSuffix) {
+		if (collection == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		int index = 0;
+		for (T element : collection) {
+			if (!predicate.test(element)) {
+				String suffix = elementErrorMsgSuffix != null ? elementErrorMsgSuffix : "contains an invalid element";
+				if (collection instanceof List) {
+					suffix += " (at index " + index + ")";
+				}
+				throw new IllegalArgumentException(optSuffix(msg, suffix));
+			}
+			index++;
+		}
+	}
+	
+	/**
+	 * Ensures that the specified array is not null and all elements satisfy the specified predicate.
+	 * @param <T> The type of elements in the array.
+	 * @param array The array that should be checked.
+	 * @param predicate The predicate that should be checked for each element in the array. Not null.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @param elementErrorMsgSuffix The suffix to be appended to the error message if the predicate fails for an element.
+	 * If null, a generic error message is used. Example: {@code "must not contain a null value"}.
+	 * @throws IllegalArgumentException If the array is null or any of its elements do not satisfy the predicate.
+	 * @since 1.8
+	 */
+	public static <T> void requireForAll(T[] array, Predicate<T> predicate, String msg, String elementErrorMsgSuffix) {
+		if (array == null) {
+			throw new IllegalArgumentException(optSuffix(msg, "must not be null"));
+		}
+		for (int i = 0, n = array.length; i < n; i++) {
+			if (!predicate.test(array[i])) {
+				throw new IllegalArgumentException(optSuffix(msg,
+						(elementErrorMsgSuffix != null ? elementErrorMsgSuffix : "contains an invalid element") + " (found at index " + i + ""));
+			}
+		}
+	}
+	
+	/**
+	 * Ensures that the specified collection and all of its elements are not null.
+	 * @param <T> The type of elements in the collection.
+	 * @param collection The collection that should be checked.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the collection is null or any of its elements are null.
+	 * @since 1.8
+	 */
+	public static <T> void requireAllNotNull(Collection<T> collection, String msg) {
+		requireForAll(collection, element -> element != null, msg, "must not contain null");
+	}
+	
+	/**
+	 * Ensures that the specified array and all of its elements are not null.
+	 * @param <T> The type of elements in the array.
+	 * @param array The array that should be checked.
+	 * @param msg The message that should be passed to the exception.
+	 * If the message ends with {@code "..."}, a suffix like {@code "must not be null"} with a meaningful error description is appended.
+	 * @throws IllegalArgumentException If the array is null or any of its elements are null.
+	 * @since 1.8
+	 */
+	public static <T> void requireAllNotNull(T[] array, String msg) {
+		requireForAll(array, element -> element != null, msg, "must not contain null");
 	}
 	
 	
