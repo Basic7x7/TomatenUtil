@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import de.tomatengames.util.exception.ReflectionException;
+
 /**
  * Provides utility methods related to class loading.
  * Currently focused on methods to load all classes from given jar files.
@@ -64,7 +66,7 @@ public class ClassLoadUtil {
 	/**
 	 * Loads all classes from the specified ZIP/JAR file using the provided class
 	 * loader.
-	 *
+	 * 
 	 * @param jar         the ZIP/JAR file containing classes
 	 * @param initialize  whether the classes should be initialized upon loading
 	 * @param classLoader the class loader to use for loading the classes
@@ -73,6 +75,23 @@ public class ClassLoadUtil {
 	 */
 	public static ClassLoadReport loadAllClasses(ZipFile jar, boolean initialize, ClassLoader classLoader) {
 		return loadAllClasses(getAllClassNames(jar), initialize, classLoader);
+	}
+	
+	/**
+	 * Runs the static initialization of the specified class if it is not already
+	 * initialized.
+	 * 
+	 * @param cls the class to initialize
+	 * @throws ExceptionInInitializerError if the initialization fails
+	 * @throws ReflectionException         if a {@link ClassNotFoundException} or
+	 *                                     {@link LinkageError} occurs unexpectedly
+	 */
+	public static void initializeClass(Class<?> cls) {
+		try {
+			Class.forName(cls.getName(), true, cls.getClassLoader());
+		} catch (ClassNotFoundException | LinkageError e) {
+			throw new ReflectionException(e); // should not happen
+		}
 	}
 	
 }
