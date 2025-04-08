@@ -16,7 +16,7 @@ public class ClassLoadReport {
 	public void addLoadedClass(Class<?> c) {
 		this.loadedClasses.add(c);
 	}
-	public void addFailedClass(String classname, Exception ex) {
+	public void addFailedClass(String classname, Throwable ex) {
 		this.failedClasses.add(new ClassLoadError(classname, ex));
 	}
 	
@@ -34,16 +34,16 @@ public class ClassLoadReport {
 	
 	public static class ClassLoadError {
 		private final String classname;
-		private final Exception exception;
-		public ClassLoadError(String classname, Exception e) {
+		private final Throwable error;
+		public ClassLoadError(String classname, Throwable error) {
 			this.classname = classname;
-			this.exception = e;
+			this.error = error;
 		}
 		public String getClassName() {
 			return classname;
 		}
-		public Exception getException() {
-			return exception;
+		public Throwable getError() {
+			return error;
 		}
 	}
 	
