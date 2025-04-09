@@ -1,0 +1,7 @@
+java-version 8
+
+name ClassLoadUtilTestProject
+
+depend ../..
+
++ src

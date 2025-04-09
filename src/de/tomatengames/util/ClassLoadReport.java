@@ -1,7 +1,9 @@
 package de.tomatengames.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A ClassLoadReport captures the results of attempting to load various classes,
@@ -59,6 +61,20 @@ public class ClassLoadReport {
 	 */
 	public List<ClassLoadError> getFailedClasses() {
 		return failedClasses;
+	}
+	
+	/**
+	 * Returns a map of the failed class load attempts where the key is the class
+	 * name and the value is the corresponding {@code Throwable} error.
+	 *
+	 * @return a map with class names as keys and {@code Throwable} errors as values
+	 *         representing the failed loads
+	 */
+	public Map<String, Throwable> getFailedClassesMap() {
+		Map<String, Throwable> map = new HashMap<>();
+		for (ClassLoadError err : getFailedClasses())
+			map.put(err.getClassName(), err.getError());
+		return map;
 	}
 	
 	/**
