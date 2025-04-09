@@ -83,13 +83,13 @@ public class ClassLoadUtil {
 	 * 
 	 * @param cls the class to initialize
 	 * @throws ExceptionInInitializerError if the initialization fails
-	 * @throws ReflectionException         if a {@link ClassNotFoundException} or
-	 *                                     {@link LinkageError} occurs unexpectedly
+	 * @throws ReflectionException         if a {@link ClassNotFoundException}
+	 *                                     occurs unexpectedly
 	 */
 	public static void initializeClass(Class<?> cls) {
 		try {
 			Class.forName(cls.getName(), true, cls.getClassLoader());
-		} catch (ClassNotFoundException | LinkageError e) {
+		} catch (ClassNotFoundException e) {
 			throw new ReflectionException(e); // should not happen
 		}
 	}

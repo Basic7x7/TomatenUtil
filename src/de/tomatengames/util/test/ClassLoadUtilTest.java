@@ -1,9 +1,11 @@
 package de.tomatengames.util.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashSet;
@@ -77,6 +79,21 @@ class ClassLoadUtilTest {
 			assertEquals(1, fails.size());
 		}
 		assertEquals(ClassFormatError.class, fails.get("Invalid").getClass());
+	}
+	
+	@Test
+	void testInitializeClass() throws MalformedURLException, ClassNotFoundException {
+		URLClassLoader loader = new URLClassLoader(new URL[] {new File(TEST_JAR).toURI().toURL()});
+		Class<?> c = Class.forName("Initializer", false, loader);
+		assertEquals(0, initializeCounter);
+		ClassLoadUtil.initializeClass(c);
+		assertEquals(1, initializeCounter);
+		ClassLoadUtil.initializeClass(c);
+		assertEquals(1, initializeCounter);
+		
+		Class<?> failc = Class.forName("FailInitializer", false, loader);
+		assertThrows(ExceptionInInitializerError.class,
+				() -> ClassLoadUtil.initializeClass(failc));
 	}
 	
 }
