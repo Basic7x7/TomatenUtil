@@ -337,12 +337,12 @@ public class TestUtil {
 	 * @throws AssertionError If the executor does not throw an exception of the expected type with the expected message.
 	 * @since 1.8
 	 */
-	public static <T extends Throwable> T assertThrows(Class<T> expectedType, String expectedMessage, VoidConsumerWithThrows<?> executor) {
+	public static <T extends Throwable> T assertThrowsWithMessage(Class<T> expectedType, String expectedMessage, VoidConsumerWithThrows<?> executor) {
 		try {
 			executor.accept();
 			throw new AssertionError("Expected a " + expectedType + " to be thrown, but nothing was thrown");
 		} catch (Throwable t) {
-			if (!expectedType.isInstance(t)) {
+			if (!expectedType.equals(t.getClass())) {
 				throw new AssertionError("Expected a " + expectedType + " to be thrown, but catched a " + t.getClass(), t);
 			}
 			assertEquals(expectedMessage, t.getMessage());
