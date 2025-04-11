@@ -341,7 +341,7 @@ public class CharsetUtil {
 				throw new CharacterDecodeException("Invalid overlong UTF-8 sequence: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
 			}
 			if (0xD800 <= result && result <= 0xDFFF) {
-				throw new CharacterDecodeException("Invalid surrogate sequence in UTF-8: " + byteToHex(b0) + " " + byteToHex(b1) + " " + byteToHex(b2));
+				throw new CharacterDecodeException("Invalid surrogate in UTF-8: " + Integer.toHexString(result));
 			}
 			return result;
 		}
