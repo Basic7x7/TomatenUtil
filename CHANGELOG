@@ -1,3 +1,21 @@
+Version 1.8 (2025-04-13)
++ ClassLoadUtil
+    Provides utilities to find, load and initialize classes.
+* RequirementUtil
+    + New 'require' methods to check numbers, arrays and collections
+    * The space before the '...' in the message pattern is now optional
++ TestUtil.assertThrowsWithMessage
++ Pool implementations
+    Pools allow to cache objects.
+* ExecUtil supports a byte array for standard input and output
++ StringUtil.indexOf and lastIndexOf
+    An indexOf() implementation with pattern bounds.
++ StringUtil.join
++ OrderedHashSet
+    Derived from OrderedHashMap.
+* Fixed JavaDoc issues
+
+
 Version 1.7 (2024-11-18)
 + OrderedHashMap
 + StringUtil.matchesSimplePattern()
