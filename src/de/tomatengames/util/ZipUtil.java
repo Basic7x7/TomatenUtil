@@ -43,7 +43,7 @@ public class ZipUtil {
 	
 	/**
 	 * Extracts the entries of the specified ZIP file into the specified target directory.
-	 * @param zip The ZIP file.
+	 * @param zipFile The ZIP file.
 	 * @param targetDir The target directory.
 	 * @throws IOException If an error occurs.
 	 */

@@ -13,6 +13,9 @@ import java.io.OutputStream;
  */
 public class Base32Util {
 	
+	private Base32Util() {
+	}
+	
 	/**
 	 * Converts the specified Base32 string into a byte array.
 	 * <p>

@@ -22,6 +22,7 @@ public class ExecGetResult {
 	/**
 	 * Returns the standard output bytes of the process.
 	 * @return The standard output bytes.
+	 * @since 1.8
 	 */
 	public byte[] getOutputBytes() {
 		return output;
@@ -30,11 +31,17 @@ public class ExecGetResult {
 	/**
 	 * Returns the standard output of the process as a string using the default charset.
 	 * @return The standard output of the process as a string.
+	 * @since 1.8
 	 */
 	public String getOutputString() {
 		return new String(this.output);
 	}
 	
+	/**
+	 * Returns the standard output of the process using the default charset.
+	 * @return The standard output of the process.
+	 * @deprecated Use {@link #getOutputString()}
+	 */
 	@Deprecated
 	public CharSequence getOutput() {
 		return getOutputString();
@@ -51,11 +58,17 @@ public class ExecGetResult {
 	/**
 	 * Returns the error output of the process as a string using the default charset.
 	 * @return the error output of the process as a string
+	 * @since 1.8
 	 */
 	public String getErrorString() {
 		return new String(this.error);
 	}
 	
+	/**
+	 * Returns the error output of the process using the default charset.
+	 * @return the error output of the process
+	 * @deprecated Use {@link #getErrorString()}
+	 */
 	@Deprecated
 	public CharSequence getError() {
 		return getErrorString();

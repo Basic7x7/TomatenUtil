@@ -67,7 +67,7 @@ const mapData = {
 	"Abstract": {
 		namePrefix: "Abstract"
 		abstractMap: true
-		genKeys: ["K"]
+		genKeys: [{name: "K", doc: "The key type."}]
 		keys: [{name: "key", type: "K"}]
 		extraMapCode: function() {
 			##

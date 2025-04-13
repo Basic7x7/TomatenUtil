@@ -19,13 +19,17 @@ import java.util.function.Function;
  */
 public class PathfinderUtil {
 	
+	private PathfinderUtil() {
+	}
+	
 	/**
 	 * Finds a goal from the provided startpoint, using the provided {@link World} to traverse the environment.
 	 * @param <N> The specific type of PathNode used
 	 * @param start The startpoint
 	 * @param world The {@link World}
 	 * @return A goal PathNode
-	 * @see {@link PathNode}, {@link World}
+	 * @see PathNode
+	 * @see World
 	 */
 	public static <N extends PathNode> N find(N start, World<N> world) {
 		return find(start, false, new PositionMap<>(world, 0.75f, 16), world);

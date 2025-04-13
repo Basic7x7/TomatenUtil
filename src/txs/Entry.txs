@@ -5,7 +5,7 @@ include <src/txs/include.txs>
 extern mapName;
 final map = mapData[mapName];
 
-final Gen = "<" * (map.genKeys+["V"]).join(", ") * ">"
+final Gen = "<" * (map.genKeys?.map(k => k.name)+["V"]).join(", ") * ">"
 final Entry = "%map.namePrefix;Entry%Gen;" 
 ##
 
@@ -15,6 +15,13 @@ import java.util.ConcurrentModificationException;
  * Represents a key-value mapping.
  * This entry type is used by the {@link %map.namePrefix;HashMap}.
  * 
+##
+for (k in map.genKeys) {
+	##
+	 * @param <%k.name;> %k.doc;
+	##
+}
+##
  * @param <V> The type of the value.
  * 
  * @author Basic7x7

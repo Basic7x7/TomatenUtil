@@ -18,10 +18,21 @@ final Function = "%inp.name;To%out.name;Function";
  * A function that accepts %inpJava == "void" ? "no parameters" : "%inp.a; {@code %inp.docName;}";
  * and returns %outJava == "void" ? "nothing" : "%out.a; {@code %out.docName;}";.
  * 
+##
+if (inpJava == "I") {
+	##
+	 * @param <I> The input type.
+	##
+}
+if (outJava == "O") {
+	##
+	 * @param <O> The output type.
+	##
+}
+##
  * @author Basic7x7
- * @version
- * 2023-04-11 last modified<br>
- * 2021-10-21 created
+ * @version 2023-04-11 last modified
+ * @version 2021-10-21 created
  * @since 1.2
  */
 // %cli.txsinfo();
@@ -51,6 +62,13 @@ public interface %Function;%Gen; {
 		/**
 		 * Returns the {@code %inp.docName;} identity function.
 		 * The identity function always returns the input argument.
+		##
+		if (inp.generic) {
+			##
+			 * @param <T> The input and output type of the function.
+			##
+		}
+		##
 		 * @return The identity function.
 		 */
 		public static %inp.generic && "<T>"; %Function;%inp.generic && "<T, T>"; identity() {
@@ -75,6 +93,13 @@ public interface %Function;%Gen; {
 		
 		/**
 		 * Returns %inp.a; %Function; that represents {@code !func.apply(e)}.
+		##
+		if (generic) {
+			##
+			 * @param %generic; The input type of the function.
+			##
+		}
+		##
 		 * @param func The function to negate. Must not be {@code null}.
 		 * @return The logical negation of the specified function.
 		 * @throws NullPointerException If the specified function is {@code null}.

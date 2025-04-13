@@ -23,9 +23,9 @@ public class SortUtil {
 	 * <p>
 	 * Example:
 	 * <pre>
-	 * compare("Hello", "Test") => "Hello" < "Test"
-	 * compare("Test1", "Test2") => "Test1" < "Test2"
-	 * compare("Test11", "Test2") => "Test11" > "Test2"
+	 * compare("Hello", "Test") => "Hello" &lt; "Test"
+	 * compare("Test1", "Test2") => "Test1" &lt; "Test2"
+	 * compare("Test11", "Test2") => "Test11" &gt; "Test2"
 	 * </pre>
 	 * The string {@code null} is before all other strings.
 	 * @param s1 The first string. May be {@code null}.

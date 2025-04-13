@@ -16,6 +16,7 @@ import java.util.function.Consumer;
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
  * 
+ * @param <K> The key type.
  * @param <V> The type of the values.
  * 
  * @author Basic7x7

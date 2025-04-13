@@ -11,6 +11,9 @@ import javax.crypto.Mac;
  */
 public class TOTPUtil {
 	
+	private TOTPUtil() {
+	}
+	
 	/**
 	 * Returns the HOTP counter to be used for the TOTP at the specified timestamp in milliseconds (e.g. {@link System#currentTimeMillis()})
 	 * using the specified amount of seconds a code should be valid (e.g. 30).

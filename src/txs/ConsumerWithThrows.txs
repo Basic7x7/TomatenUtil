@@ -14,11 +14,11 @@ final Consumer = inp.name+"ConsumerWithThrows";
 /**
  * A consumer that accepts %inpJava == "void" ? "no parameters" : inp.a; {@code %inp.docName;}.
  * 
- * @param T The Throwable that may be thrown by the consumer.
+ * @param <T> The Throwable that may be thrown by the consumer.
 ##
 if (inp.generic) {
 	##
-	 * @param I The type of the input parameter.
+	 * @param <I> The type of the input parameter.
 	##
 }
 ##
@@ -40,6 +40,7 @@ public interface %Consumer;%GenDec; {
 		##
 	}
 	##
+	 * @throws T If an exception occurs
 	 */
 	public void accept(%inpJava != "void" && "%inpJava; e";) throws T;
 	

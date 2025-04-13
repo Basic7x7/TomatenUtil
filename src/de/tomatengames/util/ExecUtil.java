@@ -91,7 +91,7 @@ public class ExecUtil {
 	 * @param dir The working directory of the subprocess. May be {@code null}.
 	 * @return The standard output as String.
 	 * @throws IOException If an error occurs or the exit value of the process is not {@code 0}.
-	 * @see #execGet(String[], String[], File)
+	 * @see #execGet(String[], String[], File, byte[])
 	 */
 	public static String execGetOutput(String[] cmd, String[] envp, File dir) throws IOException {
 		ExecGetResult result = execGet(cmd, envp, dir, null);

@@ -319,7 +319,7 @@ public class TestUtil {
 		}
 	}
 	
-	public static void assertArrayEquals(byte[] expected, byte[] actual) {
+	private static void assertArrayEquals(byte[] expected, byte[] actual) {
 		if (!Arrays.equals(expected, actual)) {
 			throw new AssertionError("expected: " + Arrays.toString(expected) +
 					" but was: " + Arrays.toString(actual));
