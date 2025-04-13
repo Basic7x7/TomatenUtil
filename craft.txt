@@ -2,6 +2,6 @@ java-version 8
 
 + src
 - txs/
-- de/tomatengames/util/test/
+junit de/tomatengames/util/test/
 
 license LICENSE
