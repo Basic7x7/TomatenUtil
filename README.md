@@ -1,7 +1,7 @@
 # TomatenUtil
 
 TomatenUtil is a collection of useful utilities written in Java.
-TomatenUtil includes convenience methods like [ArrayUtil](https://docs.tomaten.dev/javadoc/TomatenUtil/de/tomatengames/util/ArrayUtil.html) and data structures like [IntHashMap](https://docs.tomaten.dev/javadoc/TomatenUtil/de/tomatengames/util/map/IntHashMap.html) among others.
+TomatenUtil includes convenience methods like [ArrayUtil](https://docs.tomaten.dev/javadoc/TomatenUtil/de/tomatengames/util/ArrayUtil.html) and data structures like [IntHashMap](https://docs.tomaten.dev/javadoc/TomatenUtil/de/tomatengames/util/map/IntHashMap.html).
 
 ## Dependencies
 
