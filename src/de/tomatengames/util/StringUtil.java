@@ -389,7 +389,7 @@ public class StringUtil {
 	 * </p>
 	 *
 	 * @param <T> The type of elements in the array.
-	 * @param part The array containing the elements to join.
+	 * @param parts The array containing the elements to join.
 	 * @param conversion The function that converts each element to a String.
 	 * @param delimiter The string used to separate the converted parts.
 	 * @return A single string obtained by joining all elements after converting and

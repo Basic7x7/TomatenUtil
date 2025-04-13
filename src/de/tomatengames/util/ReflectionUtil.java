@@ -18,6 +18,9 @@ public class ReflectionUtil {
 	
 	private static final Object[] EMPTY_ARRAY = new Object[0];
 	
+	private ReflectionUtil() {
+	}
+	
 	// Standard Class/Field/Constructor/Method finding:
 	
 	/**
@@ -278,7 +281,7 @@ public class ReflectionUtil {
 		}
 		
 		/**
-		 * Set the current value of the given field in the given object %toType;, wraps {@link Field%#set%method;(Object, Object)}.
+		 * Set the current value of the given field in the given object %toType;, wraps {@link Field%#set%method;(Object, %type;)}.
 		 * @param object the object
 		 * @param field the field
 		 * @param value the value %asType;
@@ -699,7 +702,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a boolean, wraps {@link Field#setBoolean(Object, Object)}.
+	 * Set the current value of the given field in the given object to a boolean, wraps {@link Field#setBoolean(Object, boolean)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a boolean
@@ -765,7 +768,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a char, wraps {@link Field#setChar(Object, Object)}.
+	 * Set the current value of the given field in the given object to a char, wraps {@link Field#setChar(Object, char)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a char
@@ -831,7 +834,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a byte, wraps {@link Field#setByte(Object, Object)}.
+	 * Set the current value of the given field in the given object to a byte, wraps {@link Field#setByte(Object, byte)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a byte
@@ -897,7 +900,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a short, wraps {@link Field#setShort(Object, Object)}.
+	 * Set the current value of the given field in the given object to a short, wraps {@link Field#setShort(Object, short)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a short
@@ -963,7 +966,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to an int, wraps {@link Field#setInt(Object, Object)}.
+	 * Set the current value of the given field in the given object to an int, wraps {@link Field#setInt(Object, int)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as an int
@@ -1029,7 +1032,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a long, wraps {@link Field#setLong(Object, Object)}.
+	 * Set the current value of the given field in the given object to a long, wraps {@link Field#setLong(Object, long)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a long
@@ -1095,7 +1098,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a float, wraps {@link Field#setFloat(Object, Object)}.
+	 * Set the current value of the given field in the given object to a float, wraps {@link Field#setFloat(Object, float)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a float
@@ -1161,7 +1164,7 @@ public class ReflectionUtil {
 	}
 	
 	/**
-	 * Set the current value of the given field in the given object to a double, wraps {@link Field#setDouble(Object, Object)}.
+	 * Set the current value of the given field in the given object to a double, wraps {@link Field#setDouble(Object, double)}.
 	 * @param object the object
 	 * @param field the field
 	 * @param value the value as a double

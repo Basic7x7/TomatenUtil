@@ -10,6 +10,12 @@ package de.tomatengames.util.pool;
  */
 public class ByteUnpool implements BytePool {
 	
+	/**
+	 * Creates a new {@link ByteUnpool}.
+	 */
+	public ByteUnpool() {
+	}
+	
 	@Override
 	public Pooled<byte[]> claim(int minLength) {
 		return new Unpool.Unpooled<>(new byte[minLength]);

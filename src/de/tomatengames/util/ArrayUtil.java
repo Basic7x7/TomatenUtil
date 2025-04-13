@@ -140,7 +140,7 @@ public class ArrayUtil {
 		 * If the array is {@code null}, it does not contain any elements.
 		 %genDoc;
 		 * @param array The array. May be {@code null}.
-		 * @param element The element. %type.generic && 'May be {@code null}.';
+		 * @param element The element.%type.generic && ' May be {@code null}.';
 		 * @return The last index of the specified element.
 		 * If the array does not contain the element, {@code -1} is returned.
 		 *%'/';
@@ -159,7 +159,7 @@ public class ArrayUtil {
 		 * The array {@code null} does not contain any elements.
 		 %genDoc;
 		 * @param array The array. May be {@code null}.
-		 * @param el The element. %type.generic && 'May be {@code null}.';
+		 * @param element The element.%type.generic && ' May be {@code null}.';
 		 * @return If the array contains the specified element.
 		 *%'/';
 		// %cli.txsinfo();
@@ -260,7 +260,7 @@ public class ArrayUtil {
 	 * The array {@code null} does not contain any elements.
 	 * @param <T> The type of the elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param element The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -356,7 +356,7 @@ public class ArrayUtil {
 	 * The array {@code null} does not contain any elements.
 	 * @param <T> The type of the elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. May be {@code null}.
+	 * @param element The element. May be {@code null}.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -431,7 +431,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -447,7 +447,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -522,7 +522,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -538,7 +538,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -613,7 +613,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -629,7 +629,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -704,7 +704,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -720,7 +720,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -795,7 +795,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -811,7 +811,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -886,7 +886,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -902,7 +902,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -977,7 +977,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -993,7 +993,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!
@@ -1068,7 +1068,7 @@ public class ArrayUtil {
 	 * Returns the last index of the specified element in the array.
 	 * If the array is {@code null}, it does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param element The element. 
+	 * @param element The element.
 	 * @return The last index of the specified element.
 	 * If the array does not contain the element, {@code -1} is returned.
 	 */
@@ -1084,7 +1084,7 @@ public class ArrayUtil {
 	 * Returns if the specified array contains the specified element.
 	 * The array {@code null} does not contain any elements.
 	 * @param array The array. May be {@code null}.
-	 * @param el The element. 
+	 * @param element The element.
 	 * @return If the array contains the specified element.
 	 */
 	// !!! TextScript generated !!!

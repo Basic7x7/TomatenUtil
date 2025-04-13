@@ -28,17 +28,21 @@ final Function = "Ref%n;To%out.name;Function";
  * %out.java == "void" ? "nothing" : "%out.a; {@code %out.docName;}";.
  * 
 ##
+for (arg in args) {
+	##
+	 * @param <%arg.type;> An input parameter type
+	##
+}
 if (out.generic) {
 	##
-	 * @param <T> The return type.
+	 * @param <T> The return type
 	 * 
 	##
 }
 ##
  * @author Basic7x7
- * @version
- * 2023-04-11 last modified<br>
- * 2023-02-19 created
+ * @version 2023-04-11 last modified
+ * @version 2023-02-19 created
  * @since 1.2
  */
 // %cli.txsinfo();
@@ -78,6 +82,13 @@ public interface %Function;%Gen; {
 		
 		/**
 		 * Returns a %Function; that represents {@code !func.apply(...)}.
+		##
+		for (arg in args) {
+			##
+			 * @param <%arg.type;> A function parameter type
+			##
+		}
+		##
 		 * @param func The function to negate. Must not be {@code null}.
 		 * @return The logical negation of the specified function.
 		 * @throws NullPointerException If the specified function is {@code null}.

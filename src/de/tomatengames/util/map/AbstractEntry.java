@@ -6,6 +6,7 @@ import java.util.ConcurrentModificationException;
  * Represents a key-value mapping.
  * This entry type is used by the {@link AbstractHashMap}.
  * 
+ * @param <K> The key type.
  * @param <V> The type of the value.
  * 
  * @author Basic7x7

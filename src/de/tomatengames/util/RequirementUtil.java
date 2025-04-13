@@ -16,6 +16,9 @@ import java.util.function.Predicate;
  */
 public class RequirementUtil {
 	
+	private RequirementUtil() {
+	}
+	
 	/**
 	 * Ensures that the specified object is not {@code null}.
 	 * @param obj The object that should be checked.

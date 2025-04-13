@@ -322,7 +322,7 @@ public class HashUtil {
 	
 	
 	/**
-	 * UTF8-encodes the specified {@link char} array and passes it to the specified {@link MessageDigest}.
+	 * UTF8-encodes the specified {@code char} array and passes it to the specified {@link MessageDigest}.
 	 * <p>
 	 * This method behaves like
 	 * <pre>
@@ -362,7 +362,7 @@ public class HashUtil {
 	}
 	
 	/**
-	 * UTF8-encodes the specified {@link char} array and passes it to the specified {@link MessageDigest}.
+	 * UTF8-encodes the specified {@code char} array and passes it to the specified {@link MessageDigest}.
 	 * <p>
 	 * This method behaves like {@code alg.update(new String(chars).getBytes(StandardCharsets.UTF_8))},
 	 * but requires only constant memory for large strings and overwrites additional copies of the {@code char} array.
@@ -375,9 +375,9 @@ public class HashUtil {
 	}
 	
 	/**
-	 * UTF8-encodes the specified {@link char} array and hashes it.
+	 * UTF8-encodes the specified {@code char} array and hashes it.
 	 * @param alg The {@link MessageDigest} that should be used to calculate the hash. Must not be {@code null}.
-	 * @param str The {@code char} array that should be encoded. Must not be {@code null}.
+	 * @param chars The {@code char} array that should be encoded. Must not be {@code null}.
 	 * @return The hash. Not {@code null}.
 	 * @since 1.4
 	 */

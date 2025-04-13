@@ -2,12 +2,9 @@ package de.tomatengames.util.pool;
 
 /**
  * A BytePool wrapper that clears (zeros) the provided byte arrays on free.
- *
  * <p>
  * If this is the only access to the underlying BytePool, then all unused byte
  * arrays are clear and are clear when claimed.
- * </p>
- *
  * <p>
  * This may wrap other BytePools to improve
  * <ul>
@@ -22,7 +19,6 @@ package de.tomatengames.util.pool;
  * Unfortunately, clearing is a significant performance overhead, worsened by
  * the lack of a standard accelerated way to do such clearing in Java. So, the
  * decision to use this wrapper involves weighing security against efficiency.
- * </p>
  *
  * @version 2025-03-29 created
  * @since 1.8

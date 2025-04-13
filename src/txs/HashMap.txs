@@ -10,8 +10,9 @@ final abstr = map.abstractMap;
 final HashMap = "%map.namePrefix;HashMap";
 final Entry = "%map.namePrefix;Entry";
 
-final GenKeys = "<" * map.genKeys?.join(", ") * ">";
-final genArray = map.genKeys + ["V"];
+final mapGenKeyNames = map.genKeys?.map(k => k.name)
+final GenKeys = "<" * mapGenKeyNames?.join(", ") * ">";
+final genArray = mapGenKeyNames + ["V"];
 final Gen = "<" * genArray.join(", ") * ">";
 final Node = "Node%!abstr && Gen;";
 final wildcardGen = "<" * genArray.map(s => "?").join(", ") * ">";
@@ -69,6 +70,13 @@ import java.util.function.Consumer;
  * This map does <b>not</b> allow {@code null} values.
  * This implementation does <b>not</b> allow concurrent modifications.
  * 
+##
+for (k in map.genKeys) {
+	##
+	 * @param <%k.name;> %k.doc;
+	##
+}
+##
  * @param <V> The type of the values.
  * 
  * @author Basic7x7

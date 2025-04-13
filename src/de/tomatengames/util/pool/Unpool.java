@@ -6,11 +6,9 @@ import java.util.function.Supplier;
  * The {@code Unpool} class implements the {@link Pool} interface but does not
  * actually pool objects. It merely wraps the underlying supplier, so it creates
  * new pooled instances each time an object is claimed.
- *
  * <p>
  * Freeing its {@link Pooled} objects does nothing as there is no store of
  * pooled objects.
- * </p>
  *
  * @param <E> The type of object provided by this {@code Unpool}.
  *
@@ -37,7 +35,6 @@ public class Unpool<E> implements Pool<E> {
 	 * The claimed object is not pooled and will be created anew each time. The
 	 * {@link Pooled#free()} method of the returned {@link Pooled} instance does
 	 * nothing.
-	 * </p>
 	 *
 	 * @return A {@link Pooled} instance wrapping the newly created object.
 	 */

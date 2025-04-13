@@ -14,6 +14,13 @@ import java.io.OutputStream;
  */
 public class VoidOutputStream extends OutputStream {
 	
+	/**
+	 * Creates a new {@link VoidOutputStream}.
+	 */
+	public VoidOutputStream() {
+		super();
+	}
+	
 	@Override
 	public void write(int b) {
 	}
