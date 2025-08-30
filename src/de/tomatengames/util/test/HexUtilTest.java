@@ -1,26 +1,14 @@
 package de.tomatengames.util.test;
 
-import static de.tomatengames.util.HexUtil.byteToHex;
-import static de.tomatengames.util.HexUtil.bytesToHex;
-import static de.tomatengames.util.HexUtil.hexToBytes;
-import static de.tomatengames.util.HexUtil.hexToInt;
-import static de.tomatengames.util.HexUtil.hexToLong;
-import static de.tomatengames.util.HexUtil.intToHex;
-import static de.tomatengames.util.HexUtil.longToHex;
-import static de.tomatengames.util.HexUtil.parseHexChar;
-import static de.tomatengames.util.HexUtil.shortToHex;
-import static de.tomatengames.util.HexUtil.toHexChar;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import de.tomatengames.util.HexUtil;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.HexUtil;
+import static de.tomatengames.util.HexUtil.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HexUtilTest {
 	private static final Path dir = Paths.get("testdata/hexutil");

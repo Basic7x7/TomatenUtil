@@ -1,16 +1,13 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import de.tomatengames.util.IOUtil;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.IOUtil;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IOUtilTest {
 	

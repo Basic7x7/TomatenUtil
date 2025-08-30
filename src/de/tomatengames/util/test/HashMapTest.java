@@ -1,26 +1,11 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.util.ConcurrentModificationException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-
+import de.tomatengames.util.map.*;
 import org.junit.jupiter.api.Test;
 
-import de.tomatengames.util.map.AbstractHashMap;
-import de.tomatengames.util.map.Int3HashMap;
-import de.tomatengames.util.map.IntEntry;
-import de.tomatengames.util.map.IntHashMap;
-import de.tomatengames.util.map.Long2HashMap;
-import de.tomatengames.util.map.LongHashMap;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class HashMapTest {
 	

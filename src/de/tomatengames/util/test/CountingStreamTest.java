@@ -1,16 +1,15 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import de.tomatengames.util.io.CountingInputStream;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.io.CountingInputStream;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CountingStreamTest {
 	private static final byte[] bytes = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

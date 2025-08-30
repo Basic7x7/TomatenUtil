@@ -1,10 +1,5 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -15,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import de.tomatengames.util.HashUtil;
 import de.tomatengames.util.HexUtil;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class HashUtilTest {
 	private static final Path dir = Paths.get("testdata/hashutil");
