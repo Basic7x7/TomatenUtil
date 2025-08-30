@@ -1,12 +1,11 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
+import de.tomatengames.util.SortUtil;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.SortUtil;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SortUtilTest {
 	

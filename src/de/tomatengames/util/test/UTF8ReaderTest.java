@@ -1,18 +1,15 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import de.tomatengames.util.HexUtil;
+import de.tomatengames.util.exception.CharacterDecodeException;
+import de.tomatengames.util.io.UTF8Reader;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.HexUtil;
-import de.tomatengames.util.exception.CharacterDecodeException;
-import de.tomatengames.util.io.UTF8Reader;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UTF8ReaderTest {
 	

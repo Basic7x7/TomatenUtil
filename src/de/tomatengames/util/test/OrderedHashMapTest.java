@@ -1,19 +1,14 @@
 package de.tomatengames.util.test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import de.tomatengames.util.map.OrderedHashMap;
+import org.junit.jupiter.api.Test;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
-import org.junit.jupiter.api.Test;
-
-import de.tomatengames.util.map.OrderedHashMap;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OrderedHashMapTest {
 	

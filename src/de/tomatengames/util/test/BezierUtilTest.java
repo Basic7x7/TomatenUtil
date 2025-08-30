@@ -2,7 +2,7 @@ package de.tomatengames.util.test;
 
 import static de.tomatengames.util.BezierUtil.eval;
 import static de.tomatengames.util.BezierUtil.evalDeCasteljau;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 

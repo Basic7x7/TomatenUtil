@@ -7,11 +7,7 @@ import static de.tomatengames.util.ArrayUtil.indexOf;
 import static de.tomatengames.util.ArrayUtil.isEqualCT;
 import static de.tomatengames.util.ArrayUtil.lastIndexOf;
 import static de.tomatengames.util.ArrayUtil.reverse;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

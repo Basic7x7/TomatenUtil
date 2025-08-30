@@ -3,9 +3,7 @@ package de.tomatengames.util.test;
 import static de.tomatengames.util.CharsetUtil.encodeUTF8;
 import static de.tomatengames.util.TestUtil.assertOutputStream;
 import static de.tomatengames.util.TestUtil.assertOutputStreamThrows;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
